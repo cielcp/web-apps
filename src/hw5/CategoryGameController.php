@@ -20,7 +20,7 @@ class CategoryGameController {
     public function __construct($input) {
         $this->db = new Database();
         $this->input = $input;
-        //$this->loadGame();
+        $this->loadGame();
     }
 
     /**
@@ -66,7 +66,10 @@ class CategoryGameController {
         }
     }
 
-    // Method to process user login
+
+    /**
+     * Method to process user login, store form info in session, redirect to game page
+     */
     private function processLogin() {
         if(isset($_POST['name']) && isset($_POST['email']) && isset($_POST['passwd'])) {
             // Store all the login info to the current session
@@ -88,11 +91,16 @@ class CategoryGameController {
      * in the current object.
      */
     public function loadGame() {
-        $json = file_get_contents('https://cs4640.cs.virginia.edu/homework/connections.json');
+        /* When you publish your code to the CS4640 server, update your code to read our 
+        connections.json file directly from the server. You can do this by reading from the 
+        following absolute path: /var/www/html/homework/connections.json */
+        
+        // loads all the categories in the json file
+        $json = file_get_contents("/opt/src/hw5/connections.json");
         $this->connections = json_decode($json, true);
 
         if (empty($this->connections)) {
-            die("Something went wrong loading connections");
+            die("Something went wrong loading the game");
         }
     }
     
@@ -109,31 +117,40 @@ class CategoryGameController {
         }
         return false; */
 
-        $all_words = [];
-
-        // randomly generates four categories
-        $categories = array_rand($this->connections, 4);
-
-        // for each category, randomly generate the 16 words that will be used
-        foreach($categories as $category){
-            $words = array_rand($this->connections[$category], 4);
-
-            $w = [];
-            foreach($words as $index){
-                $w[] = $this->connections[$category][$index];
-                $all_words[] = $this->connections[$category][$index];
+        
+        // if it's our first time getting the game, should get 4 random categories,
+        // the board, and the random board and save those to session
+        if (!isset($_SESSION["board"])) {
+            $all_words = [];
+            // randomly generates four categories
+            $categories = array_rand($this->connections, 4);
+            // for each category, get 4 random words for that category, and save all to board
+            foreach($categories as $category){
+                $words = array_rand($this->connections[$category], 4);
+                $w = [];
+                foreach($words as $index){
+                    $w[] = $this->connections[$category][$index];
+                    $all_words[] = $this->connections[$category][$index];
+                }
+                $this->board[$category] = $w;
             }
-            $this->board[$category] = $w;
-        }
+            // now that our board of 16 words is done, save to session
+            $_SESSION["board"] = $board;
+            // all 16 words that will be used for the connections game, scrambled
+            shuffle($all_words);
+            foreach($all_words as $keys => $value){
+                $this->random_board[$keys + 1] = $value; // do we need to + 1??
+            }
+            // now that our random board for display is done, 
+            // save to session for display and checking
+            $_SESSION["random_board"] = $random_board;
+            // also save as list for easy display??
 
-        // all 16 words that will be used for the connections game, scrambled
-        shuffle($all_words);
-        foreach($all_words as $keys => $value){
-            $this->random_board[$keys + 1] = $value;
         }
-
+        // if theres already a game saved to the session, it should just calculate the 
+        // current state of the game and return that shtuff
+        
         return $this->random_board;
-    
     }
     
     public function answerGame(){
@@ -141,7 +158,7 @@ class CategoryGameController {
         //temp variable for given answer input = $input
 
        // input will be four numbers, find the corresponding key value and pair and add it to guess []
-       $answer = explode(', ', $_POST["answer"]);
+       $answer = explode(' ', $_POST["answer"]);
        $guess = [];
        foreach($answer as $item){
            $guess[] = $this->random_board[$item];
@@ -179,7 +196,6 @@ class CategoryGameController {
        // all of the guesses and how many are incorrect
        $this->all_guesses[4 - count($match)] = $answer;
     }
-
 
     /**
      * Show the game to the user.  This function loads a
