@@ -7,7 +7,7 @@
 
 class CategoryGameController {
 
-    private $questions = [];
+    private $game = [];
     
     private $db;
 
@@ -30,15 +30,32 @@ class CategoryGameController {
     public function run() {
         // Get the command
         $command = "example";
-        if (isset($this->input["command"]))
+
+        // Override command if specified in input
+        if (isset($this->input["command"])) {
             $command = $this->input["command"];
+        }
+
+        // Check if user is logged in
+        /* if(isset($_SESSION['email'])) {
+            $command = "game"; // Show game if user is logged in
+        } */
 
         switch($command) {
+            case "login":
+                $this->processLogin();
+                break;
             case "game":
                 $this->showGame();
                 break;
             case "gameOver":
                 $this->showGameOver();
+                break;
+            case "quit":
+                $this->showGameOver();
+                break;
+            case "exit":
+                $this->exitGame();
                 break;
             default:
                 $this->showWelcome();
@@ -46,11 +63,27 @@ class CategoryGameController {
         }
     }
 
+    // Method to process user login
+    private function processLogin() {
+        if(isset($_POST['name']) && isset($_POST['email']) && isset($_POST['passwd'])) {
+            // Store all the login info to the current session
+            $_SESSION['name'] = $_POST['name'];
+            $_SESSION['email'] = $_POST['email'];
+            $_SESSION['password'] = $_POST['passwd'];
+            $_SESSION['num_guesses'] = 0;
+            // Direct to the game page
+            $this->showGame();
+        } else {
+            // Invalid request, show error message
+            die("Please provide your name, email, and password");
+        }
+    }
+
+
     /**
      * Load game info from a file, store them as an array
      * in the current object.
      */
-    
     public function loadGame() {
         $this->game = json_decode(
             file_get_contents("https://cs4640.cs.virginia.edu/homework/connections.json"), true);
@@ -96,6 +129,17 @@ class CategoryGameController {
      */
     public function showGameOver() {
         include("/opt/src/hw5/templates/gameOver.php");
+    }
+
+    /**
+     * Exit the game and destroy the session.
+     */
+    private function exitGame() {
+        // Destroy the session
+        session_destroy();
+        
+        // Redirect to the welcome page
+        $this->showWelcome();
     }
 
     /**
