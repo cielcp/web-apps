@@ -12,11 +12,16 @@
 <body>
     
 <div class="container" style="margin-top: 15px;">
-        <div class="row">
-                <div class="col-xs-12">
-                <h1>Welcome to our connections game</h1>
-                </div>
-            </div>
+    <div class="row d-flex mb-2 justify-content-space-between">
+        <div class="col">
+            <h3>Welcome, <?php echo($_SESSION['name'])?></h3>
+        </div>
+        <div class="col d-flex justify-content-end">
+            <form action="?command=quit" method="post">
+                <button type="submit" class="btn btn-primary">Quit</button>
+            </form>
+        </div>
+    </div>
             <div class="row">
                 <div class="col-xs-12">
                 <?=$message?>

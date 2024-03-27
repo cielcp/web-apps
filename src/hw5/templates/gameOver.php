@@ -13,29 +13,17 @@
 
 <div class="container" style="margin-top: 15px;">
             <div class="row">
-                <div class="col-xs-12">
-                <h1>Welcome to our Trivia Game!</h1>
-                <p>Please answer the questions below to begin playing</p>
-                </div>
+                <h1>Game Over!</h1>
             </div>
-            <div class="row">
-                <div class="col-xs-12">
-                <form action="?command=question" method="post">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="fullname">
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
-                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="passwd" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="passwd" name="passwd">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Start</button>
+            <div class="row d-flex justify-content-between">
+                <div class="col d-flex justify-content-center">
+                <form action="?command=exit" method="post">
+                    <button type="submit" class="btn btn-primary">Exit</button>
+                </form>
+                </div>
+                <div class="col d-flex justify-content-center">
+                <form action="?command=game" method="post">
+                    <button type="submit" class="btn btn-primary">Play again?</button>
                 </form>
                 </div>
             </div>

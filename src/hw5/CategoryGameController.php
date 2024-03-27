@@ -37,19 +37,22 @@ class CategoryGameController {
         }
 
         // Check if user is logged in
-        if(isset($_SESSION['email'])) {
+        /* if(isset($_SESSION['email'])) {
             $command = "game"; // Show game if user is logged in
-        }
+        } */
 
         switch($command) {
+            case "login":
+                $this->processLogin();
+                break;
             case "game":
                 $this->showGame();
                 break;
             case "gameOver":
                 $this->showGameOver();
                 break;
-            case "login":
-                $this->processLogin();
+            case "quit":
+                $this->showGameOver();
                 break;
             case "exit":
                 $this->exitGame();
