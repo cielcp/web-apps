@@ -11,6 +11,7 @@ class CategoryGameController {
     private $random_board = [];
     private $all_guesses = [];
 
+    private $input;
     private $db;
 
     /**
@@ -114,8 +115,8 @@ class CategoryGameController {
         $categories = array_rand($this->connections, 4);
 
         // for each category, randomly generate the 16 words that will be used
-        forach($categories as $category){
-            $words = array_rand($this->connectons[$category], 4);
+        foreach($categories as $category){
+            $words = array_rand($this->connections[$category], 4);
 
             $w = [];
             foreach($words as $index){
@@ -132,23 +133,23 @@ class CategoryGameController {
         }
 
         return $this->random_board;
-
+    
     }
     
-    public function answerGame(){
+    public function answerGame($input){
         // given the number, grab the word and then check if the given guess matches the four words
         //temp variable for given answer input = $input
 
        // input will be four numbers, find the corresponding key value and pair and add it to guess []
        $guess = [];
-       foreach($input as $name){
-           $guess[] = $random_board[$name];
+       foreach($input as $item){
+           $guess[] = $this->random_board[$item];
        }
 
        // based on the four names, find if any category matches their guesses
        $match = [];
        $matchingKeys = [];
-       foreach($board as $key => $value){
+       foreach($this->board as $key => $value){
            $match = array_intersect($value, $guess);
 
            // if at least two of words (or phrases) the user guessed are in the same category, 
@@ -170,7 +171,7 @@ class CategoryGameController {
                $this->all_guesses[count($match)] = $guess;
            }
        }
-       $this->all_guesses[count];
+       $this->all_guesses[count($match)] = $input;
     }
 
 
@@ -195,7 +196,7 @@ class CategoryGameController {
      * Show the game over page to the user.
      */
     public function showGameOver() {
-        $final_guesses =$this->$all_guesses;
+        $final_guesses = count($this->all_guesses);    // number of total guesses
         include("/opt/src/hw5/templates/gameOver.php");
     }
 
