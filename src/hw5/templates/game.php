@@ -31,9 +31,9 @@
     </div>
     
     <!-- the connections grid -->
-    <div class="row">
+    <div class="row mb-3">
         <div class="col">
-            <div class="card text-white bg-secondary mb-3">
+            <div class="card text-white bg-secondary">
                 <div class="card-header">
                     1
                 </div>
@@ -43,7 +43,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card text-white bg-secondary mb-3">
+            <div class="card text-white bg-secondary">
                 <div class="card-header">
                     2
                 </div>
@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card text-white bg-secondary mb-3">
+            <div class="card text-white bg-secondary">
                 <div class="card-header">
                     3
                 </div>
@@ -63,7 +63,50 @@
             </div>
         </div>
         <div class="col">
-            <div class="card text-white bg-secondary mb-3">
+            <div class="card text-white bg-secondary">
+                <div class="card-header">
+                    4
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <div class="card text-white bg-secondary">
+                <div class="card-header">
+                    1
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card text-white bg-secondary">
+                <div class="card-header">
+                    2
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card text-white bg-secondary">
+                <div class="card-header">
+                    3
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card text-white bg-secondary">
                 <div class="card-header">
                     4
                 </div>
@@ -76,7 +119,7 @@
 
     <div class="row">
         <div class="col">
-            <div class="card text-white bg-secondary mb-3">
+            <div class="card text-white bg-secondary">
                 <div class="card-header">
                     1
                 </div>
@@ -86,7 +129,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card text-white bg-secondary mb-3">
+            <div class="card text-white bg-secondary">
                 <div class="card-header">
                     2
                 </div>
@@ -96,7 +139,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card text-white bg-secondary mb-3">
+            <div class="card text-white bg-secondary">
                 <div class="card-header">
                     3
                 </div>
@@ -106,93 +149,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card text-white bg-secondary mb-3">
-                <div class="card-header">
-                    4
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <div class="card text-white bg-secondary mb-3">
-                <div class="card-header">
-                    1
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary mb-3">
-                <div class="card-header">
-                    2
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary mb-3">
-                <div class="card-header">
-                    3
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary mb-3">
-                <div class="card-header">
-                    4
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <div class="card text-white bg-secondary mb-3">
-                <div class="card-header">
-                    1
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary mb-3">
-                <div class="card-header">
-                    2
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary mb-3">
-                <div class="card-header">
-                    3
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary mb-3">
+            <div class="card text-white bg-secondary">
                 <div class="card-header">
                     4
                 </div>
@@ -212,7 +169,7 @@
         <p>dog space bird tv <span class="badge bg-success">One away!</span></p>
         <div class="row">
         <div class="col">
-            <div class="card text-white bg-success mb-3">
+            <div class="card text-white bg-success">
                 <div class="card-header">
                     1
                 </div>
@@ -222,7 +179,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card text-white bg-success mb-3">
+            <div class="card text-white bg-success">
                 <div class="card-header">
                     2
                 </div>
@@ -232,7 +189,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card text-white bg-success mb-3">
+            <div class="card text-white bg-success">
                 <div class="card-header">
                     3
                 </div>
@@ -242,7 +199,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card text-white bg-success mb-3">
+            <div class="card text-white bg-success">
                 <div class="card-header">
                     4
                 </div>
@@ -263,7 +220,7 @@
                 <input type="text" class="form-control-lg" id="trivia-answer" name="answer">
                 <div id="emailHelp" class="form-text">Please enter the numeric IDs of the words (space separated)</div>
             </div>
-            <button type="submit" class="btn btn-dark mb-5">Submit Guess</button>
+            <button type="submit" class="btn btn-dark mb-5">Submit</button>
         </form>
     </div>
             
@@ -282,21 +239,7 @@
                 </div>
                 
             </div>
-            <div class="row">
-                <div class="col-xs-12">
-                <form action="?command=answer" method="post">
-                    <input type="hidden" name="questionid" value="<?=$question["id"]?>">
-
-                    <div class="mb-3">
-                        <label for="answer" class="form-label">Your Guess: </label>
-                        <input type="text" class="form-control-lg" id="trivia-answer" name="answer">
-                        <div id="emailHelp" class="form-text">Please enter the numeric IDs of your guesses, separated by spaces.</div>
-                    </div>
-
-                    <button type="submit" class="btn btn-dark">Submit Guess</button>
-                </form>
-                </div>
-            </div>
+            
         </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
