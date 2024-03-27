@@ -6,9 +6,12 @@
 // public_html directory.
 
 class CategoryGameController {
+    private $connections = [];
+    private $board = [];
+    private $random_board = [];
+    private $all_guesses = [];
 
-    private $game = [];
-    
+    private $input;
     private $db;
 
     /**
@@ -85,11 +88,11 @@ class CategoryGameController {
      * in the current object.
      */
     public function loadGame() {
-        $this->game = json_decode(
-            file_get_contents("https://cs4640.cs.virginia.edu/homework/connections.json"), true);
+        $json = file_get_contents('https://cs4640.cs.virginia.edu/homework/connections.json');
+        $this->connections = json_decode($json, true);
 
-        if (empty($this->game)) {
-            die("Something went wrong loading the game");
+        if (empty($this->connections)) {
+            die("Something went wrong loading connections");
         }
     }
     
@@ -105,7 +108,78 @@ class CategoryGameController {
             return $this->game[$id];
         }
         return false; */
+
+        $all_words = [];
+
+        // randomly generates four categories
+        $categories = array_rand($this->connections, 4);
+
+        // for each category, randomly generate the 16 words that will be used
+        foreach($categories as $category){
+            $words = array_rand($this->connections[$category], 4);
+
+            $w = [];
+            foreach($words as $index){
+                $w[] = $this->connections[$category][$index];
+                $all_words[] = $this->connections[$category][$index];
+            }
+            $this->board[$category] = $w;
+        }
+
+        // all 16 words that will be used for the connections game, scrambled
+        shuffle($all_words);
+        foreach($all_words as $keys => $value){
+            $this->random_board[$keys + 1] = $value;
+        }
+
+        return $this->random_board;
+    
     }
+    
+    public function answerGame(){
+        // given the number, grab the word and then check if the given guess matches the four words
+        //temp variable for given answer input = $input
+
+       // input will be four numbers, find the corresponding key value and pair and add it to guess []
+       $answer = explode(', ', $_POST["answer"]);
+       $guess = [];
+       foreach($answer as $item){
+           $guess[] = $this->random_board[$item];
+       }
+
+       // based on the four names, find if any category matches their guesses
+       $match = [];
+       $matchingKeys = [];
+       foreach($this->board as $key => $value){
+           $match = array_intersect($value, $guess);
+
+           // if at least two of words (or phrases) the user guessed are in the same category, 
+           // we’ll tell the user how many of the other words (or phrases) in their guess were 
+           // not part of the category.
+           if(count($match) > 2){
+               $matchingKeys[] = $key; //idt we need
+               $this->all_guesses[count($match)] = $guess;
+           }
+
+           // if guess matches to a given category, remove them from random_board and keep 
+           // category name
+           if(count($match) == 4){
+               foreach($answer as $value){
+                   unset($this->random_board[$answer]);
+               }
+               return $this->random_board;
+               $matchingKeys[] = $key; //idt we need
+               $this->all_guesses[count($match)] = $guess;
+           }
+           
+           if(count($this->random_board) == 0){
+                $this->showGameOver();
+           }
+       }
+       // all of the guesses and how many are incorrect
+       $this->all_guesses[4 - count($match)] = $answer;
+    }
+
 
     /**
      * Show the game to the user.  This function loads a
@@ -113,7 +187,7 @@ class CategoryGameController {
      * properties of this object.
      */
     public function showGame($message = "") {
-        $game = $this->getGame();
+        $connections = $this->getGame();
         include("/opt/src/hw5/templates/game.php");
     }
 
@@ -128,6 +202,7 @@ class CategoryGameController {
      * Show the game over page to the user.
      */
     public function showGameOver() {
+        $final_guesses = count($this->all_guesses);    // number of total guesses
         include("/opt/src/hw5/templates/gameOver.php");
     }
 
@@ -141,30 +216,5 @@ class CategoryGameController {
         // Redirect to the welcome page
         $this->showWelcome();
     }
-
-    /**
-     * Check the user's answer to a question.
-     */
-
-    /* public function answerQuestion() {
-        $message = "";
-        if (isset($_POST["questionid"]) && is_numeric($_POST["questionid"])) {
-
-            $question = $this->getQuestion($_POST["questionid"]);
-
-            if (strtolower(trim($_POST["answer"])) == strtolower($question["answer"])) {
-                $message = "<div class=\"alert alert-success\" role=\"alert\">
-                    Correct!
-                    </div>";
-            }
-            else {
-                $message = "<div class=\"alert alert-danger\" role=\"alert\">
-                    Incorrect! The correct answer was: {$question["answer"]}
-                    </div>";
-            }
-        }
-
-        $this->showQuestion($message);
-    } */
 
 }
