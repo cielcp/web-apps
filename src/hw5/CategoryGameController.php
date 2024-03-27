@@ -70,6 +70,7 @@ class CategoryGameController {
             $_SESSION['name'] = $_POST['name'];
             $_SESSION['email'] = $_POST['email'];
             $_SESSION['password'] = $_POST['passwd'];
+            $_SESSION['num_guesses'] = 0;
             // Direct to the game page
             $this->showGame();
         } else {
