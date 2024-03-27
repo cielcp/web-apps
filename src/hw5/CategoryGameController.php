@@ -136,13 +136,14 @@ class CategoryGameController {
     
     }
     
-    public function answerGame($input){
+    public function answerGame(){
         // given the number, grab the word and then check if the given guess matches the four words
         //temp variable for given answer input = $input
 
        // input will be four numbers, find the corresponding key value and pair and add it to guess []
+       $answer = explode(', ', $_POST["answer"]);
        $guess = [];
-       foreach($input as $item){
+       foreach($answer as $item){
            $guess[] = $this->random_board[$item];
        }
 
@@ -163,15 +164,20 @@ class CategoryGameController {
            // if guess matches to a given category, remove them from random_board and keep 
            // category name
            if(count($match) == 4){
-               foreach($input as $value){
-                   unset($this->random_board[$input]);
+               foreach($answer as $value){
+                   unset($this->random_board[$answer]);
                }
                return $this->random_board;
                $matchingKeys[] = $key; //idt we need
                $this->all_guesses[count($match)] = $guess;
            }
+           
+           if(count($this->random_board) == 0){
+                $this->showGameOver();
+           }
        }
-       $this->all_guesses[count($match)] = $input;
+       // all of the guesses and how many are incorrect
+       $this->all_guesses[4 - count($match)] = $answer;
     }
 
 
