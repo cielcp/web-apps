@@ -124,6 +124,7 @@ class CategoryGameController {
             $all_words = [];
             // randomly generates four categories
             $categories = array_rand($this->connections, 4);
+            $_SESSION["categories"] = $categories;
             // for each category, get 4 random words for that category, and save all to board
             foreach($categories as $category){
                 $words = array_rand($this->connections[$category], 4);
@@ -135,7 +136,7 @@ class CategoryGameController {
                 $this->board[$category] = $w;
             }
             // now that our board of 16 words is done, save to session
-            $_SESSION["board"] = $board;
+            $_SESSION["board"] = $this->board;
             // all 16 words that will be used for the connections game, scrambled
             shuffle($all_words);
             foreach($all_words as $keys => $value){
@@ -143,9 +144,7 @@ class CategoryGameController {
             }
             // now that our random board for display is done, 
             // save to session for display and checking
-            $_SESSION["random_board"] = $random_board;
-            // also save as list for easy display??
-
+            $_SESSION["random_board"] = $this->random_board;
         }
         // if theres already a game saved to the session, it should just calculate the 
         // current state of the game and return that shtuff

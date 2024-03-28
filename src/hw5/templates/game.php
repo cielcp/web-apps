@@ -22,7 +22,6 @@
         <div class="col">
             <h3>Welcome, <?php echo($_SESSION['name'])?></h3>
             <p> <?php echo($_SESSION['email'])?></p>
-            <p><?php echo($_SESSION['categories'][1])?></p>
         </div>
         <div class="col d-flex justify-content-end">
             <form action="?command=quit" method="post">
@@ -32,137 +31,37 @@
     </div>
     
     <!-- the connections grid -->
-    <div class="row mb-3">
-        <div class="col">
-            <div class="card text-white bg-secondary">
-                <div class="card-header">
-                    1
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary">
-                <div class="card-header">
-                    2
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary">
-                <div class="card-header">
-                    3
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary">
-                <div class="card-header">
-                    4
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mb-3">
-        <div class="col">
-            <div class="card text-white bg-secondary">
-                <div class="card-header">
-                    1
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary">
-                <div class="card-header">
-                    2
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary">
-                <div class="card-header">
-                    3
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary">
-                <div class="card-header">
-                    4
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <div class="card text-white bg-secondary">
-                <div class="card-header">
-                    1
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary">
-                <div class="card-header">
-                    2
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary">
-                <div class="card-header">
-                    3
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-secondary">
-                <div class="card-header">
-                    4
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- for each word in random board, display 4 words as a row of cards -->
+    <?php 
+        if(isset($_SESSION["random_board"])) {
+            $count = 0; // counter to track the number of cards
+            // loop through the random board data
+            foreach($_SESSION["random_board"] as $key => $word) {
+                // start a new row for every 4th card
+                if ($count % 4 == 0) {
+                    echo '<div class="row mb-3">';
+                }
+                // output the card HTML
+                echo '<div class="col">';
+                echo '<div class="card text-white bg-secondary">';
+                echo '<div class="card-header">' . ($key) . '</div>'; // the card number
+                echo '<div class="card-body">';
+                echo '<h5 class="card-title">' . htmlspecialchars($word) . '</h5>'; // User name
+                echo '</div>';
+                echo '</div>';
+                echo '</div>';
+                // end the row after every 4th card
+                if (($count + 1) % 4 == 0 || $count == count($_SESSION["random_board"]) - 1) {
+                    echo '</div>'; // close the row div
+                }
+                $count++;
+            }
+        } else {
+            echo "Random board data not found.";
+        }
+    ?>
 
     <!-- previous guesses -->
-
     <div class="row mt-4 text-center">
         <h4 class="mb-3">Prior guesses: <?=$_SESSION["num_guesses"]?> total</h4>
         <p>dog cat pear apple <span class="badge bg-warning text-dark">Two away</span></p>
