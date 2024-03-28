@@ -61,7 +61,7 @@ class CategoryGameController {
                 $this->showGameOver();
                 break;
             case "playAgain":
-                $this->showGameOver();
+                $this->playAgain();
                 break;
             case "exit":
                 $this->exitGame();
@@ -247,6 +247,7 @@ class CategoryGameController {
         unset($_SESSION["random_board"]);
         unset($_SESSION["all_guesses"]);
         unset($_SESSION["message"]);
+        $this->loadGame();
         $this->showGame();
     }
 
