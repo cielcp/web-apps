@@ -17,6 +17,11 @@
             <?=$message?>
         </div>
     </div>
+    <?php
+        if (isset($_SESSION['message'])) {
+            echo '<div class="alert alert-success" role="alert">'. $_SESSION['message'].'</div>';
+        }
+    ?>
 <!-- header info -->
     <div class="row d-flex mb-2 justify-content-space-between">
         <div class="col">
@@ -46,7 +51,7 @@
                 echo '<div class="card text-white bg-secondary">';
                 echo '<div class="card-header">' . ($key) . '</div>'; // the card number
                 echo '<div class="card-body">';
-                echo '<h5 class="card-title">' . htmlspecialchars($word) . '</h5>'; // User name
+                echo '<h5 class="card-title">' . ($word) . '</h5>'; // the word
                 echo '</div>';
                 echo '</div>';
                 echo '</div>';
@@ -64,51 +69,50 @@
     <!-- previous guesses -->
     <div class="row mt-4 text-center">
         <h4 class="mb-3">Prior guesses: <?=$_SESSION["num_guesses"]?> total</h4>
-        <p>dog cat pear apple <span class="badge bg-warning text-dark">Two away</span></p>
-        <p>dog space pear tv <span class="badge bg-secondary">Not quite...</span></p>
-        <p>dog space bird tv <span class="badge bg-success">One away!</span></p>
-        <div class="row">
-        <div class="col">
-            <div class="card text-white bg-success">
-                <div class="card-header">
-                    1
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-success">
-                <div class="card-header">
-                    2
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-success">
-                <div class="card-header">
-                    3
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-success">
-                <div class="card-header">
-                    4
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$_SESSION["name"]?></h5>
-                </div>
-            </div>
-        </div>
-    </div>
+        <!-- for each guess in all guesses, show the guess and the hint -->
+        <?php 
+            if(isset($_SESSION["all_guesses"])) {
+                // loop through the all guesses data
+                foreach($_SESSION["all_guesses"] as $entry) {
+                    $guess = $entry[0][0] . " ". $entry[0][1] . " ". $entry[0][2] . " ". $entry[0][3] ." ";
+                    $hint = $entry[1];
+                    // if none correct, show guess + gray tag
+                    if ($hint === "Not quite...") { 
+                        // output the guess
+                        echo '<p>' . ($guess);
+                        // output the hint
+                        echo '<span class="badge bg-secondary">' . ($hint) . '</span>';
+                        echo '</p>';
+                    }
+                    // if two correct, show guess + yellow tag
+                    elseif ($hint === "Two away") {
+                        echo '<p>' . ($guess);
+                        echo '<span class="badge bg-warning text-dark">' . ($hint) . '</span>';
+                        echo '</p>';
+                    }
+                    // if three correct, show guess + green tag
+                    elseif ($hint === "One away!") {
+                        echo '<p>' . ($guess);
+                        echo '<span class="badge bg-success">' . ($hint) . '</span>';
+                        echo '</p>';
+                    }
+                    // if all matched correctly, display as a category card
+                    else { 
+                        echo '<div class="row mb-3">';
+                        echo '<div class="col">';
+                        echo '<div class="card text-white bg-success">';
+                        echo '<div class="card-header">' . ($hint) . '</div>'; // the category
+                        echo '<div class="card-body">';
+                        echo '<h5 class="card-title">' . ($guess) . '</h5>'; // the guess
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</div>';
+                    }
+                    
+                }
+            }
+        ?>
     </div>
 
     <div class="row mt-4 text-center">
@@ -117,31 +121,15 @@
             <input type="hidden" name="questionid" value="<?=$question["id"]?>">
             <div class="mb-3">
                 <label for="answer" class="form-label me-2">Your guess: </label>
-                <input type="text" class="form-control-lg" id="trivia-answer" name="answer">
-                <div id="emailHelp" class="form-text">Please enter the numeric IDs of the words (space separated)</div>
+                <input type="text" class="form-control-lg" id="connections-answer" name="answer">
+                <div id="answerHelp" class="form-text">Please enter the numeric IDs of the words (space separated)</div>
             </div>
             <button type="submit" class="btn btn-dark mb-5">Submit</button>
         </form>
     </div>
             
-            <div class="row">
-                <div class="col-xs-12">
 
-                <div class="card">
-                    <div class="card-header">
-                        Categories
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title"><?=$question["question"]?></h5>
-                    </div>
-                </div>
-
-                </div>
-                
-            </div>
-            
-        </div>
-
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>

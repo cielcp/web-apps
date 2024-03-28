@@ -51,10 +51,16 @@ class CategoryGameController {
             case "game":
                 $this->showGame();
                 break;
+            case "answer":
+                $this->answerGame();
+                break;
             case "gameOver":
                 $this->showGameOver();
                 break;
             case "quit":
+                $this->showGameOver();
+                break;
+            case "playAgain":
                 $this->showGameOver();
                 break;
             case "exit":
@@ -115,7 +121,6 @@ class CategoryGameController {
             $all_words = [];
             // randomly generates four categories
             $categories = array_rand($this->connections, 4);
-            $_SESSION["categories"] = $categories;
             // for each category, get 4 random words for that category, and save all to board
             foreach($categories as $category){
                 $words = array_rand($this->connections[$category], 4);
@@ -144,43 +149,56 @@ class CategoryGameController {
     }
     
     public function answerGame(){
-        if(isset($_POST["answer"]) && is_numeric($_POST["answer"])){
-            // input will be four numbers, find the corresponding key value and add it to guess []
+        if(isset($_POST["answer"])){
+            unset($_SESSION["message"]);
+            // answer is an array of the 4 input numbers
             $answer = explode(' ', $_POST["answer"]);
             $guess = [];
-            foreach($answer as $item){
-                $guess[] = $this->random_board[$item];
+            // get the words corresponding to the numeric input
+            foreach($answer as $num){
+                if (array_key_exists($num, $_SESSION["random_board"])) { //if the number is a valid guess
+                    $word = $_SESSION["random_board"][$num];
+                    $guess[] = $word;
+                } 
+                else {
+                    $_SESSION["message"] = "Please make a valid guess";
+                    $this->showGame();
+                    exit();
+                }
             }
-
-            // based on the four names, find if any category matches their guesses
+            // based on the four words, find if any category matches
             $match = [];
-            foreach($this->board as $key => $value){
+            $hint = "Not quite...";
+            foreach($_SESSION["board"] as $key => $value) {
                 $match = array_intersect($value, $guess);
-
                 // if there's a perfect match to category, remove from random_board and update board
-                if(count($match) == 4){
-                    // adds to all_guess array, with the key being the num of matches to a category, 
-                    // and value being the 4 numeric guesses
-                    $this->all_guesses[count($match)] = $guess;   
-                    foreach($answer as $value){
-                        unset($this->random_board[$answer]);
+                if(count($match) == 4) { 
+                    foreach($answer as $num){
+                        unset($_SESSION["random_board"][$num]);
                     }
-                    $_SESSION["random_board"] = $this->random_board;
+                    $hint = $key;
                 }
-                else{
-                    $this->all_guesses[count($match)] = $guess; 
-                }  
-                           
-                if(count($this->random_board) == 0){
-                    $this->showGameOver();
+                elseif (count($match) == 3) {
+                    $hint = "One away!";
+                }
+                elseif (count($match) == 2) {
+                    $hint = "Two away";
                 }
             }
+            // update the list of all previous guesses
+            $_SESSION["all_guesses"][] = [$guess, $hint];
+            $_SESSION["num_guesses"] = count($_SESSION["all_guesses"]);
+            // if after checking, the random_board is now empty, redirect to game over
+            if (count($_SESSION["random_board"]) === 0) {
+                $this->showGameOver();
+                exit();
+            }
+            // Redirect to the game page
+            $this->showGame();
+        } else {
+            die("Not sure how this error is possible but plz make a guess??");
         }
-        // updates total amount of guesses made
-        $_SESSION["num_guesses"] = count($this->all_guesses);
-        return $this->all_guesses;
     }
-
 
     /**
      * Show the game to the user.  This function loads a
@@ -189,6 +207,10 @@ class CategoryGameController {
      */
     public function showGame($message = "") {
         $connections = $this->getGame();
+        // updates total amount of guesses made
+        if(isset($_SESSION["all_guesses"])) {
+            $_SESSION["num_guesses"] = count($_SESSION["all_guesses"]);
+        }
         include("/opt/src/hw5/templates/game.php");
     }
 
@@ -203,8 +225,29 @@ class CategoryGameController {
      * Show the game over page to the user.
      */
     public function showGameOver() {
-        $final_guesses = count($this->all_guesses);    // number of total guesses
+        $_GET["command"] = "gameOver";
+        // updates total amount of guesses made
+        if(isset($_SESSION["all_guesses"])) {
+            $_SESSION["num_guesses"] = count($_SESSION["all_guesses"]);
+        }
         include("/opt/src/hw5/templates/gameOver.php");
+    }
+
+    /**
+     * function to play again
+     * keeps the session but resets all the session variables except login info
+     */
+    public function playAgain() {
+        $this->connections = [];
+        $this->board = [];
+        $this->random_board = [];
+        $this->all_guesses = [];
+        $_SESSION['num_guesses'] = 0;
+        unset($_SESSION["board"]);
+        unset($_SESSION["random_board"]);
+        unset($_SESSION["all_guesses"]);
+        unset($_SESSION["message"]);
+        $this->showGame();
     }
 
     /**
@@ -213,7 +256,6 @@ class CategoryGameController {
     private function exitGame() {
         // Destroy the session
         session_destroy();
-        
         // Redirect to the welcome page
         $this->showWelcome();
     }
