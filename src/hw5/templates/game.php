@@ -22,6 +22,7 @@
         <div class="col">
             <h3>Welcome, <?php echo($_SESSION['name'])?></h3>
             <p> <?php echo($_SESSION['email'])?></p>
+            <p><?php echo($_SESSION['categories'][1])?></p>
         </div>
         <div class="col d-flex justify-content-end">
             <form action="?command=quit" method="post">
