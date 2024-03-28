@@ -77,6 +77,7 @@ class CategoryGameController {
             $_SESSION['email'] = $_POST['email'];
             $_SESSION['password'] = $_POST['passwd'];
             $_SESSION['num_guesses'] = 0;
+            
             // Direct to the game page
             $this->showGame();
         } else {
@@ -108,16 +109,6 @@ class CategoryGameController {
      * Our getGame function, now as a method!
      */
     public function getGame($id=null) {
-        /* if ($id === null) {
-            $id = array_rand($this->game);
-            return [ "id" => $id, "question" => $this->game[$id]["question"]];
-        }
-        if (is_numeric($id) && isset($this->game[$id])) {
-            return $this->game[$id];
-        }
-        return false; */
-
-        
         // if it's our first time getting the game, should get 4 random categories,
         // the board, and the random board and save those to session
         if (!isset($_SESSION["board"])) {
@@ -135,7 +126,8 @@ class CategoryGameController {
                 $this->board[$category] = $w;
             }
             // now that our board of 16 words is done, save to session
-            $_SESSION["board"] = $board;
+            $_SESSION["board"] = $this->board;
+
             // all 16 words that will be used for the connections game, scrambled
             shuffle($all_words);
             foreach($all_words as $keys => $value){
@@ -143,7 +135,7 @@ class CategoryGameController {
             }
             // now that our random board for display is done, 
             // save to session for display and checking
-            $_SESSION["random_board"] = $random_board;
+            $_SESSION["random_board"] = $this->random_board;
             // also save as list for easy display??
 
         }
@@ -154,48 +146,43 @@ class CategoryGameController {
     }
     
     public function answerGame(){
-        // given the number, grab the word and then check if the given guess matches the four words
-        //temp variable for given answer input = $input
+        if(isset($_POST["answer"]) && is_numeric($_POST["answer"])){
+            // input will be four numbers, find the corresponding key value and add it to guess []
+            $answer = explode(' ', $_POST["answer"]);
+            $guess = [];
+            foreach($answer as $item){
+                $guess[] = $this->random_board[$item];
+            }
 
-       // input will be four numbers, find the corresponding key value and pair and add it to guess []
-       $answer = explode(' ', $_POST["answer"]);
-       $guess = [];
-       foreach($answer as $item){
-           $guess[] = $this->random_board[$item];
-       }
+            // based on the four names, find if any category matches their guesses
+            $match = [];
+            foreach($this->board as $key => $value){
+                $match = array_intersect($value, $guess);
 
-       // based on the four names, find if any category matches their guesses
-       $match = [];
-       $matchingKeys = [];
-       foreach($this->board as $key => $value){
-           $match = array_intersect($value, $guess);
-
-           // if at least two of words (or phrases) the user guessed are in the same category, 
-           // we’ll tell the user how many of the other words (or phrases) in their guess were 
-           // not part of the category.
-           if(count($match) > 2){
-               $matchingKeys[] = $key; //idt we need
-               $this->all_guesses[count($match)] = $guess;
-           }
-
-           // if guess matches to a given category, remove them from random_board and keep 
-           // category name
-           if(count($match) == 4){
-               foreach($answer as $value){
-                   unset($this->random_board[$answer]);
-               }
-               return $this->random_board;
-               $matchingKeys[] = $key; //idt we need
-               $this->all_guesses[count($match)] = $guess;
-           }
-           
-           if(count($this->random_board) == 0){
-                $this->showGameOver();
-           }
-       }
-       // all of the guesses and how many are incorrect
-       $this->all_guesses[4 - count($match)] = $answer;
+                // if there's a perfect match to category, remove from random_board and update board
+                if(count($match) == 4){
+                    // adds to all_guess array, with the key being the num of matches to a category, 
+                    // and value being the 4 numeric guesses
+                    $this->all_guesses[count($match)] = $guess;   
+                    foreach($answer as $value){
+                        unset($this->random_board[$answer]);
+                    }
+                    $_SESSION["random_board"] = $this->random_board;
+                }
+                else{
+                    $this->all_guesses[count($match)] = $guess; 
+                }  
+                           
+                if(count($this->random_board) == 0){
+                    $this->showGameOver();
+                }
+            }
+        }
+        // updates total amount of guesses made
+        $_SESSION["num_guesses"] = count($this->all_guesses);
+        return $this->all_guesses;
     }
+
 
     /**
      * Show the game to the user.  This function loads a
