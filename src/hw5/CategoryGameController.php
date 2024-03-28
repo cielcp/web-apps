@@ -164,7 +164,7 @@ class CategoryGameController {
                     // adds to all_guess array, with the key being the num of matches to a category, 
                     // and value being the 4 numeric guesses
                     $this->all_guesses[count($match)] = $guess;   
-                    foreach($answer as $value){
+                    foreach($answer as $value){     // remove category of words from the board
                         unset($this->random_board[$answer]);
                     }
                     $_SESSION["random_board"] = $this->random_board;
@@ -172,7 +172,8 @@ class CategoryGameController {
                 else{
                     $this->all_guesses[count($match)] = $guess; 
                 }  
-                           
+                
+                // if there are no more cards on the board, then game over
                 if(count($this->random_board) == 0){
                     $this->showGameOver();
                 }
@@ -205,7 +206,6 @@ class CategoryGameController {
      * Show the game over page to the user.
      */
     public function showGameOver() {
-        $final_guesses = count($this->all_guesses);    // number of total guesses
         include("/opt/src/hw5/templates/gameOver.php");
     }
 
