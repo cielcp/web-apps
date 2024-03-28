@@ -180,6 +180,7 @@ class CategoryGameController {
         }
         // updates total amount of guesses made
         $_SESSION["num_guesses"] = count($this->all_guesses);
+        return $this->all_guesses;
     }
 
 
