@@ -51,10 +51,16 @@ class CategoryGameController {
             case "game":
                 $this->showGame();
                 break;
+            case "answer":
+                $this->answerGame();
+                break;
             case "gameOver":
                 $this->showGameOver();
                 break;
             case "quit":
+                $this->showGameOver();
+                break;
+            case "playAgain":
                 $this->showGameOver();
                 break;
             case "exit":
@@ -127,7 +133,6 @@ class CategoryGameController {
             }
             // now that our board of 16 words is done, save to session
             $_SESSION["board"] = $this->board;
-
             // all 16 words that will be used for the connections game, scrambled
             shuffle($all_words);
             foreach($all_words as $keys => $value){
@@ -136,8 +141,6 @@ class CategoryGameController {
             // now that our random board for display is done, 
             // save to session for display and checking
             $_SESSION["random_board"] = $this->random_board;
-            // also save as list for easy display??
-
         }
         // if theres already a game saved to the session, it should just calculate the 
         // current state of the game and return that shtuff
@@ -146,25 +149,34 @@ class CategoryGameController {
     }
     
     public function answerGame(){
-        if(isset($_POST["answer"]) && is_numeric($_POST["answer"])){
-            // input will be four numbers, find the corresponding key value and add it to guess []
+        if(isset($_POST["answer"])){
+            unset($_SESSION["message"]);
+            // answer is an array of the 4 input numbers
             $answer = explode(' ', $_POST["answer"]);
             $guess = [];
-            foreach($answer as $item){
-                $guess[] = $this->random_board[$item];
+            // get the words corresponding to the numeric input
+            foreach($answer as $num){
+                if (array_key_exists($num, $_SESSION["random_board"])) { //if the number is a valid guess
+                    $word = $_SESSION["random_board"][$num];
+                    $guess[] = $word;
+                } 
+                else {
+                    $_SESSION["message"] = "Please make a valid guess";
+                    $this->showGame();
+                    exit();
+                }
             }
-
-            // based on the four names, find if any category matches their guesses
+            // based on the four words, find if any category matches
             $match = [];
-            foreach($this->board as $key => $value){
+            $hint = "Not quite...";
+            foreach($_SESSION["board"] as $key => $value) {
                 $match = array_intersect($value, $guess);
-
                 // if there's a perfect match to category, remove from random_board and update board
                 if(count($match) == 4){
                     // adds to all_guess array, with the key being the num of matches to a category, 
                     // and value being the 4 numeric guesses
                     $this->all_guesses[count($match)] = $guess;   
-                    foreach($answer as $value){     // remove category of words from the board
+                    foreach($answer as $value){
                         unset($this->random_board[$answer]);
                     }
                     $_SESSION["random_board"] = $this->random_board;
@@ -172,18 +184,17 @@ class CategoryGameController {
                 else{
                     $this->all_guesses[count($match)] = $guess; 
                 }  
-                
-                // if there are no more cards on the board, then game over
+                           
                 if(count($this->random_board) == 0){
                     $this->showGameOver();
                 }
             }
+            // Redirect to the game page
+            $this->showGame();
+        } else {
+            die("Not sure how this error is possible but plz make a guess??");
         }
-        // updates total amount of guesses made
-        $_SESSION["num_guesses"] = count($this->all_guesses);
-        return $this->all_guesses;
     }
-
 
     /**
      * Show the game to the user.  This function loads a
@@ -192,6 +203,10 @@ class CategoryGameController {
      */
     public function showGame($message = "") {
         $connections = $this->getGame();
+        // updates total amount of guesses made
+        if(isset($_SESSION["all_guesses"])) {
+            $_SESSION["num_guesses"] = count($_SESSION["all_guesses"]);
+        }
         include("/opt/src/hw5/templates/game.php");
     }
 
@@ -206,7 +221,25 @@ class CategoryGameController {
      * Show the game over page to the user.
      */
     public function showGameOver() {
+        $final_guesses = count($this->all_guesses);    // number of total guesses
         include("/opt/src/hw5/templates/gameOver.php");
+    }
+
+    /**
+     * function to play again
+     * keeps the session but resets all the session variables except login info
+     */
+    public function playAgain() {
+        $this->connections = [];
+        $this->board = [];
+        $this->random_board = [];
+        $this->all_guesses = [];
+        $_SESSION['num_guesses'] = 0;
+        unset($_SESSION["board"]);
+        unset($_SESSION["random_board"]);
+        unset($_SESSION["all_guesses"]);
+        unset($_SESSION["message"]);
+        $this->showGame();
     }
 
     /**
@@ -215,7 +248,6 @@ class CategoryGameController {
     private function exitGame() {
         // Destroy the session
         session_destroy();
-        
         // Redirect to the welcome page
         $this->showWelcome();
     }

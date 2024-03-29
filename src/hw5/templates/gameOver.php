@@ -13,20 +13,52 @@
 
 <div class="container" style="margin-top: 15px;">
             <div class="row">
-                <h1>Game Over!</h1>
+                <h1 class="text-center">Game Over!</h1>
             </div>
-            <div class="row">
-                <h3>Number of guesses:</h3>
+            <!-- previous guesses -->
+            <div class="row mt-4 text-center">
+                <!-- for each guess in all guesses, show the guess and the hint -->
+                <?php 
+                    if(isset($_SESSION["all_guesses"])) {
+                        $count = 0;
+                        // loop through the all guesses data
+                        foreach($_SESSION["all_guesses"] as $entry) {
+                            $guess = $entry[0][0] . " ". $entry[0][1] . " ". $entry[0][2] . " ". $entry[0][3] ." ";
+                            $hint = $entry[1];
+                            // if all matched correctly, display as a category card
+                            if ($hint !== "Not quite..." && $hint !== "Two away" && $hint !== "One away!") { 
+                                echo '<div class="row mb-3">';
+                                echo '<div class="col">';
+                                echo '<div class="card text-white bg-success">';
+                                echo '<div class="card-header">' . ($hint) . '</div>'; // the category
+                                echo '<div class="card-body">';
+                                echo '<h5 class="card-title">' . ($guess) . '</h5>'; // the guess
+                                echo '</div>';
+                                echo '</div>';
+                                echo '</div>';
+                                echo '</div>';
+                                $count++;
+                            }
+                        }
+                        if ($count === 4) {
+                            echo '<h3 class="text-center mt-3 mb-5">It took you '. $_SESSION["num_guesses"] . ' guesses to beat the game! </h3>';
+                        } else {
+                            echo '<h3 class="text-center mt-3 mb-5">Better luck next time! </h3>';
+                        }
+                    } else {
+                        echo '<p class="text-center mt-2 mb-3"> Bro did not even try </p>';
+                    }
+                ?>
             </div>
-            <div class="row d-flex justify-content-between">
+            <div class="row d-flex justify-content-between mb-5">
                 <div class="col d-flex justify-content-center">
                 <form action="?command=exit" method="post">
-                    <button type="submit" class="btn btn-primary">Exit</button>
+                    <button type="submit" class="btn btn-dark">Exit</button>
                 </form>
                 </div>
                 <div class="col d-flex justify-content-center">
-                <form action="?command=game" method="post">
-                    <button type="submit" class="btn btn-primary">Play again?</button>
+                <form action="?command=playAgain" method="post">
+                    <button type="submit" class="btn btn-dark">Play again?</button>
                 </form>
                 </div>
             </div>
