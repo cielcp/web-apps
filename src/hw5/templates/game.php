@@ -44,7 +44,7 @@
             foreach($_SESSION["random_board"] as $key => $word) {
                 // start a new row for every 4th card
                 if ($count % 4 == 0) {
-                    echo '<div class="row mb-3">';
+                    echo '<div class="row flex-nowrap mb-3">';
                 }
                 // output the card HTML
                 echo '<div class="col">';
