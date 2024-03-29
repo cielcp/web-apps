@@ -19,12 +19,14 @@
             <div class="row mt-4 text-center">
                 <!-- for each guess in all guesses, show the guess and the hint -->
                 <?php 
+                    $guessed_categories = [];
                     if(isset($_SESSION["all_guesses"])) {
                         $count = 0;
                         // loop through the all guesses data
                         foreach($_SESSION["all_guesses"] as $entry) {
                             $guess = $entry[0][0] . " ". $entry[0][1] . " ". $entry[0][2] . " ". $entry[0][3] ." ";
                             $hint = $entry[1];
+                            $guessed_categories[] = $hint;
                             // if all matched correctly, display as a category card
                             if ($hint !== "Not quite..." && $hint !== "Two away" && $hint !== "One away!") { 
                                 echo '<div class="row mb-3">';
@@ -41,16 +43,31 @@
                             }
                         }
                         if ($count === 4) {
-                            echo '<h3 class="text-center mt-3 mb-5">It took you '. $_SESSION["num_guesses"] . ' guesses to beat the game! </h3>';
+                            echo '<h3 class="text-center mt-3 mb-4">It took you '. $_SESSION["num_guesses"] . ' guesses to beat the game! </h3>';
                         } else {
-                            echo '<h3 class="text-center mt-3 mb-5">Better luck next time! </h3>';
+                            echo '<h3 class="text-center mt-3 mb-4"> Better luck next time! </h3>';
                         }
                     } else {
-                        echo '<p class="text-center mt-2 mb-3"> Bro did not even try </p>';
+                        echo '<h3 class="text-center mt-2 mb-4"> Bro did not even try </h3>';
+                    }
+                    foreach($_SESSION["board"] as $category => $words) {
+                        $better_words = $words[0] . " ". $words[1] . " ". $words[2] . " ". $words[3];
+                        if (!in_array($category, $guessed_categories)) { // if there is a category that the user didn't guess
+                            echo '<div class="row mb-3">';
+                            echo '<div class="col">';
+                            echo '<div class="card text-white bg-secondary">';
+                            echo '<div class="card-header">' . ($category) . '</div>'; // the category
+                            echo '<div class="card-body">';
+                            echo '<h5 class="card-title">' . ($better_words) . '</h5>'; // the guess
+                            echo '</div>'; 
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>';
+                        }
                     }
                 ?>
             </div>
-            <div class="row d-flex justify-content-between mb-5">
+            <div class="row d-flex justify-content-between my-5">
                 <div class="col d-flex justify-content-center">
                 <form action="?command=exit" method="post">
                     <button type="submit" class="btn btn-dark">Exit</button>

@@ -77,18 +77,17 @@ class CategoryGameController {
      * Method to process user login, store form info in session, redirect to game page
      */
     private function processLogin() {
-        if(isset($_POST['name']) && isset($_POST['email']) && isset($_POST['passwd'])) {
+        if(isset($_POST['name']) && isset($_POST['email'])) {
             // Store all the login info to the current session
             $_SESSION['name'] = $_POST['name'];
             $_SESSION['email'] = $_POST['email'];
-            $_SESSION['password'] = $_POST['passwd'];
             $_SESSION['num_guesses'] = 0;
             
             // Direct to the game page
             $this->showGame();
         } else {
             // Invalid request, show error message
-            die("Please provide your name, email, and password");
+            die("Please provide your name and email");
         }
     }
 
