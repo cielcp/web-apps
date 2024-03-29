@@ -44,7 +44,7 @@
             foreach($_SESSION["random_board"] as $key => $word) {
                 // start a new row for every 4th card
                 if ($count % 4 == 0) {
-                    echo '<div class="row mb-3">';
+                    echo '<div class="row flex-nowrap mb-3">';
                 }
                 // output the card HTML
                 echo '<div class="col">';
@@ -68,10 +68,10 @@
 
     <!-- new guess -->
     <div class="row mt-4 text-center">
-        <h4 class="mb-3">New guess</h4>
+        <h4 class="mb-3">New Guess</h4>
         <form class="d-flex justify-content-center" action="?command=answer" method="post">
             <div class="mb-3 me-3">
-                <label for="answer" class="form-label me-2">Your guess: </label>
+                <label for="answer" class="form-label me-2">Your Guess: </label>
                 <input type="text" class="form-control-lg" id="connections-answer" name="answer">
                 <div id="answerHelp" class="form-text">Please enter the numeric IDs of the words (space separated)</div>
             </div>
@@ -83,8 +83,8 @@
 
 
     <!-- previous guesses -->
-    <div class="row mt-4 text-center">
-        <h4 class="mb-5">Prior guesses: <?=$_SESSION["num_guesses"]?> total</h4>
+    <div class="row my-4 text-center">
+        <h4 class="mb-3">Prior Guesses: <?=$_SESSION["num_guesses"]?> Total</h4>
         <!-- for each guess in all guesses, show the guess and the hint -->
         <?php 
             if(isset($_SESSION["all_guesses"])) {
