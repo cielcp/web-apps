@@ -100,7 +100,7 @@ class CategoryGameController {
         following absolute path: /var/www/html/homework/connections.json */
         
         // loads all the categories in the json file
-        $json = file_get_contents("/students/hyp2ftn/students/hyp2ftn/private/connections.json");
+        $json = file_get_contents("/var/www/html/homework/connections.json");
         $this->connections = json_decode($json, true);
 
         if (empty($this->connections)) {
