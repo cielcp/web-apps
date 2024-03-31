@@ -101,6 +101,7 @@ class CategoryGameController {
         
         // loads all the categories in the json file
         $json = file_get_contents("/var/www/html/homework/connections.json");
+        
         $this->connections = json_decode($json, true);
 
         if (empty($this->connections)) {
@@ -169,22 +170,26 @@ class CategoryGameController {
             foreach($_SESSION["board"] as $key => $value) {
                 $match = array_intersect($value, $guess);
                 // if there's a perfect match to category, remove from random_board and update board
-                if(count($match) == 4){
-                    // adds to all_guess array, with the key being the num of matches to a category, 
-                    // and value being the 4 numeric guesses
-                    $this->all_guesses[count($match)] = $guess;   
-                    foreach($answer as $value){
-                        unset($this->random_board[$answer]);
+                if(count($match) == 4) { 
+                    foreach($answer as $num){
+                        unset($_SESSION["random_board"][$num]);
                     }
-                    $_SESSION["random_board"] = $this->random_board;
+                    $hint = $key;
                 }
-                else{
-                    $this->all_guesses[count($match)] = $guess; 
-                }  
-                           
-                if(count($this->random_board) == 0){
-                    $this->showGameOver();
+                elseif (count($match) == 3) {
+                    $hint = "One away!";
                 }
+                elseif (count($match) == 2) {
+                    $hint = "Two away";
+                }
+            }
+            // update the list of all previous guesses
+            $_SESSION["all_guesses"][] = [$guess, $hint];
+            $_SESSION["num_guesses"] = count($_SESSION["all_guesses"]);
+            // if after checking, the random_board is now empty, redirect to game over
+            if (count($_SESSION["random_board"]) === 0) {
+                $this->showGameOver();
+                exit();
             }
             // Redirect to the game page
             $this->showGame();
@@ -199,20 +204,18 @@ class CategoryGameController {
      * properties of this object.
      */
     public function showGame($message = "") {
-        include("/students/hyp2ftn/students/hyp2ftn/private/templates/game.php");
         $connections = $this->getGame();
         // updates total amount of guesses made
         if(isset($_SESSION["all_guesses"])) {
             $_SESSION["num_guesses"] = count($_SESSION["all_guesses"]);
         }
-        //include("/opt/src/hw5/templates/game.php");
+        include("/students/hyp2ftn/students/hyp2ftn/private/templates/game.php");
     }
 
     /**
      * Show the welcome page to the user.
      */
     public function showWelcome() {
-       // include("/opt/src/hw5/templates/welcome.php");
         include("/students/hyp2ftn/students/hyp2ftn/private/templates/welcome.php");
     }
 
@@ -220,8 +223,11 @@ class CategoryGameController {
      * Show the game over page to the user.
      */
     public function showGameOver() {
-        $final_guesses = count($this->all_guesses);    // number of total guesses
-        //include("/opt/src/hw5/templates/gameOver.php");
+        $_GET["command"] = "gameOver";
+        // updates total amount of guesses made
+        if(isset($_SESSION["all_guesses"])) {
+            $_SESSION["num_guesses"] = count($_SESSION["all_guesses"]);
+        }
         include("/students/hyp2ftn/students/hyp2ftn/private/templates/gameOver.php");
     }
 
