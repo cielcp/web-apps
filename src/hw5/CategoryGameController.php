@@ -12,13 +12,11 @@ class CategoryGameController {
     private $all_guesses = [];
 
     private $input;
-    private $db;
 
     /**
      * Constructor
      */
     public function __construct($input) {
-        $this->db = new Database();
         $this->input = $input;
         $this->loadGame();
     }
@@ -77,7 +75,7 @@ class CategoryGameController {
      * Method to process user login, store form info in session, redirect to game page
      */
     private function processLogin() {
-        if(isset($_POST['name']) && isset($_POST['email'])) {
+        if(isset($_POST['name']) && isset($_POST['email']) && !empty($_POST['name']) && !empty($_POST['email'])){
             // Store all the login info to the current session
             $_SESSION['name'] = $_POST['name'];
             $_SESSION['email'] = $_POST['email'];
@@ -102,7 +100,7 @@ class CategoryGameController {
         following absolute path: /var/www/html/homework/connections.json */
         
         // loads all the categories in the json file
-        $json = file_get_contents("/opt/src/hw5/connections.json");
+        $json = file_get_contents("/students/hyp2ftn/students/hyp2ftn/private/connections.json");
         $this->connections = json_decode($json, true);
 
         if (empty($this->connections)) {
@@ -201,19 +199,21 @@ class CategoryGameController {
      * properties of this object.
      */
     public function showGame($message = "") {
+        include("/students/hyp2ftn/students/hyp2ftn/private/templates/game.php");
         $connections = $this->getGame();
         // updates total amount of guesses made
         if(isset($_SESSION["all_guesses"])) {
             $_SESSION["num_guesses"] = count($_SESSION["all_guesses"]);
         }
-        include("/opt/src/hw5/templates/game.php");
+        //include("/opt/src/hw5/templates/game.php");
     }
 
     /**
      * Show the welcome page to the user.
      */
     public function showWelcome() {
-        include("/opt/src/hw5/templates/welcome.php");
+       // include("/opt/src/hw5/templates/welcome.php");
+        include("/students/hyp2ftn/students/hyp2ftn/private/templates/welcome.php");
     }
 
     /**
@@ -221,7 +221,8 @@ class CategoryGameController {
      */
     public function showGameOver() {
         $final_guesses = count($this->all_guesses);    // number of total guesses
-        include("/opt/src/hw5/templates/gameOver.php");
+        //include("/opt/src/hw5/templates/gameOver.php");
+        include("/students/hyp2ftn/students/hyp2ftn/private/templates/gameOver.php");
     }
 
     /**
