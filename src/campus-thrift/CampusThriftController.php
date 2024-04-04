@@ -22,6 +22,7 @@ class CampusThriftController {
         // Database object (provided by CS4640).  You have a copy
         // in the src/example directory, but it will be below as well.
         $this->db = new Database();
+       // $this->db = $this->db->getConnection();
 
         // Set input
         $this->input = $input;
@@ -412,9 +413,11 @@ class CampusThriftController {
                     $this->showProfile();
                 }
             }
-        } */
-            $user = $this->db->query("SELECT * FROM users WHERE email = $1", $email);
+        } */  
 
+            $sql = "SELECT * FROM users WHERE email = $1";
+            $user = $this->db->prepareAndExecute("fetch_user", $sql, array($email));
+            
             if ($user) {
                 echo "Email Already Exists, Try Logging In!";
                 $this->showLogin();
@@ -423,7 +426,9 @@ class CampusThriftController {
                 // email is not in database, add as new entry
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-                $insertResult = $this->db->query("INSERT INTO users (username, email, password) VALUES ($1, $2, $3)", $username, $email, $hashedPassword);
+                
+                $sql = "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)";
+                $insertResult = $this->db->prepareAndExecute("insert_user", $sql, array($username, $email, $hashedPassword));
                 if ($insertResult) {
                     // Redirect or perform other success actions
                     echo "success making";
@@ -470,7 +475,10 @@ class CampusThriftController {
                 $this->showLogin();
             }
         }  */
-            $user = $this->db->query("SELECT * FROM users WHERE email = $1", $email);
+        
+
+            $sql = "SELECT * FROM users WHERE email = $1";
+            $user = $this->db->prepareAndExecute("fetch_user", $sql, array($email));
 
             if ($user) {
             // Verify if password is correct

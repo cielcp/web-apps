@@ -22,7 +22,6 @@ class Database {
         $password = Config::$db["pass"];
         $port = Config::$db["port"];
 
-
         $this->dbConnector = pg_connect("host=$host port=$port dbname=$database user=$user password=$password");
     }
 
@@ -42,5 +41,10 @@ class Database {
         }
 
         return pg_fetch_all($res);
+    }
+
+    public function prepareAndExecute($name, $sql, $params) {
+        $stmt = pg_prepare($this->dbConnector, $name, $sql);
+        return pg_execute($this->dbConnector, $name, $params);
     }
 }
