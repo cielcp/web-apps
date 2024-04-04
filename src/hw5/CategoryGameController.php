@@ -101,7 +101,7 @@ class CategoryGameController {
         
         // loads all the categories in the json file
         $json = file_get_contents("/var/www/html/homework/connections.json");
-        
+        //$json = file_get_contents("/opt/src/hw5/connections.json"); // for local dev
         $this->connections = json_decode($json, true);
 
         if (empty($this->connections)) {
@@ -209,14 +209,14 @@ class CategoryGameController {
         if(isset($_SESSION["all_guesses"])) {
             $_SESSION["num_guesses"] = count($_SESSION["all_guesses"]);
         }
-        include("/students/hyp2ftn/students/hyp2ftn/private/templates/game.php");
+        include("/students/ccp7gcp/students/ccp7gcp/private/hw5/templates/game.php");
     }
 
     /**
      * Show the welcome page to the user.
      */
     public function showWelcome() {
-        include("/students/hyp2ftn/students/hyp2ftn/private/templates/welcome.php");
+        include("/students/ccp7gcp/students/ccp7gcp/private/hw5/templates/welcome.php");
     }
 
     /**
@@ -228,7 +228,7 @@ class CategoryGameController {
         if(isset($_SESSION["all_guesses"])) {
             $_SESSION["num_guesses"] = count($_SESSION["all_guesses"]);
         }
-        include("/students/hyp2ftn/students/hyp2ftn/private/templates/gameOver.php");
+        include("/students/ccp7gcp/students/ccp7gcp/private/hw5/templates/gameOver.php");
     }
 
     /**

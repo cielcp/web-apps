@@ -1,5 +1,4 @@
 <?php
-// Sources used: https://cs4640.cs.virginia.edu, https://getbootstrap.com/docs, https://www.php.net/manual/en/...
 // Published version: https://cs4640.cs.virginia.edu/ccp7gcp/hw5
 
 // Our index file is in the web/www directory. 
@@ -15,18 +14,19 @@ ini_set("display_errors", 1);
 // that Apache does not serve publicly.  They will be in /opt/src/, which
 // is our src/ directory in Docker.
 spl_autoload_register(function ($classname) {
-        include "/students/ccp7gcp/students/ccp7gcp/private/hw5/$classname.php";
+        //include "/students/ccp7gcp/students/ccp7gcp/private/hw5/$classname.php";
+        include "/opt/src/campus-thrift/$classname.php"; // for local
 });
 
 // Other global things that we need to do
 // (such as starting a session, coming soon!)
 
-// Start/resume the session
-session_start();
+// Start/resume the session (not necessary anymore if in controller?)
+//session_start();
 
 // Instantiate the front controller
-$game = new CategoryGameController($_GET);
+$thrift = new CampusThriftController($_GET);
 
 // Run the controller
-$game->run();
+$thrift->run();
 
