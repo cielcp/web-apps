@@ -83,8 +83,16 @@
                     echo '<div class="vert-line"></div>';
                     echo '<div class="listing-small-info-block">';
                         echo '<p> This item is available for: </p> <br> <ul><li>' . $listing['method'] .'</li></ul>';
-                        echo '<form action="?command=messages" method="POST" class="mb-0 ">
+                        /* if ($listing['creator'] === $_SESSION["user"]) {
+                            echo '<form action="?command=deleteListing" method="POST" class="mb-0 ">
+                                <button type="submit">DELETE LISTING</button>
+                            </form>';
+                        } */
+                        echo '<form action="?command=messages" method="POST" class="mb-2 ">
                                 <button type="submit">MESSAGE SELLER</button>
+                            </form>';
+                        echo '<form action="?command=deleteListing" method="POST" class="mb-0 ">
+                                <button type="submit">DELETE LISTING</button>
                             </form>';
                     echo '</div>';
                 echo '</div>';

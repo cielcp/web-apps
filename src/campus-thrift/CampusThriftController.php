@@ -81,11 +81,17 @@ class CampusThriftController {
             case "saveListing":
                 $this->saveListing();
                 break;
+            case "showCreateListing":
+                $this->showCreateListing();
+                break;
             case "createListing":
                 $this->createListing();
                 break;
             case "logout":
                 $this->logout();
+            case "deleteListing":
+                $this->deleteListing();
+                break;
 
             /* case "answer":
                 $this->answerQuestion();
@@ -340,7 +346,7 @@ class CampusThriftController {
     }
 
     /**
-     * Show create-listing page to user
+     * Function to create a listing and add it to the database
      */
     public function createListing() {
         //$x = "hi";
@@ -376,9 +382,29 @@ class CampusThriftController {
                 $message = "<div class=\"alert alert-danger\" role=\"alert\">
                     hey!
                     </div>";
+                $this->showProfile();
             }
         }
         //$this->showCreateListing($message);
+
+        /**
+        * Function to delete a listing from the database
+        */
+        public function deleteListing() {
+            $message = "";
+            //if (!empty($_POST["createButton"])) {
+            if (isset($_SESSION['listing_id'])) {
+                //delete the listing that corresponds to the current id
+                $this->db->query("DELETE FROM listings WHERE id=" . $_SESSION['listing_id'] . ";");
+                $this->errorMessage = "Successfully deleted listing";
+                $this->showProfile();
+                }
+                else {
+                    $message = "<div class=\"alert alert-danger\" role=\"alert\">
+                        Invalid listing id
+                        </div>";
+                }
+            }
     
 
     public function showSignUp(){
