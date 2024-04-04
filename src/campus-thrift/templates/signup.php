@@ -29,7 +29,7 @@
                 <div class="col-md-6 offset-md-3">
                     <h2 class="text-center">Sign up for a Campus Thrift account!</h2>
     
-                    <form action="/signup">
+                    <form action="?command=signup" method="post">
                         <div class="mb-3">
                             <label for="name" class="form-label">Name:</label>
                             <input type="text" id="name" name="name" class="form-control" required>
