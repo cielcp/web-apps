@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles/main.css">
+     <link rel="stylesheet" href="styles/main.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -143,52 +143,12 @@
             </div>
         </section>
 
-        <!-- All listings -->
+        <!-- Example all listings -->
         <section class="my-4">
             <div class="category-text-container">
-                <h2>All listings</h2>
+                <h2>Testing</h2>
             </div>
             <div class="category-container">
-                <?php 
-                    $listings = $this->db->query("select * FROM listings;");
-
-                    foreach ($listings as $listing):
-                        echo '<div class="listing">';
-                        echo '<div class="listing-img-container">';
-                        echo '<form action="?command=viewListing" method="POST" class="listing-img-form mb-0" style="height:100%; width:100%;">';
-                        echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
-                        echo '<button type="submit" class="" style="border-style:none; padding:0px; height:100%; width:100%;">';
-                        echo '<img src="images/greyshirt.jpg" alt="grey shirt image">';
-                        echo '</button>';
-                        echo '</form>';
-                        echo '</div>';
-                        echo '<div class="line"></div>';
-                        echo '<div class="listing-text-container">';
-                        echo '<h3> $'. $listing["price"] . ' '. $listing["name"] . '</h3>';
-                        echo '<form action="?command=saveListing" method="POST" class="mb-0">
-                                <button type="submit" class="icon-button"><img src="icons/bookmark.svg"></button>
-                              </form>';
-                        echo '</div>';
-                        echo '</div>';
-                    endforeach;
-                ?>
-
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <form action="?command=viewListing" method="POST" class="listing-img-form mb-0" style="height:100%; width:100%;">
-                            <button type="submit" class="" style="border-style:none; padding:0px; height:100%; width:100%;">
-                                <img src="images/greyshirt.jpg" alt="grey shirt image">
-                            </button>
-                        </form>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <form action="?command=saveListing" method="POST" class="mb-0">
-                                <button type="submit" class="icon-button"><img src="icons/bookmark.svg"></button>
-                        </form>
-                    </div>
-                </div>
                 <div class="listing">
                     <div class="listing-img-container">
                         <a href="#">
@@ -261,9 +221,67 @@
                         <button class="icon-button"><img src="icons/bookmark.svg"></button>
                     </div>
                 </div>
-                
+                <div class="listing">
+                    <div class="listing-img-container">
+                        <a href="#">
+                            <img src="images/blueshirt.jpg" alt="blue shirt image">
+                        </a>
+                    </div>
+                    <div class="line"></div>
+                    <div class="listing-text-container">
+                        <h3>$10</h3>
+                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
+                    </div>
+                </div>
+                <div class="listing">
+                    <div class="listing-img-container">
+                        <a href="#">
+                            <img src="images/blueshirt.jpg" alt="blue shirt image">
+                        </a>
+                    </div>
+                    <div class="line"></div>
+                    <div class="listing-text-container">
+                        <h3>$10</h3>
+                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
+                    </div>
+                </div>
             </div>
         </section>
+
+
+        <!-- All listings -->
+        <section class="my-4">
+            <div class="category-text-container">
+                <h2>All listings</h2>
+            </div>
+            <div class="category-container">
+                <?php 
+                    $listings = $this->db->query("select * FROM listings;");
+
+                    foreach ($listings as $listing):
+                        echo '<div class="listing">';
+                        echo '<div class="listing-img-container">';
+                        echo '<form action="?command=viewListing" method="POST" class="listing-img-form mb-0" style="height:100%; width:100%;">';
+                        echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
+                        echo '<button type="submit" style="border-style:none; padding:0px; height:100%; width:100%; border-radius:0px;">';
+                        echo '<img src="images/greyshirt.jpg" alt="grey shirt image">';
+                        echo '</button>';
+                        echo '</form>';
+                        echo '</div>';
+                        echo '<div class="line"></div>';
+                        echo '<div class="listing-text-container">';
+                        echo '<h3> $'. $listing["price"] . ' '. $listing["name"] . '</h3>';
+                        echo '<form action="?command=saveListing" method="POST" class="mb-0">
+                                <button type="submit" class="icon-button"><img src="icons/bookmark.svg"></button>
+                              </form>';
+                        echo '</div>';
+                        echo '</div>';
+                    endforeach;
+                ?>
+            </div>
+        </section>
+
+        
 
         <!-- View all listings -->
         <!-- <section>
