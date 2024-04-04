@@ -3,7 +3,7 @@
 class CampusThriftController {
 
     private $listings = [];
-    
+    private $input;
     private $db;
 
     // An error message to display on the welcome page
@@ -56,11 +56,11 @@ class CampusThriftController {
         //     $command = "welcome";
 
         switch($command) {
-            case "signin":
-                $this->showSignin();
+            case "signup":
+                $this->showSignUp();
                 break;
             case "login":
-                $this->showLogin();
+                $this->processLogin();
                 break;
             case "home":
                 $this->showHome();
@@ -101,23 +101,7 @@ class CampusThriftController {
         }
     }
 
-    
-    /**
-     * Show Signin page to user
-     */
-    public function showSignin() {
-        // Show an optional error message if the errorMessage field
-        // is not empty.
-        $message = "";
-        if (!empty($this->errorMessage)) {
-            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
-        }
-        if ($_SERVER['SERVER_PORT'] === '8080') {
-                include "/opt/src/campus-thrift/templates/signin.php";
-        } else {
-                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/signin.php";
-        }
-    }
+
 
     /**
      * Show home page to user
@@ -283,92 +267,7 @@ class CampusThriftController {
         
     }
 
-    /**
-     * Login Function
-     *
-     * This function checks that the user submitted the form and did not
-     * leave the name and email inputs empty.  If all is well, we set
-     * their information into the session and then send them to the 
-     * question page.  If all didn't go well, we set the class field
-     * errorMessage and show the welcome page again with that message.
-     *
-     * NOTE: This is the function we wrote in class!  It **should** also
-     * check more detailed information about the name/email to make sure
-     * they are valid.
-     */
-    public function login() {
-        if (isset($_POST["fullname"]) && isset($_POST["email"]) &&
-            !empty($_POST["fullname"]) && !empty($_POST["email"])) {
-            $_SESSION["name"] = $_POST["fullname"];
-            $_SESSION["email"] = $_POST["email"];
-            $_SESSION["score"] = 0;
-            header("Location: ?command=question");
-            return;
-        }
-        $this->errorMessage = "Error logging in - Name and email is required";
-        $this->showWelcome();
-    }
-
-    /**
-     * Alternate Login Function
-     *
-     * **NEW**: we can replace the function above with this function which
-     * will check the user's credentials against their information in the
-     * database's users table to see if their password is correct.
-     *
-     * 1) if the user is not in the table, it automatically adds them and saves
-     * the 1-way hash of their password to the table (so that they can log in again later)
-     * 2) if the user is in the table, then it verifies that the password they
-     * provided is correct.   If so, it allows them to continue playing, reading their
-     * score out of the database.
-     *
-     * NOTE: you should **not** save passwords in clear text -- only the hashed passwords
-     * are stored in the database.
-     */
-    public function loginDatabase() {
-        // User must provide a non-empty name, email, and password to attempt a login
-        if(isset($_POST["fullname"]) && !empty($_POST["fullname"]) &&
-            isset($_POST["email"]) && !empty($_POST["email"]) &&
-            isset($_POST["passwd"]) && !empty($_POST["passwd"])) {
-
-                // Check if user is in database, by email
-                $res = $this->db->query("select * from users where email = $1;", $_POST["email"]);
-                if (empty($res)) {
-                    // User was not there (empty result), so insert them
-                    $this->db->query("insert into users (name, email, password, score) values ($1, $2, $3, $4);",
-                        $_POST["fullname"], $_POST["email"],
-                        // Use the hashed password!
-                        password_hash($_POST["passwd"], PASSWORD_DEFAULT), 0);
-                    $_SESSION["name"] = $_POST["fullname"];
-                    $_SESSION["email"] = $_POST["email"];
-                    $_SESSION["score"] = 0;
-                    // Send user to the appropriate page (question)
-                    header("Location: ?command=question");
-                    return;
-                } else {
-                    // User was in the database, verify password is correct
-                    // Note: Since we used a 1-way hash, we must use password_verify()
-                    // to check that the passwords match.
-                    if (password_verify($_POST["passwd"], $res[0]["password"])) {
-                        // Password was correct, save their information to the
-                        // session and send them to the question page
-                        $_SESSION["name"] = $res[0]["name"];
-                        $_SESSION["email"] = $res[0]["email"];
-                        $_SESSION["score"] = $res[0]["score"];
-                        header("Location: ?command=question");
-                        return;
-                    } else {
-                        // Password was incorrect
-                        $this->errorMessage = "Incorrect password.";
-                    }
-                }
-        } else {
-            $this->errorMessage = "Name, email, and password are required.";
-        }
-        // If something went wrong, show the welcome page again
-        $this->showWelcome();
-    }
-
+ 
     /**
      * Show messages page to user
      */
@@ -469,9 +368,153 @@ class CampusThriftController {
             }
         }
         //$this->showCreateListing($message);
+    
+
+    public function showSignUp(){
+        $message = "";
+        if (!empty($this->errorMessage)) {
+            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
+        }
+        if ($_SERVER['SERVER_PORT'] === '8080') {
+            include "/opt/src/campus-thrift/templates/signin.php";
+        } else {
+            include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/signin.php";
+        }
+        // check if user entered information
+        if (!empty($_POST["username"]) && !empty($_POST["email"]) && !empty($_POST["password"]) && isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"])) {
+            $username = $_POST["username"];
+            $email = $_POST["email"];
+            $password = $_POST["password"];
+
+/*             // fetch user's email
+            $sql = "SELECT * FROM users WHERE email = $1";
+            $sql_prepare = pg_prepare($this->db, "fetch_user", $sql);
+            $result = pg_execute($this->db, "fetch_user", array($email));
+    
+            // if email exists in database already
+            if (pg_num_rows($result) > 0){
+                echo "Email Already Exists, Try Logging In!";
+                $this->showLogin();
+            } 
+            else {
+                // email is not in database, add as new entry
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+                $sql = "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)";
+                $stmt = pg_prepare($this->db, "insert_user", $sql);
+                $result = pg_execute($this->db, "insert_user", array($username, $email, $hashedPassword));
+
+                if ($result) {
+                    echo $username;
+                    // Redirect or perform other success actions
+                    echo "success making";
+                    // Optionally, redirect to another page
+                    $this->showProfile();
+                }
+            }
+        } */
+            $user = $this->db->query("SELECT * FROM users WHERE email = $1", $email);
+
+            if ($user) {
+                echo "Email Already Exists, Try Logging In!";
+                $this->showLogin();
+            }
+            else {
+                // email is not in database, add as new entry
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+                $insertResult = $this->db->query("INSERT INTO users (username, email, password) VALUES ($1, $2, $3)", $username, $email, $hashedPassword);
+                if ($insertResult) {
+                    // Redirect or perform other success actions
+                    echo "success making";
+                    // Optionally, redirect to another page
+                    $this->showProfile();
+                }
+            }
+        }
+        else {
+            echo "All fields are required.";
+
+        }
+        include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/signup.php";
     }
 
+    public function processLogin() {    
+        // check if user entered information
+        if (!empty($_POST["username"]) && !empty($_POST["email"]) && !empty($_POST["password"]) && isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"])) {
+            $username = $_POST["username"];
+            $email = $_POST["email"];
+            $password = $_POST["password"];
+/* 
+            // fetch user's email
+            $sql = "SELECT * FROM users WHERE email = $1";
+            $sql_prepare = pg_prepare($this->db, "fetch_user", $sql);
+            $result = pg_execute($this->db, "fetch_user", array($email));
+    
+            // if email exists in database already
+            if (pg_num_rows($result) > 0) {
+                $user = pg_fetch_assoc($result);
+                // verify if password is corrct
+                if (password_verify($password, $user["password"])) {
+                    // password entered is correct, go to profile
+                    echo "Login Successful";
+                    $this->showProfile();
+                    return;
+                } else {
+                    // password entered is incorrect, go back to login screen
+                    echo "Incorrect Password, Try Again";
+                    $this->showLogin();
+                }
+            } else {
+                echo "Email Does Not Exist, Try Again or Sign Up!";
+                $this->showLogin();
+            }
+        }  */
+            $user = $this->db->query("SELECT * FROM users WHERE email = $1", $email);
 
+            if ($user) {
+            // Verify if password is correct
+                if (password_verify($password, $user[0]["password"])) {
+                // Password entered is correct, go to profile
+                echo "Login Successful";
+                $this->showProfile();
+                } else {
+                // Password entered is incorrect, go back to login screen
+                echo "Incorrect Password, Try Again";
+                $this->showLogin();
+                }   
+            }
+            else {
+                echo "Email Does Not Exist, Try Again or Sign Up!";
+                $this->showLogin();
+            
+            }
+        }
+        else{
+                // Error handling
+                // Error_log('Insert error: ' . pg_last_error($this->db));
+                // Provide feedback to the user as appropriate
+                // echo "An error occurred.";
+                echo "All fields are required.";
+
+        }    
+        $this->showLogin(); // Show login page on failure or if form data is missing
+    }
+
+    public function showLogin(){
+        $message = "";
+        if (!empty($this->errorMessage)) {
+            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
+        }
+        if ($_SERVER['SERVER_PORT'] === '8080') {
+            include "/opt/src/campus-thrift/templates/login.php";
+        } else {
+            include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/login.php";
+        }
+    }
+    
+
+}
     /**
      * Logout
      *
