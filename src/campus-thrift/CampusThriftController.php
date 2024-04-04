@@ -491,6 +491,7 @@ class CampusThriftController {
                     
                     echo "Login Successful";
                     $this->showProfile();
+                    return;
                 } else {
                 // Password entered is incorrect, go back to login screen
                 echo "Incorrect Password, Try Again";
