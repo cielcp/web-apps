@@ -28,54 +28,99 @@
     <!-- Main section -->
     <section class="d-flex listing-details" id="chat">
         <!-- Listing image -->
-        <div class="listing-details-img-container">
-            <img src="images/greyshirt.jpg" style="width:50%;">
+        <div class="listing-details-container">
+            <img src="images/greyshirt.jpg">
         </div>
 
         <div class="vert-line"></div>
 
         <!-- Listing info -->
         <div class="listing-details-container">
+
             <?php
+
+            // TRYING TO GET JSON TO WORK, GIVING UP!!
+
             // Check if the listing ID parameter is set in the URL
-            if (isset($_SESSION['listing_details'])) {
+            /* if (isset($_SESSION['listing_details'])) {
                 // Sanitize the input to prevent SQL injection
                 //$listing_id = $_GET['id'];
 
                 $listing = $_SESSION['listing_details'];
+                $listing_deets = $listing['listing_details'];
+                foreach($listing_deets as $col => $val):
+                    echo($col);
+                    echo($val);
+                endforeach;
                 $name = $listing['listing_details']['name'];
-                echo $name;
+                
+                echo $name; */
+
+                $listings = $this->db->query("select * FROM listings WHERE id=". $_SESSION['listing_id'] . ";");
+                foreach ($listings as $listing):
 
                 // Display the listing details
-                    echo '<p>' . $listing['category'] . '</p>';
-                    echo '<h2>' . $listing['name'] . '</h2>';
-                    echo '<p> $' . $listing['price'] . '</p>';
-                    echo '<p>' . $listing['description'] . '</p>';
-                    echo '<p>' . $listing['tags'] . '</p>';
-                    echo '<p> This item is available for:' . $listing['method'] . '</p>';
-                    echo '<p> Message seller ' . $listing['creator'] . '</p>';
+                echo '<div class="listing-info-block">';
+                    echo '<div class="listing-small-info-block">';
+                        echo '<h3>' . $listing['category'] . '</h3>';
+                        echo '<h2>' . $listing['name'] . '</h2>';
+                        echo '<h2> $' . $listing['price'] . '</h2>';
+                        echo '<h3>' . $listing['tags'] . '</h3>';
+                    echo '</div>';
+                    echo '<div class="listing-small-info-block d-flex justify-content-end">';
+                        echo '<form action="?command=saveListing" method="POST" class="mb-0 ">
+                                <button type="submit" class="icon-button"><img style="width:40px; height:40px;" src="icons/bookmark.svg"></button>
+                            </form>';
+                    echo '</div>';
+                echo '</div>';
+
+                echo '<div class="line"></div>';
+
+                echo '<div class="listing-info-block">';
+                    echo '<div class="listing-small-info-block">';
+                        echo '<p>' . $listing['description'] . '</p>';
+                    echo '</div>';
+                    echo '<div class="vert-line"></div>';
+                    echo '<div class="listing-small-info-block">';
+                        echo '<p> This item is available for: </p> <br> <ul><li>' . $listing['method'] .'</li></ul>';
+                        echo '<form action="?command=messages" method="POST" class="mb-0 ">
+                                <button type="submit">MESSAGE SELLER</button>
+                            </form>';
+                    echo '</div>';
+                echo '</div>';
                 
-            } else {
+                endforeach;
+            /* } else {
                 echo 'Not getting.';
-            }
+            } */
             ?>
 
-            <div class="messages" id="messageArea">
-                <div class="message">
-                    <img src="icons/person circle.svg">
-                    <p class="message-bubble">Hello, can I buy this item?</p>
+            <!-- <div class="listing-info-block">
+                
+                <div class="listing-small-info-block">
+                    <h3> Category </h3>
+                    <h2> Name </h2>
+                    <h2> $20 </h2>
+                    <h3> tags </h3>
                 </div>
-                <div class="message mine">
-                    <p class="message-bubble me">Sorry, no longer on sale</p>
-                    <img src="icons/person circle.svg">
+                <div class="listing-small-info-block d-flex justify-content-end">
+                    <form action="?command=saveListing" method="POST" class="mb-0 ">
+                        <button type="submit" class="icon-button"><img style="width:40px; height:40px;" src="icons/bookmark.svg"></button>
+                    </form>
                 </div>
             </div>
-            <form class="form-inline mt-4">
-                <div class="input-group align-items-center">
-                    <input class="form-control search-bar" type="text" placeholder="Type a message..." id="messageInput">
-                    <button class="btn btn-outline-secondary" type="submit">SEND</button>
+            <div class="line"></div>
+            <div class="listing-info-block">
+                <div class="listing-small-info-block">
+                    <p> Description blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah </p>
                 </div>
-            </form>
+                <div class="vert-line"></div>
+                <div class="listing-small-info-block">
+                    <p> This item is available for: </p><br>
+                    <ul><li>Pickup</li></ul>
+                </div>
+            </div> -->
+
         </div>
         
     </section>
