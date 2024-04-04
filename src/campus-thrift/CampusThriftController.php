@@ -158,13 +158,13 @@ class CampusThriftController {
                 $keys = ['name', 'creator', 'description', 'price', 'category', 'method', 'images', 'tags'];
                 $values = [];
                 foreach ($keys as $i):
-                    array_push($values, $listing[$i]);
+                    array_push($output["listing_details"], [$i =>$listing[$i]]);
                 endforeach;
-                $count=0;
-                foreach ($keys as $i):
-                    array_push($output["listing_details"], [$i => $values[$count]]);
-                    $count += 1;
-                endforeach;
+                // $count=0;
+                // foreach ($keys as $i):
+                //     array_push($output["listing_details"], [$i => $values[$count]]);
+                //     $count += 1;
+                // endforeach;
                 
             endforeach;
 
@@ -219,19 +219,34 @@ class CampusThriftController {
         if (!empty($this->errorMessage)) {
             $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
         }
+
+        if (isset($_POST['listing_id']) && !empty($_POST['listing_id'])){
+            // Store the id to the current session
+            $_SESSION['listing_id'] = $_POST['listing_id'];
+
+            // Direct to the view listing page
+            if ($_SERVER['SERVER_PORT'] === '8080') {
+                include "/opt/src/campus-thrift/templates/listing.php";
+            } 
+            else {
+                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/listing.php"; //?ID=" . $listing_id;
+            }
+        } else {
+            // Invalid request, show error message
+            die("Invalid listing ID provided");
+        }
         
-        // load the listing details json file
+        // json shtuff
+        /* // load the listing details json file
         $data = $this->loadListing();
         //save to session
+        $parsed_data = json_decode($data, true);
         $_SESSION['listing_details'] = json_decode($data, true);
+        foreach ($data as $item) {
+            echo 'ID: ' . $item['id'] . ', Name: ' . $item['name'] . ', Price: ' . $item['price'] . '<br>';
+        } */
 
         // redirect the user to the appropriate listing.php page with the json file
-        if ($_SERVER['SERVER_PORT'] === '8080') {
-            include "/opt/src/campus-thrift/templates/listing.php";
-        } 
-        else {
-                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/listing.php"; //?ID=" . $listing_id;
-        }
 
     }
 

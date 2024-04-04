@@ -37,8 +37,11 @@
         <!-- Listing info -->
         <div class="listing-details-container">
             <?php
+
+            // TRYING TO GET JSON TO WORK, GIVING UP!!
+
             // Check if the listing ID parameter is set in the URL
-            if (isset($_SESSION['listing_details'])) {
+            /* if (isset($_SESSION['listing_details'])) {
                 // Sanitize the input to prevent SQL injection
                 //$listing_id = $_GET['id'];
 
@@ -50,20 +53,24 @@
                 endforeach;
                 $name = $listing['listing_details']['name'];
                 
-                echo $name;
+                echo $name; */
+
+                $listings = $this->db->query("select * FROM listings WHERE id=". $_SESSION['listing_id'] . ";");
+                foreach ($listings as $listing):
 
                 // Display the listing details
-                    echo '<p>' . $listing['category'] . '</p>';
+                    echo '<h3>' . $listing['category'] . '</h3>';
                     echo '<h2>' . $listing['name'] . '</h2>';
-                    echo '<p> $' . $listing['price'] . '</p>';
+                    echo '<h2> $' . $listing['price'] . '</h2>';
                     echo '<p>' . $listing['description'] . '</p>';
                     echo '<p>' . $listing['tags'] . '</p>';
-                    echo '<p> This item is available for:' . $listing['method'] . '</p>';
-                    echo '<p> Message seller ' . $listing['creator'] . '</p>';
+                    echo '<p> This item is available for: ' . $listing['method'] . '</p>';
+                    echo '<p> Message seller: ' . $listing['creator'] . '</p>';
                 
-            } else {
+                endforeach;
+            /* } else {
                 echo 'Not getting.';
-            }
+            } */
             ?>
 
             <div class="messages" id="messageArea">
