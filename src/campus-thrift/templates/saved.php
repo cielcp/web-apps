@@ -24,7 +24,6 @@
     <!-- Nav bar -->
     <?php include('shared/header.php'); ?>
 
-
     <!-- Profile info -->
     <section class="container my-4">
         <div class="container d-flex align-items-center justify-content-between">
@@ -33,14 +32,12 @@
                     <img src="images/profilepic.jpg" alt="profile pic" width=30px>
                 </div>
                 <div class="user-info">
-                    <h2>@hannahypark</h2>
+                    <h2><?php echo($_SESSION['username'])?></h2>                    
                     <p>3 items</p>
                     <p>0 exchanges</p>
                 </div>
             </div>
-            <form action="?command=createListing" method="POST" class="mb-0">
-                <button type="submit">CREATE LISTING</button>
-            </form>
+            <a href="#"><button type="button">CREATE LISTING</button></a>
         </div>
     </section>
 
