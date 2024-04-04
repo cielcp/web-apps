@@ -20,7 +20,7 @@
 </head>
 
 <body style="background-color: #F8F5F0;">
-    
+      
     <!-- Nav bar -->
     <?php include('shared/header.php'); ?>
 
