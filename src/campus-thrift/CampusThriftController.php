@@ -74,18 +74,24 @@ class CampusThriftController {
             case "saved":
                 $this->showSaved();
                 break;
+            case "viewListing":
+                $this->showListing();
+                break;
+            case "saveListing":
+                $this->saveListing();
+                break;
             case "createListing":
                 $this->createListing();
                 break;
 
-            case "answer":
+            /* case "answer":
                 $this->answerQuestion();
                 break;
             case "login":
                 $this->login();
                 break;
             case "logout":
-                $this->logout();
+                $this->logout(); */
                 // no break; logout will also show the welcome page.
             default:
                 //$this->showWelcome();
@@ -95,8 +101,26 @@ class CampusThriftController {
         }
     }
 
+    
     /**
-     * Show HOMEPAGE page to user
+     * Show Signin page to user
+     */
+    public function showSignin() {
+        // Show an optional error message if the errorMessage field
+        // is not empty.
+        $message = "";
+        if (!empty($this->errorMessage)) {
+            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
+        }
+        if ($_SERVER['SERVER_PORT'] === '8080') {
+                include "/opt/src/campus-thrift/templates/signin.php";
+        } else {
+                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/signin.php";
+        }
+    }
+
+    /**
+     * Show home page to user
      */
     public function showHome() {
         // Show an optional error message if the errorMessage field
@@ -112,21 +136,132 @@ class CampusThriftController {
         }
     }
 
+
     /**
-     * Show listing detail pages to user
+     * load listing detail as json
      */
-    public function showListingDetail() {
+    public function loadListing() {
         // Show an optional error message if the errorMessage field
         // is not empty.
         $message = "";
         if (!empty($this->errorMessage)) {
             $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
         }
-        if ($_SERVER['SERVER_PORT'] === '8080') {
-                include "/opt/src/campus-thrift/templates/listing-detail.php";
-        } else {
-                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/listing-detail.php";
+        if (isset($_POST['listing_id'])) {
+            // sanitizing the input
+            $listing_id = $_POST['listing_id'];
+
+            // Set headers to indicate JSON content
+            //header('Content-Type: application/json');
+
+            //this worked earlier! keep for reference
+            /* $listings = $this->db->query("select * FROM listings;");
+            foreach ($listings as $listing):
+                echo $listing["name"];
+            endforeach; */
+
+            // build the return data structure
+            $output = [
+                "result"=> "success",
+                "listing_details"=> []
+            ];
+
+            //get  listing info 
+            $query = "SELECT * FROM listings WHERE id=1;";
+            $listings = $this->db->query($query);
+            foreach ($listings as $listing):
+                $keys = ['name', 'creator', 'description', 'price', 'category', 'method', 'images', 'tags'];
+                $values = [];
+                foreach ($keys as $i):
+                    array_push($values, $listing[$i]);
+                endforeach;
+                $count=0;
+                foreach ($keys as $i):
+                    array_push($output["listing_details"], [$i => $values[$count]]);
+                    $count += 1;
+                endforeach;
+                
+            endforeach;
+
+            
+                /* foreach ($listing as $detail) {
+                    $keys = $listing[$columns];
+                    $values = [];
+                    foreach ($keys as $key)
+                        array_push($values, $listing[$columns][$key]);
+
+                    array_push($output["listing_details"], [
+                        "columns" => $columns,
+                        "values" => $values
+                    ]);
+                } */
+            
+            return json_encode($output, JSON_PRETTY_PRINT); 
+            } 
+                // Output the JSON data
+                // return $json_data;
+                //$_SESSION['listing_details'] = $json_data;
+
+            //make a json with the information of the specific listing
+            // Fetch the listing details from the database based on the ID
+            //$query = "SELECT * FROM listings WHERE ID = $1";
+            //uhhhh $res = $this->db->query("select * from questions where id = $1;", $id);
+            //$listing = $this->db->query("select * from listings where ID =". $listing_id . ";");
+            // Check if the listing was found
+            //if ($listing->num_rows > 0) {
+            // Fetch data and store it in an array
+
+            // Convert the array to JSON format
+            //$json_data = json_encode($listing_details, JSON_PRETTY_PRINT);
+            // Output the JSON data
+            //echo $json_data;
+            //$_SESSION['listing_details'] = $json_data;
+        else {
+            // No listing found
+            return json_encode(array('result' => 'Listing not found'));
         }
+
+    }
+
+
+    /**
+     * Show listing detail pages to user
+     */
+    public function showListing() {
+        // Show an optional error message if the errorMessage field
+        // is not empty.
+        $message = "";
+        if (!empty($this->errorMessage)) {
+            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
+        }
+        
+        // load the listing details json file
+        $data = $this->loadListing();
+        //save to session
+        $_SESSION['listing_details'] = json_decode($data, true);
+
+        // redirect the user to the appropriate listing.php page with the json file
+        if ($_SERVER['SERVER_PORT'] === '8080') {
+            include "/opt/src/campus-thrift/templates/listing.php";
+        } 
+        else {
+                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/listing.php"; //?ID=" . $listing_id;
+        }
+
+    }
+
+
+    /**
+     * Show listing detail pages to user
+     */
+    public function saveListing() {
+        // Show an optional error message if the errorMessage field
+        // is not empty.
+        $message = "";
+        if (!empty($this->errorMessage)) {
+            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
+        }
+        $this->showHome();
     }
 
 
@@ -140,11 +275,10 @@ class CampusThriftController {
         if (!empty($this->errorMessage)) {
             $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
         }
-        include("/opt/src/campus-thrift/templates/signin.php");
         if ($_SERVER['SERVER_PORT'] === '8080') {
                 include "/opt/src/campus-thrift/templates/signin.php";
         } else {
-                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/listingDetail.php";
+                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/signin.php";
         }
         
     }
@@ -265,7 +399,7 @@ class CampusThriftController {
         if ($_SERVER['SERVER_PORT'] === '8080') {
                 include "/opt/src/campus-thrift/templates/saved.php";
         } else {
-                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/messages.php";
+                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/saved.php";
         }
     }
 
@@ -299,15 +433,10 @@ class CampusThriftController {
      * Show create-listing page to user
      */
     public function createListing() {
-        $x = "hi";
-        //$this->db->query("INSERT INTO listing (name, creator, description, price, category, method, image, tags) VALUES ($x, $x, $x, 10, $x, $x, $x, $x);");
+        //$x = "hi";
+        //$this->db->query("INSERT INTO listings (name, creator, description, price, category, method, images, tags) VALUES ($x, $x, $x, 10, $x, $x, $x, $x);");
         $message = "";
-        echo $x;
-        $listings = $this->db->query("select * FROM listing;");
-
-        foreach ($listings as $listing):
-            echo $listing["name"];
-        endforeach;
+        //echo $x;
     
         //if (!empty($_POST["createButton"])) {
         if (isset($_POST['name'])) {
@@ -318,15 +447,13 @@ class CampusThriftController {
             $price = $_POST['price'];
             $category = $_POST['category'];
             $method = $_POST['method'];
-            $image = $_POST['image'];
+            $images = $_POST['image'];
             $tags = $_POST['tags'];
 
             //save the input as an entry in the listing db
-            
-            
-            $this->db->query("INSERT INTO listing (name, creator, description, price, category, method, image, tags) 
+            $this->db->query("INSERT INTO listings (name, creator, description, price, category, method, images, tags) 
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8);",
-             $name, $creator, $description, $price, $category, $method, $image, $tags);
+             $name, $creator, $description, $price, $category, $method, $images, $tags);
 
             //$this->db->query("insert into users (name, email, password, score) values ($1, $2, $3, $4);", 0);
             $message = "<div class=\"alert alert-danger\" role=\"alert\">

@@ -38,7 +38,9 @@
                     <p>0 exchanges</p>
                 </div>
             </div>
-            <a href="#"><button type="button">CREATE LISTING</button></a>
+            <form action="?command=createListing" method="POST" class="mb-0">
+                <button type="submit">CREATE LISTING</button>
+            </form>
         </div>
     </section>
 
