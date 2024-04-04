@@ -1,3 +1,5 @@
+<?php
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -43,8 +45,8 @@
                             </form>
                         </li>
                     </ul>
-                    <form action="?command=login" method="POST" class="mb-0">
-                        <button type="submit" class="">SIGN IN</button>
+                    <form action="?command=<?php echo isset($_SESSION['logged']) && $_SESSION['logged'] ? 'logout' : 'login'; ?>" method="POST" class="mb-0">
+                        <button type="submit" class=""><?php echo isset($_SESSION['logged']) && $_SESSION['logged'] ? 'Logout' : 'Sign In'; ?></button>
                     </form>
                     
                 </div>

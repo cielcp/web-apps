@@ -84,6 +84,8 @@ class CampusThriftController {
             case "createListing":
                 $this->createListing();
                 break;
+            case "logout":
+                $this->logout();
 
             /* case "answer":
                 $this->answerQuestion();
@@ -425,6 +427,7 @@ class CampusThriftController {
                 // email is not in database, add as new entry
                 $_SESSION["username"] = $_POST["username"];
                 $_SESSION["email"] = $_POST["email"];
+                $_SESSION["logged"] = true;
 
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
@@ -435,6 +438,7 @@ class CampusThriftController {
                     echo "success making";
                     // Optionally, redirect to another page
                     $this->showProfile();
+                    return;
                 }
             }
         }
@@ -442,7 +446,7 @@ class CampusThriftController {
             echo "All fields are required.";
 
         }
-        include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/signup.php";
+        $this->showSignUp();
     }
 
     public function processLogin() {    
@@ -488,6 +492,7 @@ class CampusThriftController {
                 // Password entered is correct, go to profile
                     $_SESSION["username"] = $_POST["username"];
                     $_SESSION["email"] = $_POST["email"];
+                    $_SESSION["logged"] = true;
                     
                     echo "Login Successful";
                     $this->showProfile();
@@ -517,6 +522,12 @@ class CampusThriftController {
 
     public function showLogin(){
         include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/login.php";
+    }
+
+    public function logout() {
+        $_SESSION = array();
+        session_destroy();
+        session_start();
     }
     
 }
