@@ -43,7 +43,7 @@
                             </form>
                         </li>
                     </ul>
-                    <form action="?command=signup" method="POST" class="mb-0">
+                    <form action="?command=login" method="POST" class="mb-0">
                         <button type="submit" class="">SIGN IN</button>
                     </form>
                     
