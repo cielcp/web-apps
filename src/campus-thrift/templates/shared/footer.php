@@ -49,7 +49,7 @@
                         </ul>
                         <ul class="navbar-nav footer-links flex-column mx-5">
                             <li class="nav-item">
-                                <form action="?command=signin" method="POST" class="mb-0">
+                                <form action="?command=signup" method="POST" class="mb-0">
                                     <button type="submit" class="nav-link icon-button py-1">SIGN IN</button>
                                 </form>
                             </li>

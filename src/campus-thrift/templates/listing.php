@@ -43,7 +43,13 @@
                 //$listing_id = $_GET['id'];
 
                 $listing = $_SESSION['listing_details'];
+                $listing_deets = $listing['listing_details'];
+                foreach($listing_deets as $col => $val):
+                    echo($col);
+                    echo($val);
+                endforeach;
                 $name = $listing['listing_details']['name'];
+                
                 echo $name;
 
                 // Display the listing details
