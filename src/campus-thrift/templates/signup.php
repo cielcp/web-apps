@@ -19,6 +19,7 @@
 </head>
 
 <body style="background-color: #F8F5F0;">
+    
     <!-- Nav bar -->
     <?php include('shared/header.php'); ?>
 
@@ -29,10 +30,10 @@
                 <div class="col-md-6 offset-md-3">
                     <h2 class="text-center">Sign up for a Campus Thrift account!</h2>
     
-                    <form action="/signup">
+                    <form action="?command=signup" method="post">
                         <div class="mb-3">
                             <label for="name" class="form-label">Name:</label>
-                            <input type="text" id="name" name="name" class="form-control" required>
+                            <input type="text" id="username" name="username" class="form-control" required>
                         </div>
     
                         <div class="mb-3">
@@ -50,11 +51,13 @@
                         </div>
                     </form>
 
-                    <p class="text-center mt-3">Already have an account? <a href="login.html">Log in here</a></p>
+                    <p class="text-center mt-3">Already have an account? <a href="?command=login">Log in here</a></p>
                 </div>
             </div>
         </div>
     </section>
+</main>
+
 
     <!-- Footer -->
     <?php include('shared/footer.php'); ?>
