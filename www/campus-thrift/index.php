@@ -14,9 +14,13 @@ ini_set("display_errors", 1);
 // that Apache does not serve publicly.  They will be in /opt/src/, which
 // is our src/ directory in Docker.
 spl_autoload_register(function ($classname) {
-        include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/$classname.php";
-        //include "/opt/src/campus-thrift/$classname.php"; // for local
+        if ($_SERVER['SERVER_PORT'] === '8080') {
+                include "/opt/src/campus-thrift/$classname.php";
+        } else {
+                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/$classname.php";
+        }
 });
+
 
 // Other global things that we need to do
 // (such as starting a session, coming soon!)

@@ -8,6 +8,8 @@
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+    <!-- Nav bar -->
+    <?php include('shared/header.php'); ?>
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-8">
@@ -56,5 +58,8 @@
       </div>
     </div>
   </div>
+
+  <!-- Footer -->
+  <?php include('shared/footer.php'); ?>
 </body>
 </html>

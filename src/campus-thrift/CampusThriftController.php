@@ -56,13 +56,19 @@ class CampusThriftController {
         //     $command = "welcome";
 
         switch($command) {
+            case "signin":
+                $this->showSignin();
+                break;
+            case "login":
+                $this->showLogin();
+                break;
             case "home":
                 $this->showHome();
                 break;
             case "profile":
                 $this->showProfile();
                 break;
-            case "message":
+            case "messages":
                 $this->showMessages();
                 break;
             case "saved":
@@ -83,8 +89,8 @@ class CampusThriftController {
                 // no break; logout will also show the welcome page.
             default:
                 //$this->showWelcome();
-                //$this->showHome();
-                $this->showCreateListing();
+                $this->showHome();
+                //$this->showCreateListing();
                 break;
         }
     }
@@ -99,11 +105,15 @@ class CampusThriftController {
         if (!empty($this->errorMessage)) {
             $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
         }
-        include("/opt/src/campus-thrift/templates/home.php");
+        if ($_SERVER['SERVER_PORT'] === '8080') {
+                include "/opt/src/campus-thrift/templates/home.php";
+        } else {
+                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/home.php";
+        }
     }
 
     /**
-     * Show HOMEPAGE page to user
+     * Show listing detail pages to user
      */
     public function showListingDetail() {
         // Show an optional error message if the errorMessage field
@@ -112,7 +122,11 @@ class CampusThriftController {
         if (!empty($this->errorMessage)) {
             $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
         }
-        include("/opt/src/campus-thrift/templates/listingDetail.php");
+        if ($_SERVER['SERVER_PORT'] === '8080') {
+                include "/opt/src/campus-thrift/templates/listing-detail.php";
+        } else {
+                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/listing-detail.php";
+        }
     }
 
 
@@ -127,6 +141,12 @@ class CampusThriftController {
             $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
         }
         include("/opt/src/campus-thrift/templates/signin.php");
+        if ($_SERVER['SERVER_PORT'] === '8080') {
+                include "/opt/src/campus-thrift/templates/signin.php";
+        } else {
+                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/listingDetail.php";
+        }
+        
     }
 
     /**
@@ -225,7 +245,11 @@ class CampusThriftController {
         if (!empty($this->errorMessage)) {
             $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
         }
-        include("/opt/src/campus-thrift/templates/messages.php");
+        if ($_SERVER['SERVER_PORT'] === '8080') {
+                include "/opt/src/campus-thrift/templates/messages.php";
+        } else {
+                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/messages.php";
+        }
     }
 
     /**

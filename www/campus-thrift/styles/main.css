@@ -79,6 +79,10 @@ button:hover {
     background-color: #040402;
 }
 
+form {
+    margin-bottom: 0em;
+}
+
 
 /* ------------ HOME ---------- */
 
@@ -95,7 +99,13 @@ button:hover {
     margin-right: 30px;
 }
 
-        /* nav link icons */
+    /* bro why is it not aligning center ugh */
+.navbar-collapse .item {
+    align-self: center;
+}
+
+
+    /* nav link icons */
 .navbar-nav .nav-link img {
     width: 30px;
     height: 30px;
@@ -187,6 +197,7 @@ button:hover {
 .footer-links {
     gap: 0px;
 }
+
 
 /* ------------ MESSAGES ---------- */
 

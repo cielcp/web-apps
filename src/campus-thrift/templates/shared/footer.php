@@ -26,16 +26,43 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <div class="container d-flex justify-content-end">
                         <ul class="navbar-nav footer-links flex-column mx-5">
-                            <li class="nav-item"><a class="nav-link active" href="index.php">HOME</a></li>
-                            <li class="nav-item"><a class="nav-link" aria-current="page"
-                                    href="messages.php">MESSAGES</a></li>
-                            <li class="nav-item"><a class="nav-link" href="saved.php">SAVED</a></li>
-                            <li class="nav-item"><a class="nav-link" href="profile.php">PROFILE</a></li>
+                            <li class="nav-item">
+                                <form action="?command=home" method="POST" class="mb-0">
+                                    <button type="submit" class="nav-link active icon-button py-1">HOME</button>
+                                </form>
+                            </li>
+                            <li class="nav-item">
+                                <form action="?command=messages" method="POST" class="mb-0">
+                                    <button type="submit" class="nav-link icon-button py-1">MESSAGES</button>
+                                </form>
+                            </li>
+                            <li class="nav-item">
+                                <form action="?command=saved" method="POST" class="mb-0">
+                                    <button type="submit" class="nav-link icon-button py-1">SAVED</button>
+                                </form>
+                            </li>
+                            <li class="nav-item">
+                                <form action="?command=profile" method="POST" class="mb-0">
+                                    <button type="submit" class="nav-link icon-button py-1">PROFILE</button>
+                                </form>
+                            </li>
                         </ul>
                         <ul class="navbar-nav footer-links flex-column mx-5">
-                            <li class="nav-item"><a class="nav-link" href="signin.php">SIGN IN</a></li>
-                            <li class="nav-item"><a class="nav-link disabled" href="#">ABOUT</a></li>
-                            <li class="nav-item"><a class="nav-link disabled" href="#">CONTACT US</a></li>
+                            <li class="nav-item">
+                                <form action="?command=signin" method="POST" class="mb-0">
+                                    <button type="submit" class="nav-link icon-button py-1">SIGN IN</button>
+                                </form>
+                            </li>
+                            <li class="nav-item">
+                                <form action="" method="" class="mb-0">
+                                    <button type="submit" class="nav-link icon-button py-1">ABOUT</button>
+                                </form>
+                            </li>
+                            <li class="nav-item">
+                                <form action="" method="" class="mb-0">
+                                    <button type="submit" class="nav-link icon-button py-1">CONTACT US</button>
+                                </form>
+                            </li>
                         </ul>
                     </div>
                 </div>
