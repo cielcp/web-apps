@@ -17,7 +17,7 @@ spl_autoload_register(function ($classname) {
         if ($_SERVER['SERVER_PORT'] === '8080') {
                 include "/opt/src/campus-thrift/$classname.php";
         } else {
-                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/$classname.php";
+                include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/$classname.php";
         }
 });
 

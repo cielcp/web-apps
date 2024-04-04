@@ -117,7 +117,7 @@ class CampusThriftController {
         if ($_SERVER['SERVER_PORT'] === '8080') {
                 include "/opt/src/campus-thrift/templates/home.php";
         } else {
-                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/home.php";
+                include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/home.php";
         }
     }
 
@@ -230,7 +230,7 @@ class CampusThriftController {
             include "/opt/src/campus-thrift/templates/listing.php";
         } 
         else {
-                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/listing.php"; //?ID=" . $listing_id;
+                include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/listing.php"; //?ID=" . $listing_id;
         }
 
     }
@@ -263,7 +263,7 @@ class CampusThriftController {
         if ($_SERVER['SERVER_PORT'] === '8080') {
                 include "/opt/src/campus-thrift/templates/signin.php";
         } else {
-                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/signin.php";
+                include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/signin.php";
         }
         
     }
@@ -273,16 +273,11 @@ class CampusThriftController {
      * Show messages page to user
      */
     public function showMessages() {
-        // Show an optional error message if the errorMessage field
-        // is not empty.
-        $message = "";
-        if (!empty($this->errorMessage)) {
-            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
+        if(!isset($_SESSION['name']) && !isset($_SESSION['email'])){
+            $this->showLogin();
         }
-        if ($_SERVER['SERVER_PORT'] === '8080') {
-                include "/opt/src/campus-thrift/templates/messages.php";
-        } else {
-                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/messages.php";
+        else{
+            include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/messages.php";
         }
     }
 
@@ -290,16 +285,11 @@ class CampusThriftController {
      * Show saved page to user
      */
     public function showSaved() {
-        // Show an optional error message if the errorMessage field
-        // is not empty.
-        $message = "";
-        if (!empty($this->errorMessage)) {
-            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
+        if(!isset($_SESSION['name']) && !isset($_SESSION['email'])){
+            $this->showLogin();
         }
-        if ($_SERVER['SERVER_PORT'] === '8080') {
-                include "/opt/src/campus-thrift/templates/saved.php";
-        } else {
-                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/saved.php";
+        else{
+            include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/saved.php";
         }
     }
 
@@ -308,15 +298,11 @@ class CampusThriftController {
      */
     public function showProfile() {
         // Show an optional error message if the errorMessage field
-        // is not empty.
-        $message = "";
-        if (!empty($this->errorMessage)) {
-            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
+        if(!isset($_SESSION['name']) && !isset($_SESSION['email'])){
+            $this->showLogin();
         }
-        if ($_SERVER['SERVER_PORT'] === '8080') {
-                include "/opt/src/campus-thrift/templates/profile.php";
-        } else {
-                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/profile.php";
+        else{
+            include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/profile.php";
         }
 
     }
@@ -326,7 +312,7 @@ class CampusThriftController {
      */
     public function showCreateListing($message = "") {
         //include("/opt/src/campus-thrift/templates/create-listing.php");
-        include("/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/create-listing.php");
+        include("/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/create-listing.php");
     }
 
     /**
@@ -372,15 +358,6 @@ class CampusThriftController {
     
 
     public function showSignUp(){
-        $message = "";
-        if (!empty($this->errorMessage)) {
-            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
-        }
-        if ($_SERVER['SERVER_PORT'] === '8080') {
-            include "/opt/src/campus-thrift/templates/signin.php";
-        } else {
-            include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/signin.php";
-        }
         // check if user entered information
         if (!empty($_POST["username"]) && !empty($_POST["email"]) && !empty($_POST["password"]) && isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"])) {
             $username = $_POST["username"];
@@ -417,16 +394,18 @@ class CampusThriftController {
 
             $sql = "SELECT * FROM users WHERE email = $1";
             $user = $this->db->prepareAndExecute("fetch_user", $sql, array($email));
-            
+
             if ($user) {
                 echo "Email Already Exists, Try Logging In!";
                 $this->showLogin();
             }
             else {
                 // email is not in database, add as new entry
+                $_SESSION["username"] = $_POST["username"];
+                $_SESSION["email"] = $_POST["email"];
+
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-                
                 $sql = "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)";
                 $insertResult = $this->db->prepareAndExecute("insert_user", $sql, array($username, $email, $hashedPassword));
                 if ($insertResult) {
@@ -441,7 +420,7 @@ class CampusThriftController {
             echo "All fields are required.";
 
         }
-        include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/signup.php";
+        include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/signup.php";
     }
 
     public function processLogin() {    
@@ -480,12 +459,16 @@ class CampusThriftController {
             $sql = "SELECT * FROM users WHERE email = $1";
             $user = $this->db->prepareAndExecute("fetch_user", $sql, array($email));
 
-            if ($user) {
-            // Verify if password is correct
-                if (password_verify($password, $user[0]["password"])) {
+            if ($user && count($user) > 0) {
+                $user = $user[0]; // Assuming email is unique, take the first result
+                // Verify if password is correct
+                if (password_verify($password, $user["password"])) {
                 // Password entered is correct, go to profile
-                echo "Login Successful";
-                $this->showProfile();
+                    $_SESSION["username"] = $_POST["username"];
+                    $_SESSION["email"] = $_POST["email"];
+                    
+                    echo "Login Successful";
+                    $this->showProfile();
                 } else {
                 // Password entered is incorrect, go back to login screen
                 echo "Incorrect Password, Try Again";
@@ -510,123 +493,8 @@ class CampusThriftController {
     }
 
     public function showLogin(){
-        $message = "";
-        if (!empty($this->errorMessage)) {
-            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
-        }
-        if ($_SERVER['SERVER_PORT'] === '8080') {
-            include "/opt/src/campus-thrift/templates/login.php";
-        } else {
-            include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/login.php";
-        }
+        include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/login.php";
     }
     
-
 }
-    /**
-     * Logout
-     *
-     * Destroys the session, essentially logging the user out.  It will then start
-     * a new session so that we have $_SESSION if we need it.
-     */
-    // public function logout() {
-    //     session_destroy();
-    //     session_start();
-    // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    /**
-     * Our getQuestion function, now as a method!
-     */
-//     public function getQuestion($id=null) {
-
-//         // If $id is not set, then get a random question
-//         // We wrote this in class.
-//         if ($id === null) {
-//             // Read ONE random question from the database
-//             $qn = $this->db->query("select * from questions order by random() limit 1;");
-
-//             // The query function calls pg_fetch_all, which returns an **array of arrays**.
-//             // That means that if we only have one row in our result, it's an array at
-//             // position 0 of the array of arrays.
-//             // Note: we should check that $qn here is _not_ false first!
-//             return $qn[0];
-//         }
-        
-//         // If an $id **was** passed in, then we should get that specific
-//         // question from the database.
-//         //
-//         // NOTE: We did **not** write this in class, but it is provided/updated
-//         // below:
-//         if (is_numeric($id)) {
-//             $res = $this->db->query("select * from questions where id = $1;", $id);
-//             if (empty($res)) {
-//                 return false;
-//             }
-//             return $res[0];
-//         }
-       
-//         // Anything else, just return false
-//         return false;
-//     }
-
-//     /**
-//      * Show a question to the user.  This function loads a
-//      * template PHP file and displays it to the user based on
-//      * properties of this object and the SESSION information.
-//      */
-//     public function showQuestion($message = "") {
-//         $name = $_SESSION["name"];
-//         $email = $_SESSION["email"];
-//         $score = $_SESSION["score"];
-//         $question = $this->getQuestion();
-//         include("/opt/src/trivia/templates/question.php");
-//     }
-
-
-//     /**
-//      * Check the user's answer to a question.
-//      */
-//     public function answerQuestion() {
-//         $message = "";
-//         if (isset($_POST["questionid"]) && is_numeric($_POST["questionid"])) {
-
-//             $question = $this->getQuestion($_POST["questionid"]);
-
-//             if (strtolower(trim($_POST["answer"])) == strtolower($question["answer"])) {
-//                 $message = "<div class=\"alert alert-success\" role=\"alert\">
-//                     Correct!
-//                     </div>";
-//                 // Update the score in the session
-//                 $_SESSION["score"] += 10;
-
-//                 // **NEW**: We'll update the user's score in the database, too!
-//                 $this->db->query("update users set score = $1 where email = $2;", 
-//                                     $_SESSION["score"], $_SESSION["email"]);
-//             }
-//             else {
-//                 $message = "<div class=\"alert alert-danger\" role=\"alert\">
-//                     Incorrect! The correct answer was: {$question["answer"]}
-//                     </div>";
-//             }
-//         }
-
-//         $this->showQuestion($message);
-//     }
-
-// }

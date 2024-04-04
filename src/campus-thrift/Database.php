@@ -23,6 +23,7 @@ class Database {
         $port = Config::$db["port"];
 
         $this->dbConnector = pg_connect("host=$host port=$port dbname=$database user=$user password=$password");
+        echo "success";
     }
 
     /**
@@ -45,6 +46,11 @@ class Database {
 
     public function prepareAndExecute($name, $sql, $params) {
         $stmt = pg_prepare($this->dbConnector, $name, $sql);
-        return pg_execute($this->dbConnector, $name, $params);
+        $result = pg_execute($this->dbConnector, $name, $params);
+        if ($result) {
+            return pg_fetch_all($result); // Fetch and return all rows as an associative array
+        } else {
+            return false; // Or handle the error appropriately
+        }
     }
 }
