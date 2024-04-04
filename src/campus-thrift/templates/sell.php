@@ -14,37 +14,9 @@
 </head>
 
 <body style="background-color: #F8F5F0;">
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light">
-            <div class="container-fluid py-3">
-                <a class="navbar-brand mx-3" href="index.html">
-                    <img src="images/logo.png" alt="Campus Thrift Logo" height="80">
-                </a>
-                <h1>CAMPUS THRIFT</h1>
-
-                <div class="collapse navbar-collapse justify-content-flex-end" id="navbarSupportedContent">
-                    <ul class="navbar-nav align-items-center">
-                        <li class="nav-item mx-3">
-                            <a class="nav-link active" href="index.html"><i class="iconoir-home"></i></a>
-                        </li>
-                        <li class="nav-item mx-3">
-                            <a class="nav-link active" href="messages.html"><i class="iconoir-message-text"></i></a>
-                        </li>
-                        <li class="nav-item mx-3">
-                            <a class="nav-link active" href="saved.html"><i class="iconoir-star"></i></a>
-                        </li>
-                        <li class="nav-item mx-3">
-                            <a class="nav-link active" href="profile.html"><i class="iconoir-profile-circle"></i></a>
-                        </li>
-                    </ul>
-
-                    <button type="button"><a aria-current="page" href="#">SELL NOW</a></button>
-                    <button type="button"><a href="signup.html">SIGN UP</a></button>
-                    <button type="button"><a href="login.html">LOGIN</a></button>
-                </div>
-            </div>
-        </nav>
-    </header>
+    
+    <!-- Nav bar -->
+    <?php include('shared/header.php'); ?>
 
     <div class="flex-container">
         <div class="container">
@@ -81,38 +53,8 @@
         </div>
     </div>
     
-    <footer class="container d-flex justify-content-center primary-footer" id="footer">
-        <div class="logo-container">
-            <img src="images/logo.png" alt="Campus Thrift Logo" height="80">
-            <h1>CAMPUS THRIFT</h1>
-            <h2>A UVA thrifting platform made by students, for students!</h2>
-        </div>
-        
-        <nav class="container flex-column">
-            <ul class="navbar align-items-flex-start">
-                <li class="nav-item mx-3"><a class="nav-link active" href="index.html">HOME</a></li>
-                <li class="nav-item mx-3"><a class="nav-link active" href="messages.html">MESSAGES</a></li>
-                <li class="nav-item mx-3"><a class="nav-link active" href="saved.html">SAVED</a></li>
-                <li class="nav-item mx-3"><a class="nav-link active" href="profile.html">PROFILE</a></li>
-            </ul>
-
-            <ul class="navbar align-items-flex-start">
-                <li class="nav-item mx-3"><a class="nav-link disabled" href="#">ABOUT</a></li>
-                <li class="nav-item mx-3"><a class="nav-link disabled" href="#">CONTACT US</a></li>
-            </ul>
-        </nav>
-
-        <div class="line"></div>
-        
-        <small class="copyright mx-3">
-            &copy; CIEL PARK AND & HANNAH PARK
-        </small> 
-
-        <small class="copyright mx-3">
-            TERMS & CONDITIONS
-        </small> 
-
-    </footer>
+    <!-- Footer -->
+    <?php include('shared/footer.php'); ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

@@ -143,13 +143,24 @@
             </div>
         </section>
 
-        <!-- Under $20 category -->
-        <section class="mb-5">
+        <!-- All listings -->
+        <section class="my-4">
             <div class="category-text-container">
-                <h2>Under $20</h2>
-                <a href="#">See more <img src="icons/angle-right.svg"> </a>
+                <h2>All listings</h2>
             </div>
             <div class="category-container">
+                <div class="listing">
+                    <div class="listing-img-container">
+                        <a href="#">
+                            <img src="images/greyshirt.jpg" alt="grey shirt image">
+                        </a>
+                    </div>
+                    <div class="line"></div>
+                    <div class="listing-text-container">
+                        <h3>$10</h3>
+                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
+                    </div>
+                </div>
                 <div class="listing">
                     <div class="listing-img-container">
                         <a href="#">
@@ -210,89 +221,7 @@
                         <button class="icon-button"><img src="icons/bookmark.svg"></button>
                     </div>
                 </div>
-                <div class="listing sixth">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Free category -->
-        <section class="mb-5">
-            <div class="category-text-container">
-                <h2>Free</h2>
-                <a href="#">See more <img src="icons/angle-right.svg"> </a>
-            </div>
-            <div class="category-container">
                 <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/greyshirt.jpg" alt="grey shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/redshirt.jpg" alt="red shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/greyshirt.jpg" alt="grey shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing sixth">
                     <div class="listing-img-container">
                         <a href="#">
                             <img src="images/blueshirt.jpg" alt="blue shirt image">
@@ -308,12 +237,12 @@
         </section>
 
         <!-- View all listings -->
-        <section>
+        <!-- <section>
             <a class="view-all" href="#">
                 <h3>View all listings</h3>
                 <img src="icons/angle-down.svg">
             </a>
-        </section>
+        </section> -->
     </main>
 
 
