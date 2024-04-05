@@ -121,6 +121,7 @@ class CampusThriftController {
         $message = "";
         if (!empty($this->errorMessage)) {
             $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
+            echo $message;
         }
         if ($_SERVER['SERVER_PORT'] === '8080') {
                 include "/opt/src/campus-thrift/templates/home.php";
@@ -421,7 +422,8 @@ class CampusThriftController {
     
             // if email exists in database already
             if (pg_num_rows($result) > 0){
-                echo "Email Already Exists, Try Logging In!";
+                $message = "<div class='alert alert-danger'>Email already exists, try logging in!</div>";
+                echo $message;
                 $this->showLogin();
             } 
             else {
@@ -446,7 +448,8 @@ class CampusThriftController {
             $user = $this->db->prepareAndExecute("fetch_user", $sql, array($email));
 
             if ($user) {
-                echo "Email Already Exists, Try Logging In!";
+                $message = "<div class='alert alert-danger'>Email already exists, try logging in!</div>";
+                echo $message;
                 $this->showLogin();
                 return;
             }
