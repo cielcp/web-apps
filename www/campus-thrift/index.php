@@ -1,5 +1,5 @@
 <?php
-// Published version: https://cs4640.cs.virginia.edu/ccp7gcp/hw5
+// Published version: https://cs4640.cs.virginia.edu/hyp2ftn/campus-thrift
 
 // Our index file is in the web/www directory. 
 // If we were to deploy it to the cs4640 server, 
