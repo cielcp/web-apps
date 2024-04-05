@@ -448,6 +448,7 @@ class CampusThriftController {
             if ($user) {
                 echo "Email Already Exists, Try Logging In!";
                 $this->showLogin();
+                return;
             }
             else {
                 // email is not in database, add as new entry
@@ -527,11 +528,13 @@ class CampusThriftController {
                 // Password entered is incorrect, go back to login screen
                 echo "Incorrect Password, Try Again";
                 $this->showLogin();
+                return;
                 }   
             }
             else {
                 echo "Email Does Not Exist, Try Again or Sign Up!";
                 $this->showLogin();
+                return;
             
             }
         }
