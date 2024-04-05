@@ -122,6 +122,7 @@ class CampusThriftController {
  /*        $message = "";
         if (!empty($this->errorMessage)) {
             $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
+            echo $message;
         }
         if ($_SERVER['SERVER_PORT'] === '8080') {
                 include "/opt/src/campus-thrift/templates/home.php";
@@ -401,7 +402,8 @@ class CampusThriftController {
     
             // if email exists in database already
             if (pg_num_rows($result) > 0){
-                echo "Email Already Exists, Try Logging In!";
+                $message = "<div class='alert alert-danger'>Email already exists, try logging in!</div>";
+                echo $message;
                 $this->showLogin();
             } 
             else {
@@ -426,7 +428,8 @@ class CampusThriftController {
             $user = $this->db->prepareAndExecute("fetch_user", $sql, array($email));
 
             if ($user) {
-                echo "Email Already Exists, Try Logging In!";
+                $message = "<div class='alert alert-danger'>Email already exists, try logging in!</div>";
+                echo $message;
                 $this->showLogin();
                 return;
             }
@@ -495,7 +498,8 @@ class CampusThriftController {
             if ($user && count($user) > 0) {
                 $user = $user[0]; // Assuming email is unique, take the first result
                 // Verify if password is correct
-                if (password_verify($password, $user["password"])) {
+                // if (password_verify($password, $user["password"])) {
+                if ($password === $user["password"]) {
                 // Password entered is correct, go to profile
                     $_SESSION["username"] = $_POST["username"];
                     $_SESSION["email"] = $_POST["email"];
@@ -507,6 +511,7 @@ class CampusThriftController {
                 } else {
                 // Password entered is incorrect, go back to login screen
                 echo "Incorrect Password, Try Again";
+                echo "password was: " . $user["password"] . " your password was: " . $password;
                 $this->showLogin();
                 return;
                 }   
