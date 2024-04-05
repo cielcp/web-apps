@@ -515,7 +515,8 @@ class CampusThriftController {
             if ($user && count($user) > 0) {
                 $user = $user[0]; // Assuming email is unique, take the first result
                 // Verify if password is correct
-                if (password_verify($password, $user["password"])) {
+                // if (password_verify($password, $user["password"])) {
+                if ($password === $user["password"]) {
                 // Password entered is correct, go to profile
                     $_SESSION["username"] = $_POST["username"];
                     $_SESSION["email"] = $_POST["email"];
@@ -527,6 +528,7 @@ class CampusThriftController {
                 } else {
                 // Password entered is incorrect, go back to login screen
                 echo "Incorrect Password, Try Again";
+                echo "password was: " . $user["password"] . " your password was: " . $password;
                 $this->showLogin();
                 return;
                 }   
