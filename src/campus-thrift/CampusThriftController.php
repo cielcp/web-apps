@@ -234,19 +234,14 @@ class CampusThriftController {
             $_SESSION['listing_id'] = $_POST['listing_id'];
 
         // redirect the user to the appropriate listing.php page with the json file
+       
+        // Direct to the view listing page
         if ($_SERVER['SERVER_PORT'] === '8080') {
             include "/opt/src/campus-thrift/templates/listing.php";
         } 
         else {
-                include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/listing.php"; //?ID=" . $listing_id;
+            include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/listing.php"; //?ID=" . $listing_id;
         }
-            // Direct to the view listing page
-            if ($_SERVER['SERVER_PORT'] === '8080') {
-                include "/opt/src/campus-thrift/templates/listing.php";
-            } 
-            else {
-                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/listing.php"; //?ID=" . $listing_id;
-            }
         } else {
             // Invalid request, show error message
             die("Invalid listing ID provided");
@@ -445,7 +440,7 @@ class CampusThriftController {
 
                 $sql = "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)";
                 $insertResult = $this->db->prepareAndExecute("insert_user", $sql, array($username, $email, $hashedPassword));
-                if ($insertResult) {
+                if (!$insertResult) {
                     // Redirect or perform other success actions
                     echo "success making";
                     // Optionally, redirect to another page

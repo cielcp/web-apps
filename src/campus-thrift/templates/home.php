@@ -251,12 +251,17 @@
 
         <!-- All listings -->
         <section class="my-4">
-            <div class="category-text-container">
-                <h2>All listings</h2>
-            </div>
-            <div class="category-container">
-                <?php 
-                    $listings = $this->db->query("select * FROM listings;");
+            <?php  
+            if (isset($_SESSION['logged']) && $_SESSION['logged'] === true){
+
+    
+
+                   echo '<div class="category-text-container">';
+                   echo     '<h2>All listings</h2>';
+                   echo '</div>';
+                     echo '<div class="category-container">';
+                   
+                   $listings = $this->db->query("select * FROM listings;");
 
                     foreach ($listings as $listing):
                         echo '<div class="listing">';
@@ -277,8 +282,12 @@
                         echo '</div>';
                         echo '</div>';
                     endforeach;
-                ?>
-            </div>
+                           
+                echo '</div>';
+                            }
+        ?>
+
+     
         </section>
 
         
