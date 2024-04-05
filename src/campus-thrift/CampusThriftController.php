@@ -89,6 +89,7 @@ class CampusThriftController {
                 break;
             case "logout":
                 $this->logout();
+                break;
             case "deleteListing":
                 $this->deleteListing();
                 break;
@@ -118,16 +119,16 @@ class CampusThriftController {
     public function showHome() {
         // Show an optional error message if the errorMessage field
         // is not empty.
-        $message = "";
+ /*        $message = "";
         if (!empty($this->errorMessage)) {
             $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
             echo $message;
         }
         if ($_SERVER['SERVER_PORT'] === '8080') {
                 include "/opt/src/campus-thrift/templates/home.php";
-        } else {
+        } else { */
                 include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/home.php";
-        }
+        
     }
 
 
@@ -280,25 +281,6 @@ class CampusThriftController {
         $this->showHome();
     }
 
-
-    /**
-     * Show the signin page to the user.
-     */
-    public function showWelcome() {
-        // Show an optional error message if the errorMessage field
-        // is not empty.
-        $message = "";
-        if (!empty($this->errorMessage)) {
-            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
-        }
-        if ($_SERVER['SERVER_PORT'] === '8080') {
-                include "/opt/src/campus-thrift/templates/signin.php";
-        } else {
-                include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/signin.php";
-        }
-        
-    }
-
  
     /**
      * Show messages page to user
@@ -368,24 +350,27 @@ class CampusThriftController {
             $tags = $_POST['tags'];
 
             //save the input as an entry in the listing db
-            $this->db->query("INSERT INTO listings (name, creator, description, price, category, method, images, tags) 
+/*             $this->db->query("INSERT INTO listings (name, description, price, category, images, creator, method, tags) 
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8);",
-             $name, $creator, $description, $price, $category, $method, $images, $tags);
+             $name, $creator, $description, $price, $category, $method, $images, $tags); */
 
-            //$this->db->query("insert into users (name, email, password, score) values ($1, $2, $3, $4);", 0);
-            $message = "<div class=\"alert alert-danger\" role=\"alert\">
-                    hey!
-                    </div>";
+             $sql = "INSERT INTO listings (name, description, price, category, images, creator, method, tags)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
+             $insertListing = $this->db->prepareAndExecute("insert_listing", $sql, array($name, $description, $price, $category, $images, $creator, $method, $tags));
 
-            $this->showProfile();
-            }
-            else {
-                $message = "<div class=\"alert alert-danger\" role=\"alert\">
-                    hey!
-                    </div>";
+            //$this->db->query("insert into users (name, description, password, score) values ($1, $2, $3, $4);", 0);
+            
+            if (!$insertListing) {
+                // Redirect or perform other success actions
+                echo "success making";
+                // Optionally, redirect to another page
                 $this->showProfile();
+                return;
             }
         }
+        include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/create-listing.php";
+
+    }
         //$this->showCreateListing($message);
 
         /**
@@ -476,7 +461,7 @@ class CampusThriftController {
             echo "All fields are required.";
 
         }
-        $this->showSignUp();
+        include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/signup.php";
     }
 
     public function processLogin() {    
@@ -562,6 +547,8 @@ class CampusThriftController {
         $_SESSION = array();
         session_destroy();
         session_start();
+        $this->showHome();
+
     }
     
 }

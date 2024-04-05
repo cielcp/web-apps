@@ -23,6 +23,7 @@ class Database {
         $port = Config::$db["port"];
 
         $this->dbConnector = pg_connect("host=$host port=$port dbname=$database user=$user password=$password");
+        echo "success";
     }
 
     /**
