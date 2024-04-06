@@ -25,98 +25,46 @@
     <?php include('shared/header.php'); ?>
 
     <!-- Profile info -->
-    <section class="container my-4">
-        <div class="container d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center">
-                <div class="profile-pic-container">
-                <img src="images/profilepic.jpg" alt="profile pic" width=30px>
-            </div>
-            <div class="user-info">
-                <h2>@hannahypark</h2>
-                <p>3 items</p>
-                <p>0 exchanges</p>
-            </div>
-            </div>
-            <form action="?command=createListing" method="POST" class="mb-0">
-                <button type="submit">CREATE LISTING</button>
-            </form>
-        </div>
-    </section>
+    <?php include('shared/profile-info.php'); ?>
 
     <section class="tabs" >
-        <a class="tab current" href="profile.html"><button type="button">SELLING</button></a>
-        <a class="tab" href="saved.html"><button type="button">SAVED</button></a>
+        <a class="tab current" href="?command=profile"><button type="button">SELLING</button></a>
+        <a class="tab" href="?command=saved"><button type="button">SAVED</button></a>
     </section>
     <div class="line"></div>
 
     <!-- Profile listings -->
     <main>
         <section class="flex-column">
-            <div class="listing-container">
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/greyshirt.jpg" alt="grey shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/redshirt.jpg" alt="red shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/greyshirt.jpg" alt="grey shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
+            <div class="category-container">
+                <?php 
+                    $sql = "SELECT * FROM listings WHERE creator = $1";
+                    $listings = $this->db->prepareAndExecute("fetch_listings", $sql, array($_SESSION["username"]));
+                    if (count($listings) == 0) {
+                        echo '<div class="my-5">';
+                        echo '<h3"> You don\'t have any listings posted :( Create one now to get your store started! </h3>';
+                        echo '</div>';
+                    }
+                    foreach ($listings as $listing):
+                        echo '<div class="listing">';
+                        echo '<div class="listing-img-container">';
+                        echo '<form action="?command=listing" method="POST" class="listing-img-form mb-0" style="height:100%; width:100%;">';
+                        echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
+                        echo '<button type="submit" style="border-style:none; padding:0px; height:100%; width:100%; border-radius:0px;">';
+                        echo '<img src="images/greyshirt.jpg" alt="grey shirt image">';
+                        echo '</button>';
+                        echo '</form>';
+                        echo '</div>';
+                        echo '<div class="line"></div>';
+                        echo '<div class="listing-text-container">';
+                        echo '<h3> $'. $listing["price"] . ' '. $listing["name"] . '</h3>';
+                        echo '</div>';
+                        echo '</div>';
+                    endforeach;
+                ?>
             </div>
         </section>
     </main>
-
 
     <!-- Footer -->
     <?php include('shared/footer.php'); ?>

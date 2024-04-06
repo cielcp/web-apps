@@ -1,6 +1,7 @@
 <?php
 
-class CampusThriftController {
+class CampusThriftController
+{
 
     private $listings = [];
     private $input;
@@ -12,57 +13,54 @@ class CampusThriftController {
     /**
      * Constructor
      */
-    public function __construct($input) {
-        // We should always start (or join) a session at the top
-        // of execution of PHP -- the constructor is the best place
-        // to do that.
-        session_start(); // start a session!
-        
-        // Connect to the database by instantiating a
-        // Database object (provided by CS4640).  You have a copy
-        // in the src/example directory, but it will be below as well.
+    public function __construct($input)
+    {
+        session_start();
         $this->db = new Database();
-       // $this->db = $this->db->getConnection();
-
-        // Set input
         $this->input = $input;
-
-        // Loading questions no longer necessary, as they are
-        // in the database
-        //$this->loadQuestions();
     }
 
     /**
      * Run the server
-     * 
-     * Given the input (usually $_GET), then it will determine
-     * which command to execute based on the given "command"
-     * parameter.  Default is the welcome page.
      */
-    public function run() {
+    public function run()
+    {
         // Get the command
         $command = "welcome";
-        
+
         // Override command if specified in input
         if (isset($this->input["command"])) {
             $command = $this->input["command"];
         }
 
-        // NOTE: UPDATED 3/29/2024!!!!!
         // If the session doesn't have the key "name", AND they
         // are not trying to login (UPDATE!), then they
         // got here without going through the welcome page, so we
         // should send them back to the welcome page only.
         // if (!isset($_SESSION["name"]) && $command != "login")
         //     $command = "welcome";
-
-        switch($command) {
+        switch ($command) {
+                // commands to process account stuff
             case "signup":
-                $this->showSignUp();
+                $this->processSignup();
                 break;
             case "login":
                 $this->processLogin();
                 break;
+            case "logout":
+                $this->processLogout();
+                break;
+                // commands to process listing stuff
+            case "saveListing":
+                $this->saveListing();
+                break;
+            case "createListing":
+                $this->createListing();
+                break;
+            case "deleteListing":
+                $this->deleteListing();
+                break;
+                // commands to show pages
             case "home":
                 $this->showHome();
                 break;
@@ -75,67 +73,185 @@ class CampusThriftController {
             case "saved":
                 $this->showSaved();
                 break;
-            case "viewListing":
+            case "listing":
                 $this->showListing();
-                break;
-            case "saveListing":
-                $this->saveListing();
                 break;
             case "showCreateListing":
                 $this->showCreateListing();
                 break;
-            case "createListing":
-                $this->createListing();
+            case "showSignup":
+                $this->showSignup();
                 break;
-            case "logout":
-                $this->logout();
+            case "showLogin":
+                $this->showLogin();
                 break;
-            case "deleteListing":
-                $this->deleteListing();
-                break;
-
-            /* case "answer":
-                $this->answerQuestion();
-                break;
-            case "login":
-                $this->login();
-                break;
-            case "logout":
-                $this->logout(); */
-                // no break; logout will also show the welcome page.
+                // default homepage
             default:
-                //$this->showWelcome();
                 $this->showHome();
-                //$this->showCreateListing();
                 break;
         }
     }
 
+    /** ------------------- FUNCTIONS TO PROCESS ACCOUNT STUFF ------------------- */
 
+    public function processSignup()
+    {
+        // check if user entered information
+        if (!empty($_POST["username"]) && !empty($_POST["email"]) && !empty($_POST["password"])) {
+            $username = $_POST["username"];
+            $email = $_POST["email"];
+            $password = $_POST["password"];
 
-    /**
-     * Show home page to user
-     */
-    public function showHome() {
-        // Show an optional error message if the errorMessage field
-        // is not empty.
- /*        $message = "";
-        if (!empty($this->errorMessage)) {
-            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
-            echo $message;
+            $sql = "SELECT * FROM users WHERE email = $1";
+            $user = $this->db->prepareAndExecute("fetch_user", $sql, array($email));
+
+            if ($user) {
+                $message = "An account with that email already exists. Try logging in?";
+                $this->showSignup($message);
+                return;
+            } else {
+                // if email is not in database, sign the user in and add as new entry
+                $_SESSION["username"] = $username;
+                $_SESSION["email"] = $email;
+                $_SESSION["logged"] = true;
+
+                // hashing for security!
+                //$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                $sql = "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)";
+                $insertResult = $this->db->prepareAndExecute("insert_user", $sql, array($username, $email, $password)); // $hashedPassword later
+                // if unsuccessful, refresh signup and show error message
+                if ($insertResult === false) { 
+                    $message = "There was an unknown error creating your account";
+                    $this->showSignup($message);
+                    return;
+                } else {
+                    // Show welcome message and redirect to home
+                    $message = "Welcome to Campus Thrift, " . $username;
+                    $this->showHome($message);
+                    return;
+                }
+            }
+        } else {
+            $message = "Please enter the required fields";
+            $this->showSignup($message);
         }
-        if ($_SERVER['SERVER_PORT'] === '8080') {
-                include "/opt/src/campus-thrift/templates/home.php";
-        } else { */
-                include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/home.php";
-        
     }
 
+    public function processLogin()
+    {
+        // check if user entered required information
+        if (!empty($_POST["username"]) && !empty($_POST["email"]) && !empty($_POST["password"])) {
+            $username = $_POST["username"];
+            $email = $_POST["email"];
+            $password = $_POST["password"];
 
-    /**
-     * load listing detail as json
-     */
-    public function loadListing() {
+            $sql = "SELECT * FROM users WHERE email = $1";
+            $user = $this->db->prepareAndExecute("fetch_user", $sql, array($email));
+
+            if ($user === false) {
+                $message = "An account with that email does not exist, please try again";
+                $this->showLogin($message);
+                return;
+            } else {
+                $user = $user[0]; // Assuming email is unique, take the first result
+                // Verify if password is correct
+                // if (password_verify($password, $user["password"])) {
+                if ($password === $user["password"]) {
+                    // if password entered is correct, go to home?
+                    $_SESSION["username"] = $username;
+                    $_SESSION["email"] = $email;
+                    $_SESSION["logged"] = true;
+                    $message = "Welcome back to Campus Thrift, " . $username;
+                    $this->showHome($message);
+                    return;
+                } else {
+                    // If password entered is incorrect, refresh login screen
+                    echo "FOR TESTING: password was: " . $user["password"] . " your password was: " . $password;
+                    $message = "Incorrect password, please try again";
+                    $this->showLogin($message);
+                    return;
+                }
+            }
+        } else {
+            // Error handling
+            // Error_log('Insert error: ' . pg_last_error($this->db));
+            // Provide feedback to the user as appropriate
+            // echo "An error occurred.";
+            $message = "Please enter the required fields";
+            $this->showSignup($message);
+        }
+    }
+
+    public function processLogout()
+    {
+        $_SESSION = array();
+        session_destroy();
+        // session_start();
+        $message = "You have been logged out";
+        $this->showHome($message);
+    }
+
+    /** ------------------- FUNCTIONS TO PROCESS LISTING STUFF ------------------- */
+
+    // function to create a listing into the databasae
+    public function createListing()
+    {
+        //$message = "";
+
+        if (!empty($_POST['name']) && !empty($_POST['description']) && isset($_POST['price'])) {
+            //get the input
+            $name = $_POST['name'];
+            $description = $_POST['description'];
+            $price = $_POST['price'];
+            $category = $_POST['category'];
+            $method = $_POST['method'];
+            $tags = $_POST['tags'];
+            // how to do images??????????
+            $images = $_POST['image'];
+            if (!empty($_SESSION['username'])) {
+                $creator = $_SESSION['username'];
+            } else {
+                $message = "Um how did you get here? You need to sign in to create a listing...";
+                $this->showLogin($message);
+                return;
+            }
+
+            $sql = "INSERT INTO listings (name, description, price, category, images, creator, method, tags)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
+            $insertListing = $this->db->prepareAndExecute("insert_listing", $sql, array($name, $description, $price, $category, $images, $creator, $method, $tags));
+            //$this->db->query("insert into users (name, description, password, score) values ($1, $2, $3, $4);", 0);
+
+            if ($insertListing === false) {
+                $message = "There was an unknown error creating your listing";
+                $this->showCreateListing($message);
+            } else {
+                $message = "Successfully created your listing";
+                $this->showProfile($message);
+            }
+        } else {
+            $message = "Please enter at least the name, description, and price of your item";
+            $this->showCreateListing($message);
+        }
+    }
+
+    // function to delete a listing from the database
+    public function deleteListing()
+    {
+        $message = "";
+        if (!empty($_SESSION['listing_id'])) {
+            //delete the listing that corresponds to the current id
+            $this->db->query("DELETE FROM listings WHERE id=" . $_SESSION['listing_id'] . ";");
+            $message = "Successfully deleted listing";
+            $this->showProfile($message);
+        } else {
+            $message = "Invalid listing id";
+            $this->showProfile($message);
+        }
+    }
+
+    // load listing detail as json NOT WORKING
+    public function loadListing()
+    {
         // Show an optional error message if the errorMessage field
         // is not empty.
         $message = "";
@@ -157,29 +273,27 @@ class CampusThriftController {
 
             // build the return data structure
             $output = [
-                "result"=> "success",
-                "listing_details"=> []
+                "result" => "success",
+                "listing_details" => []
             ];
 
             //get  listing info 
             $query = "SELECT * FROM listings WHERE id=1;";
             $listings = $this->db->query($query);
-            foreach ($listings as $listing):
+            foreach ($listings as $listing) :
                 $keys = ['name', 'creator', 'description', 'price', 'category', 'method', 'images', 'tags'];
                 $values = [];
-                foreach ($keys as $i):
-                    array_push($output["listing_details"], [$i =>$listing[$i]]);
+                foreach ($keys as $i) :
+                    array_push($output["listing_details"], [$i => $listing[$i]]);
                 endforeach;
-                // $count=0;
-                // foreach ($keys as $i):
-                //     array_push($output["listing_details"], [$i => $values[$count]]);
-                //     $count += 1;
-                // endforeach;
-                
-            endforeach;
+            // $count=0;
+            // foreach ($keys as $i):
+            //     array_push($output["listing_details"], [$i => $values[$count]]);
+            //     $count += 1;
+            // endforeach;
 
-            
-                /* foreach ($listing as $detail) {
+            endforeach;
+            /* foreach ($listing as $detail) {
                     $keys = $listing[$columns];
                     $values = [];
                     foreach ($keys as $key)
@@ -190,69 +304,142 @@ class CampusThriftController {
                         "values" => $values
                     ]);
                 } */
-            
-            return json_encode($output, JSON_PRETTY_PRINT); 
-            } 
-                // Output the JSON data
-                // return $json_data;
-                //$_SESSION['listing_details'] = $json_data;
 
-            //make a json with the information of the specific listing
-            // Fetch the listing details from the database based on the ID
-            //$query = "SELECT * FROM listings WHERE ID = $1";
-            //uhhhh $res = $this->db->query("select * from questions where id = $1;", $id);
-            //$listing = $this->db->query("select * from listings where ID =". $listing_id . ";");
-            // Check if the listing was found
-            //if ($listing->num_rows > 0) {
-            // Fetch data and store it in an array
+            return json_encode($output, JSON_PRETTY_PRINT);
+        }
+        // Output the JSON data
+        // return $json_data;
+        //$_SESSION['listing_details'] = $json_data;
 
-            // Convert the array to JSON format
-            //$json_data = json_encode($listing_details, JSON_PRETTY_PRINT);
-            // Output the JSON data
-            //echo $json_data;
-            //$_SESSION['listing_details'] = $json_data;
+        //make a json with the information of the specific listing
+        // Fetch the listing details from the database based on the ID
+        //$query = "SELECT * FROM listings WHERE ID = $1";
+        //uhhhh $res = $this->db->query("select * from questions where id = $1;", $id);
+        //$listing = $this->db->query("select * from listings where ID =". $listing_id . ";");
+        // Check if the listing was found
+        //if ($listing->num_rows > 0) {
+        // Fetch data and store it in an array
+
+        // Convert the array to JSON format
+        //$json_data = json_encode($listing_details, JSON_PRETTY_PRINT);
+        // Output the JSON data
+        //echo $json_data;
+        //$_SESSION['listing_details'] = $json_data;
         else {
             // No listing found
             return json_encode(array('result' => 'Listing not found'));
         }
+    }
 
+    // function to save listing NEED TO DO
+    public function saveListing()
+    {
+        $this->showSaved();
     }
 
 
-    /**
-     * Show listing detail pages to user
-     */
-    public function showListing() {
-        // Show an optional error message if the errorMessage field
-        // is not empty.
-        $message = "";
-        if (!empty($this->errorMessage)) {
-            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
-        }
 
-        if (isset($_POST['listing_id']) && !empty($_POST['listing_id'])){
+    /** ------------------- FUNCTIONS TO SHOW PAGES ------------------- */
+
+    // SWAP TO YOUR URL HERE!!
+    public $myURL = "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/";
+    //public $myURL = "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/";
+
+    public function showHome($message = "")
+    {
+        if (!empty($message)) {
+            $alert = "<div class='alert alert-success'>{$message}</div>";
+            echo $alert;
+        }
+        if ($_SERVER['SERVER_PORT'] === '8080') {
+            include "/opt/src/campus-thrift/templates/home.php";
+        } else {
+            include ($this->myURL . "home.php");
+        }
+    }
+
+    public function showSignup($message = "")
+    {
+        //$message = "what";
+        if (!empty($message)) {
+            $alert = "<div class='alert alert-success'>{$message}</div>";
+            echo $alert;
+        }
+        include $this->myURL . "signup.php";
+    }
+
+    public function showLogin($message = "")
+    {
+        if (!empty($message)) {
+            $alert = "<div class='alert alert-success'>{$message}</div>";
+            echo $alert;
+        }
+        include $this->myURL . "login.php";
+    }
+
+    public function showMessages($message = "")
+    {
+        if (!empty($message)) {
+            $alert = "<div class='alert alert-success'>{$message}</div>";
+            echo $alert;
+        }
+        if (isset($_SESSION['logged']) && $_SESSION['logged']) {
+            include $this->myURL . "messages.php";
+        } else {
+            $message = "Please sign in to access messaging";
+            $this->showLogin($message);
+        }
+    }
+
+    public function showSaved($message = "")
+    {
+        if (!empty($message)) {
+            $alert = "<div class='alert alert-success'>{$message}</div>";
+            echo $alert;
+        }
+        if (isset($_SESSION['logged']) && $_SESSION['logged']) {
+            include $this->myURL . "saved.php";
+        } else {
+            $message = "Please sign in to access saved listings";
+            $this->showLogin($message);
+        }
+    }
+
+    public function showProfile($message = "")
+    {
+        if (!empty($message)) {
+            $alert = "<div class='alert alert-success'>{$message}</div>";
+            echo $alert;
+        }
+        // Show an optional error message if the errorMessage field
+        if (isset($_SESSION['logged']) && $_SESSION['logged']) {
+            include $this->myURL . "profile.php";
+        } else {
+            $message = "Please sign in to access your profile";
+            $this->showLogin($message);
+        }
+    }
+
+    public function showListing($message = "")
+    {
+        // $message = "";
+        if (!empty($message)) {
+            $alert = "<div class='alert alert-success'>{$message}</div>";
+            echo $alert;
+        }
+        if (!empty($_POST['listing_id'])) {
             // Store the id to the current session
             $_SESSION['listing_id'] = $_POST['listing_id'];
-
-        // redirect the user to the appropriate listing.php page with the json file
-        if ($_SERVER['SERVER_PORT'] === '8080') {
-            include "/opt/src/campus-thrift/templates/listing.php";
-        } 
-        else {
-                include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/listing.php"; //?ID=" . $listing_id;
-        }
-            // Direct to the view listing page
+            // redirect the user to the appropriate listing.php page (with the json file?)
             if ($_SERVER['SERVER_PORT'] === '8080') {
                 include "/opt/src/campus-thrift/templates/listing.php";
-            } 
-            else {
-                include "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/listing.php"; //?ID=" . $listing_id;
+            } else {
+                include $this->myURL . "listing.php";
             }
         } else {
             // Invalid request, show error message
             die("Invalid listing ID provided");
         }
-        
         // json shtuff
         /* // load the listing details json file
         $data = $this->loadListing();
@@ -262,294 +449,16 @@ class CampusThriftController {
         foreach ($data as $item) {
             echo 'ID: ' . $item['id'] . ', Name: ' . $item['name'] . ', Price: ' . $item['price'] . '<br>';
         } */
-
         // redirect the user to the appropriate listing.php page with the json file
-
     }
 
-
-    /**
-     * Show listing detail pages to user
-     */
-    public function saveListing() {
-        // Show an optional error message if the errorMessage field
-        // is not empty.
-        $message = "";
-        if (!empty($this->errorMessage)) {
-            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
+    public function showCreateListing($message = "")
+    {
+        if (!empty($message)) {
+            $alert = "<div class='alert alert-success'>{$message}</div>";
+            echo $alert;
         }
-        $this->showHome();
+        //include ("/opt/src/campus-thrift/templates/create-listing.php");
+        include($this->myURL . "create-listing.php");
     }
-
- 
-    /**
-     * Show messages page to user
-     */
-    public function showMessages() {
-        if(!isset($_SESSION['name']) && !isset($_SESSION['email'])){
-            $this->showLogin();
-        }
-        else{
-            include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/messages.php";
-        }
-    }
-
-    /**
-     * Show saved page to user
-     */
-    public function showSaved() {
-        if(!isset($_SESSION['name']) && !isset($_SESSION['email'])){
-            $this->showLogin();
-        }
-        else{
-            include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/saved.php";
-        }
-    }
-
-    /**
-     * Show profile page to user
-     */
-    public function showProfile() {
-        // Show an optional error message if the errorMessage field
-        if(!isset($_SESSION['name']) && !isset($_SESSION['email'])){
-            $this->showLogin();
-        }
-        else{
-            include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/profile.php";
-        }
-
-    }
-
-    /**
-     * Show create-listing page to user
-     */
-    public function showCreateListing($message = "") {
-        //include("/opt/src/campus-thrift/templates/create-listing.php");
-        include("/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/create-listing.php");
-    }
-
-    /**
-     * Function to create a listing and add it to the database
-     */
-    public function createListing() {
-        //$x = "hi";
-        //$this->db->query("INSERT INTO listings (name, creator, description, price, category, method, images, tags) VALUES ($x, $x, $x, 10, $x, $x, $x, $x);");
-        $message = "";
-        //echo $x;
-    
-        //if (!empty($_POST["createButton"])) {
-        if (isset($_POST['name'])) {
-            //get the input
-            $name = $_POST['name'];
-            $creator = "cielpark"; //$_SESSION['user'];
-            $description = $_POST['description'];
-            $price = $_POST['price'];
-            $category = $_POST['category'];
-            $method = $_POST['method'];
-            $images = $_POST['image'];
-            $tags = $_POST['tags'];
-
-            //save the input as an entry in the listing db
-/*             $this->db->query("INSERT INTO listings (name, description, price, category, images, creator, method, tags) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8);",
-             $name, $creator, $description, $price, $category, $method, $images, $tags); */
-
-             $sql = "INSERT INTO listings (name, description, price, category, images, creator, method, tags)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
-             $insertListing = $this->db->prepareAndExecute("insert_listing", $sql, array($name, $description, $price, $category, $images, $creator, $method, $tags));
-
-            //$this->db->query("insert into users (name, description, password, score) values ($1, $2, $3, $4);", 0);
-            
-            if (!$insertListing) {
-                // Redirect or perform other success actions
-                echo "success making";
-                // Optionally, redirect to another page
-                $this->showProfile();
-                return;
-            }
-        }
-        include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/create-listing.php";
-
-    }
-        //$this->showCreateListing($message);
-
-        /**
-        * Function to delete a listing from the database
-        */
-        public function deleteListing() {
-            $message = "";
-            //if (!empty($_POST["createButton"])) {
-            if (isset($_SESSION['listing_id'])) {
-                //delete the listing that corresponds to the current id
-                $this->db->query("DELETE FROM listings WHERE id=" . $_SESSION['listing_id'] . ";");
-                $this->errorMessage = "Successfully deleted listing";
-                $this->showProfile();
-                }
-                else {
-                    $message = "<div class=\"alert alert-danger\" role=\"alert\">
-                        Invalid listing id
-                        </div>";
-                }
-            }
-    
-
-    public function showSignUp(){
-        // check if user entered information
-        if (!empty($_POST["username"]) && !empty($_POST["email"]) && !empty($_POST["password"]) && isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"])) {
-            $username = $_POST["username"];
-            $email = $_POST["email"];
-            $password = $_POST["password"];
-
-/*             // fetch user's email
-            $sql = "SELECT * FROM users WHERE email = $1";
-            $sql_prepare = pg_prepare($this->db, "fetch_user", $sql);
-            $result = pg_execute($this->db, "fetch_user", array($email));
-    
-            // if email exists in database already
-            if (pg_num_rows($result) > 0){
-                $message = "<div class='alert alert-danger'>Email already exists, try logging in!</div>";
-                echo $message;
-                $this->showLogin();
-            } 
-            else {
-                // email is not in database, add as new entry
-                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-                $sql = "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)";
-                $stmt = pg_prepare($this->db, "insert_user", $sql);
-                $result = pg_execute($this->db, "insert_user", array($username, $email, $hashedPassword));
-
-                if ($result) {
-                    echo $username;
-                    // Redirect or perform other success actions
-                    echo "success making";
-                    // Optionally, redirect to another page
-                    $this->showProfile();
-                }
-            }
-        } */  
-
-            $sql = "SELECT * FROM users WHERE email = $1";
-            $user = $this->db->prepareAndExecute("fetch_user", $sql, array($email));
-
-            if ($user) {
-                $message = "<div class='alert alert-danger'>Email already exists, try logging in!</div>";
-                echo $message;
-                $this->showLogin();
-                return;
-            }
-            else {
-                // email is not in database, add as new entry
-                $_SESSION["username"] = $_POST["username"];
-                $_SESSION["email"] = $_POST["email"];
-                $_SESSION["logged"] = true;
-
-                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-                $sql = "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)";
-                $insertResult = $this->db->prepareAndExecute("insert_user", $sql, array($username, $email, $hashedPassword));
-                if ($insertResult) {
-                    // Redirect or perform other success actions
-                    echo "success making";
-                    // Optionally, redirect to another page
-                    $this->showProfile();
-                    return;
-                }
-            }
-        }
-        else {
-            echo "All fields are required.";
-
-        }
-        include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/signup.php";
-    }
-
-    public function processLogin() {    
-        // check if user entered information
-        if (!empty($_POST["username"]) && !empty($_POST["email"]) && !empty($_POST["password"]) && isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"])) {
-            $username = $_POST["username"];
-            $email = $_POST["email"];
-            $password = $_POST["password"];
-/* 
-            // fetch user's email
-            $sql = "SELECT * FROM users WHERE email = $1";
-            $sql_prepare = pg_prepare($this->db, "fetch_user", $sql);
-            $result = pg_execute($this->db, "fetch_user", array($email));
-    
-            // if email exists in database already
-            if (pg_num_rows($result) > 0) {
-                $user = pg_fetch_assoc($result);
-                // verify if password is corrct
-                if (password_verify($password, $user["password"])) {
-                    // password entered is correct, go to profile
-                    echo "Login Successful";
-                    $this->showProfile();
-                    return;
-                } else {
-                    // password entered is incorrect, go back to login screen
-                    echo "Incorrect Password, Try Again";
-                    $this->showLogin();
-                }
-            } else {
-                echo "Email Does Not Exist, Try Again or Sign Up!";
-                $this->showLogin();
-            }
-        }  */
-        
-
-            $sql = "SELECT * FROM users WHERE email = $1";
-            $user = $this->db->prepareAndExecute("fetch_user", $sql, array($email));
-
-            if ($user && count($user) > 0) {
-                $user = $user[0]; // Assuming email is unique, take the first result
-                // Verify if password is correct
-                // if (password_verify($password, $user["password"])) {
-                if ($password === $user["password"]) {
-                // Password entered is correct, go to profile
-                    $_SESSION["username"] = $_POST["username"];
-                    $_SESSION["email"] = $_POST["email"];
-                    $_SESSION["logged"] = true;
-                    
-                    echo "Login Successful";
-                    $this->showProfile();
-                    return;
-                } else {
-                // Password entered is incorrect, go back to login screen
-                echo "Incorrect Password, Try Again";
-                echo "password was: " . $user["password"] . " your password was: " . $password;
-                $this->showLogin();
-                return;
-                }   
-            }
-            else {
-                echo "Email Does Not Exist, Try Again or Sign Up!";
-                $this->showLogin();
-                return;
-            
-            }
-        }
-        else{
-                // Error handling
-                // Error_log('Insert error: ' . pg_last_error($this->db));
-                // Provide feedback to the user as appropriate
-                // echo "An error occurred.";
-                echo "All fields are required.";
-
-        }    
-        $this->showLogin(); // Show login page on failure or if form data is missing
-    }
-
-    public function showLogin(){
-        include "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/login.php";
-    }
-
-    public function logout() {
-        $_SESSION = array();
-        session_destroy();
-        session_start();
-        $this->showHome();
-
-    }
-    
 }
-

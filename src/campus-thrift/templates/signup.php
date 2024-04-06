@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
+    <title>Sign Up</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/iconoir-icons/iconoir@main/css/iconoir.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -51,7 +51,7 @@
                         </div>
                     </form>
 
-                    <p class="text-center mt-3">Already have an account? <a href="?command=login">Log in here</a></p>
+                    <p class="text-center mt-3">Already have an account? <a href="?command=showLogin">Log in here</a></p>
                 </div>
             </div>
         </div>

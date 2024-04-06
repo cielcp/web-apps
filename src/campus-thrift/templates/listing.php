@@ -63,8 +63,8 @@
                 echo '<div class="listing-info-block">';
                     echo '<div class="listing-small-info-block">';
                         echo '<h3>' . $listing['category'] . '</h3>';
-                        echo '<h2>' . $listing['name'] . '</h2>';
-                        echo '<h2> $' . $listing['price'] . '</h2>';
+                        echo '<h2 class="my-2">' . $listing['name'] . '</h2>';
+                        echo '<h2 class="mb-2"> $' . $listing['price'] . '</h2>';
                         echo '<h3>' . $listing['tags'] . '</h3>';
                     echo '</div>';
                     echo '<div class="listing-small-info-block d-flex justify-content-end">';
@@ -78,22 +78,19 @@
 
                 echo '<div class="listing-info-block">';
                     echo '<div class="listing-small-info-block">';
-                        echo '<p>' . $listing['description'] . '</p>';
+                        echo '<h3>' . $listing['description'] . '</h3>';
                     echo '</div>';
                     echo '<div class="vert-line"></div>';
                     echo '<div class="listing-small-info-block">';
-                        echo '<p> This item is available for: </p> <br> <ul><li>' . $listing['method'] .'</li></ul>';
-                        /* if ($listing['creator'] === $_SESSION["user"]) {
+                        echo '<h3> This item is available for: </h3>
+                            <ul class="mb-5"><li>' . $listing['method'] .'</li></ul>';
+                        if ($listing['creator'] == $_SESSION["username"]) {
                             echo '<form action="?command=deleteListing" method="POST" class="mb-0 ">
                                 <button type="submit">DELETE LISTING</button>
                             </form>';
-                        } */
-                        echo '<form action="?command=messages" method="POST" class="mb-2 ">
-                                <button type="submit">MESSAGE SELLER</button>
-                            </form>';
-                        echo '<form action="?command=deleteListing" method="POST" class="mb-0 ">
-                                <button type="submit">DELETE LISTING</button>
-                            </form>';
+                        } else {
+                            echo '<a href="?command=messages" class="mb-2 "><button>MESSAGE SELLER</button></a>';
+                        }
                     echo '</div>';
                 echo '</div>';
                 

@@ -10,7 +10,7 @@
         <nav class="navbar navbar-expand-lg navbar-light" id="footer">
             <div class="container-fluid justify-content-between align-items-center">
                 <div class="d-flex flex-column">
-                    <a class="navbar-brand d-flex align-items-center" href="index.php">
+                    <a href="?command=home" class="navbar-brand d-flex align-items-center">
                         <img src="images/logo.png" alt="Campus Thrift Logo">
                         CAMPUS THRIFT
                     </a>
@@ -26,43 +26,15 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <div class="container d-flex justify-content-end">
                         <ul class="navbar-nav footer-links flex-column mx-5">
-                            <li class="nav-item">
-                                <form action="?command=home" method="POST" class="mb-0">
-                                    <button type="submit" class="nav-link active icon-button py-1">HOME</button>
-                                </form>
-                            </li>
-                            <li class="nav-item">
-                                <form action="?command=messages" method="POST" class="mb-0">
-                                    <button type="submit" class="nav-link icon-button py-1">MESSAGES</button>
-                                </form>
-                            </li>
-                            <li class="nav-item">
-                                <form action="?command=saved" method="POST" class="mb-0">
-                                    <button type="submit" class="nav-link icon-button py-1">SAVED</button>
-                                </form>
-                            </li>
-                            <li class="nav-item">
-                                <form action="?command=profile" method="POST" class="mb-0">
-                                    <button type="submit" class="nav-link icon-button py-1">PROFILE</button>
-                                </form>
-                            </li>
+                            <li class="nav-item"><a class="nav-link" href="?command=home">HOME</a></li>
+                            <li class="nav-item"><a class="nav-link" href="?command=messages">MESSAGES</a></li>
+                            <li class="nav-item"><a class="nav-link" href="?command=saved">SAVED</a></li>
+                            <li class="nav-item"><a class="nav-link" href="?command=profile">PROFILE</a></li>
                         </ul>
                         <ul class="navbar-nav footer-links flex-column mx-5">
-                            <li class="nav-item">
-                                <form action="?command=signup" method="POST" class="mb-0">
-                                    <button type="submit" class="nav-link icon-button py-1">SIGN IN</button>
-                                </form>
-                            </li>
-                            <li class="nav-item">
-                                <form action="" method="" class="mb-0">
-                                    <button type="submit" class="nav-link icon-button py-1">ABOUT</button>
-                                </form>
-                            </li>
-                            <li class="nav-item">
-                                <form action="" method="" class="mb-0">
-                                    <button type="submit" class="nav-link icon-button py-1">CONTACT US</button>
-                                </form>
-                            </li>
+                            <li class="nav-item"><a class="nav-link" href="?command=showSignup">SIGN IN</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#">ABOUT</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#">CONTACT US</a></li>
                         </ul>
                     </div>
                 </div>

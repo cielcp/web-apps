@@ -161,93 +161,8 @@
                         <button class="icon-button"><img src="icons/bookmark.svg"></button>
                     </div>
                 </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/redshirt.jpg" alt="red shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/greyshirt.jpg" alt="grey shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
             </div>
         </section>
-
 
         <!-- All listings -->
         <section class="my-4">
@@ -261,7 +176,7 @@
                     foreach ($listings as $listing):
                         echo '<div class="listing">';
                         echo '<div class="listing-img-container">';
-                        echo '<form action="?command=viewListing" method="POST" class="listing-img-form mb-0" style="height:100%; width:100%;">';
+                        echo '<form action="?command=listing" method="POST" class="listing-img-form mb-0" style="height:100%; width:100%;">';
                         echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
                         echo '<button type="submit" style="border-style:none; padding:0px; height:100%; width:100%; border-radius:0px;">';
                         echo '<img src="images/greyshirt.jpg" alt="grey shirt image">';
@@ -271,17 +186,17 @@
                         echo '<div class="line"></div>';
                         echo '<div class="listing-text-container">';
                         echo '<h3> $'. $listing["price"] . ' '. $listing["name"] . '</h3>';
-                        echo '<form action="?command=saveListing" method="POST" class="mb-0">
+                        if (isset($_SESSION["username"]) && ($listing["creator"] !== $_SESSION["username"])) {
+                            echo '<form action="?command=saveListing" method="POST" class="mb-0">
                                 <button type="submit" class="icon-button"><img src="icons/bookmark.svg"></button>
                               </form>';
+                        }
                         echo '</div>';
                         echo '</div>';
                     endforeach;
                 ?>
             </div>
         </section>
-
-        
 
         <!-- View all listings -->
         <!-- <section>
@@ -292,10 +207,8 @@
         </section> -->
     </main>
 
-
     <!-- Footer -->
     <?php include('shared/footer.php'); ?>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

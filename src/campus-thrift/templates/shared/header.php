@@ -10,12 +10,10 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container-fluid">
-                <form action="?command=home" method="POST" class="navbar-brand d-flex mb-0 align-items-center">
-                    <button type="submit" class="nav-logo" style="border-color:transparent; padding: 0px;">
-                        <img src="images/logo.png" alt="Campus Thrift Logo">
-                    </button>
+                <a href="?command=home" class="navbar-brand d-flex align-items-center">
+                    <img src="images/logo.png" alt="Campus Thrift Logo">
                     CAMPUS THRIFT
-                </form>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -25,30 +23,21 @@
                     <!-- Properly create at least four different screens with respect to the functionalities you proposed -->
                     <ul class="navbar-nav align-items-center">
                         <li class="nav-item">
-                            <form action="?command=home" method="POST" class="mb-0">
-                                <button type="submit" class="nav-link icon-button"><img src="icons/house.svg"></button>
-                            </form>
+                            <a href="?command=home"><button class="nav-link icon-button"><img src="icons/house.svg"></button></a>
                         </li>
                         <li class="nav-item">
-                            <form action="?command=messages" method="POST" class="mb-0">
-                                <button type="submit" class="nav-link icon-button"><img src="icons/letter.svg"></button>
-                            </form>
+                            <a href="?command=messages"><button class="nav-link icon-button"><img src="icons/letter.svg"></button></a>
                         </li>
                         <li class="nav-item">
-                            <form action="?command=saved" method="POST" class="mb-0">
-                                <button type="submit" class="nav-link icon-button"><img src="icons/bookmark.svg"></button>
-                            </form>
+                            <a href="?command=saved"><button class="nav-link icon-button"><img src="icons/bookmark.svg"></button></a>
                         </li>
                         <li class="nav-item">
-                            <form action="?command=profile" method="POST" class="mb-0">
-                                <button type="submit" class="nav-link icon-button"><img src="icons/person circle.svg"></button>
-                            </form>
+                            <a href="?command=profile"><button class="nav-link icon-button"><img src="icons/person circle.svg"></button></a>
                         </li>
                     </ul>
-                    <form action="?command=<?php echo isset($_SESSION['logged']) && $_SESSION['logged'] ? 'logout' : 'login'; ?>" method="POST" class="mb-0">
-                        <button type="submit" class=""><?php echo isset($_SESSION['logged']) && $_SESSION['logged'] ? 'Logout' : 'Sign In'; ?></button>
-                    </form>
-                    
+                    <a href="?command=<?php echo isset($_SESSION['logged']) && $_SESSION['logged'] ? 'logout' : 'showLogin'; ?>">
+                        <button><?php echo isset($_SESSION['logged']) && $_SESSION['logged'] ? 'LOGOUT' : 'SIGN IN'; ?></button>
+                    </a>
                 </div>
             </div>
         </nav>

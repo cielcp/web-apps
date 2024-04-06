@@ -25,8 +25,8 @@ class Config {
     public static $db = [
         "host" => "localhost",
         "port" => 5432,
-        "user" => "hyp2ftn",
-        "pass" => "H-w4wU5jPj09",
-        "database" => "hyp2ftn"
+        "user" => "ccp7gcp",
+        "pass" => "6LW1nWhgOtNq",
+        "database" => "ccp7gcp"
     ];
 }

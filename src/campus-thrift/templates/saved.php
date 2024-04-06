@@ -25,34 +25,18 @@
     <?php include('shared/header.php'); ?>
 
     <!-- Profile info -->
-    <section class="container my-4">
-        <div class="container d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center">
-                <div class="profile-pic-container">
-                    <img src="images/profilepic.jpg" alt="profile pic" width=30px>
-                </div>
-                <div class="user-info">
-                    <h2><?php echo($_SESSION['username'])?></h2>                    
-                    <p>3 items</p>
-                    <p>0 exchanges</p>
-                </div>
-            </div>
-            <form action="?command=showCreateListing" method="POST" class="mb-0">
-                <button type="submit">CREATE LISTING</button>
-            </form>
-        </div>
-    </section>
+    <?php include('shared/profile-info.php'); ?>
 
     <section class="tabs">
-        <a class="tab" href="profile.html"><button type="button">SELLING</button></a>
-        <a class="tab current" href="saved.html"><button type="button">SAVED</button></a>
+        <a class="tab" href="?command=profile"><button type="button">SELLING</button></a>
+        <a class="tab current" href="?command=saved"><button type="button">SAVED</button></a>
     </section>
     <div class="line"></div>
     
     <!-- Profile listings -->
     <main>
         <section class="flex-column">
-            <div class="listing-container">
+            <div class="category-container">
                 <div class="listing">
                     <div class="listing-img-container">
                         <a href="#">

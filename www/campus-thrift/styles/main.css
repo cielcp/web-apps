@@ -35,6 +35,10 @@ a {
     color: #040402;
 }
 
+a:hover {
+    color: #41653F;
+}
+
 .small {
     font-size: small;
 }
@@ -60,9 +64,6 @@ button {
     color: #040402;
 }
 
-
-/* At least 3 of your ten CSS rules properly update the style or layout of your screens 
-when specific events occur. */
 button:hover {
     background-color: #040402;
     color: #F8F5F0;
@@ -81,6 +82,13 @@ button:hover {
 
 form {
     margin-bottom: 0em;
+}
+
+.form-control {
+    border-radius: 50px;
+    border-color: #040402;
+    border-width: 1.5px;
+    background-color: transparent;
 }
 
 
@@ -326,15 +334,6 @@ form {
     padding-left: 40px;
 }
 
-.listing-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 .tabs {
     display: flex;
     justify-content: end;
@@ -350,9 +349,7 @@ form {
 .tabs .current{
     border-style: solid;
     border-width: 1.5px;
-    border-bottom: green;
 }
-
 
 
 /* Support responsive design / layout - the user demonstration 
