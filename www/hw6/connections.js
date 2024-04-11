@@ -100,15 +100,23 @@ function setUpNewGame(newCategories) {
  * as the only parameter. getRandomCategories() will then call your function 
  * with the new category object.
 */
-// ADD EVENT HANDLER
+// EVENT HANDLER NOT WORKING
+const restartButton = document.getElementById('restartButton');
+restartButton.addEventListener('click', function() {
+    startNewGame();
+});
+
 function startNewGame() {
-    // reset game state
-    // get new categories and setup board
+    // load a new set of categories and redraw the game board
     getRandomCategories(setUpNewGame);
     console.log('Starting a new game...');
+    // If a game was currently in progress, clear the win streak and average num guesses
+    // Hint: you may want to keep track of the overall number of guesses.
+    // Remove any display of the prior guesses for the in-progress game
+    // Update the game statistics to increase the number of games played
 }
-
 startNewGame();
+
 
 // Clear history. The user must be able to clear the game statistics 
 // (and any current game) from the browser.
