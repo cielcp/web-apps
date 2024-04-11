@@ -232,8 +232,7 @@ function makeGuess() {
     localStorage.setItem("numGuesses", allGuesses.length.toString());
 
     // check to see if all cards were guessed,and then end game if all have been gueesed
-
-}
+    //if(randomBoard ===){}
 
 function updateStatistics(){
 /*  The number of games played
@@ -352,4 +351,5 @@ function answerGame() {
         // Function to update the UI based on the hint or to show the updated board
         updateUI(hint);
     }
+}
 }
