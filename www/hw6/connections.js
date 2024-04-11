@@ -63,17 +63,67 @@ async function getRandomCategories(callback) {
 
 
 
+/** --------------------- GAME LOGIC STUFF --------------------- */
+// Page load and unload. The user’s data must be stored between views of the page.
+/** 
+ * You should use an object or array object to store the game and game statistics. 
+ * By creating an object to store them, you will be able to store the current state 
+ * more easily in localStorage by converting the object to a JSON string. 
+ * See JSON.stringify() and JSON.parse().
+*/
 
+/** 
+ * You must write a separate function that handles the setup of the new game. 
+ * This function must take one parameter: an object that contains the categories 
+ * and words to start the game.
+*/
+// New game functionality. The user must be able to start a new game.
+var allWords = [];
+
+function setUpNewGame(newCategories) {
+    // reset the game board (clearhistory should reset selected words)
+    // generate new categories
+    // setup board for display (and checking later)
+    const categories = newCategories["categories"];
+    // categories[0]; // first category in the board
+    categories.forEach(function(category) {
+        allWords = allWords.concat(category.words);
+    });
+    shuffle(allWords);
+    createCards(allWords);
+}
+
+
+/** 
+ * In the event handler for when the user chooses to start a new game, 
+ * call getRandomCategories() and pass in your separate function above 
+ * as the only parameter. getRandomCategories() will then call your function 
+ * with the new category object.
+*/
+// ADD EVENT HANDLER
+function startNewGame() {
+    // reset game state
+    // get new categories and setup board
+    getRandomCategories(setUpNewGame);
+    console.log('Starting a new game...');
+}
+
+startNewGame();
+
+// Clear history. The user must be able to clear the game statistics 
+// (and any current game) from the browser.
+function clearHistory() {
+}
 
 
 /** --------------------- DISPLAY CARDS STUFF --------------------- */
 const board = document.getElementById('grid');
 // loop through the random board data (REPLACE WITH WORDS ARRAY?)
 // might have to be an object to keep track of categories? idk
-var randomWords = ["word1", "word2", "word3", "word4", "word5", "word6", "word7", "word8", "word9", "word10", "word11", "word12", "word13", "word14", "word15", "word16"];
+//var randomWords = ["word1", "word2", "word3", "word4", "word5", "word6", "word7", "word8", "word9", "word10", "word11", "word12", "word13", "word14", "word15", "word16"];
 
 // Function to create cards
-function createCards() {
+function createCards(allWords) {
     var cardCount = 0;
     // create 4 rows 
     for (let rowNum = 0; rowNum < 4; rowNum++) {
@@ -94,7 +144,7 @@ function createCards() {
             const cardBody = document.createElement('div');
             cardBody.classList.add('card-body');
                 // get the current word in the scrambled word list? (idk how we wanna do this)
-            const curr = randomWords[cardCount];
+            const curr = allWords[cardCount];
             const word = document.createElement('h5');
             word.classList.add('card-title');
             word.textContent = curr;
@@ -108,7 +158,7 @@ function createCards() {
     }
 }
 // probs have to wrap this in a function so it only runs when user is playing?
-createCards();
+//createCards();
 
 // event listener to select cards on click
 function selectWord(word) {
@@ -117,12 +167,12 @@ function selectWord(word) {
 
 // taken from stack overflow probably need to cite/unplagarize?
 function shuffle(array) {
-    let currentIndex = array.length;
-    while (currentIndex != 0) {
-      let randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
+    let i = array.length;
+    while (i != 0) {
+      let j = Math.floor(Math.random() * i);
+      i--;
+      [array[i], array[j]] = [
+        array[j], array[i]];
     }
   }
 
@@ -130,57 +180,18 @@ function shuffle(array) {
 /** --------------------- SHUFFLE STUFF --------------------- */
 const shuffleButton = document.getElementById('shuffleButton');
 shuffleButton.addEventListener('click', function() {
-    shuffle(randomWords);
+    shuffle(allWords);
     shuffleCardContent();
 });
 function shuffleCardContent() {
     var cardCount = 0;
     const cards = document.querySelectorAll('.card-title');
     cards.forEach(function(card) {
-        card.textContent = randomWords[cardCount];
+        card.textContent = allWords[cardCount];
         cardCount++;
     });
 }
 
-
-/** --------------------- GAME LOGIC STUFF --------------------- */
-// Page load and unload. The user’s data must be stored between views of the page.
-/** 
- * You should use an object or array object to store the game and game statistics. 
- * By creating an object to store them, you will be able to store the current state 
- * more easily in localStorage by converting the object to a JSON string. 
- * See JSON.stringify() and JSON.parse().
-*/
-
-/** 
- * You must write a separate function that handles the setup of the new game. 
- * This function must take one parameter: an object that contains the categories 
- * and words to start the game.
-*/
-// New game functionality. The user must be able to start a new game.
-function setUpNewGame(newCategories) {
-    const categories = newCategories["categories"];
-    const board = {};
-    forEach(categories => {
-        // add four categories and their words to the board
-    });
-}
-
-/** 
- * In the event handler for when the user chooses to start a new game, 
- * call getRandomCategories() and pass in your separate function above 
- * as the only parameter. getRandomCategories() will then call your function 
- * with the new category object.
-*/
-function startNewGame() {
-    getRandomCategories(setUpNewGame);
-
-}
-
-// Clear history. The user must be able to clear the game statistics 
-// (and any current game) from the browser.
-function clearHistory() {
-}
 
 
 /** --------------------- GUESS STUFF --------------------- */
@@ -280,14 +291,6 @@ function guessWord(){
 
     clearSelections(); // Prepare for the next guess
 
-}
-
-
-function startNewGame() {
-    // Reset game state and UI for a new game session
-    // This is a placeholder function. Implement according to your game's requirements
-    console.log('Starting a new game...');
-    // For example, reset the game board, generate new categories, or reset selected words.
 }
 
 
