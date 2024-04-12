@@ -63,75 +63,17 @@ async function getRandomCategories(callback) {
 
 
 
-/** --------------------- GAME LOGIC STUFF --------------------- */
-// Page load and unload. The user’s data must be stored between views of the page.
-/** 
- * You should use an object or array object to store the game and game statistics. 
- * By creating an object to store them, you will be able to store the current state 
- * more easily in localStorage by converting the object to a JSON string. 
- * See JSON.stringify() and JSON.parse().
-*/
 
-/** 
- * You must write a separate function that handles the setup of the new game. 
- * This function must take one parameter: an object that contains the categories 
- * and words to start the game.
-*/
-// New game functionality. The user must be able to start a new game.
-var allWords = [];
-
-function setUpNewGame(newCategories) {
-    // reset the game board (clearhistory should reset selected words)
-    // generate new categories
-    // setup board for display (and checking later)
-    const categories = newCategories["categories"];
-    // categories[0]; // first category in the board
-    categories.forEach(function(category) {
-        allWords = allWords.concat(category.words);
-    });
-    shuffle(allWords);
-    createCards(allWords);
-}
-
-
-/** 
- * In the event handler for when the user chooses to start a new game, 
- * call getRandomCategories() and pass in your separate function above 
- * as the only parameter. getRandomCategories() will then call your function 
- * with the new category object.
-*/
-// EVENT HANDLER NOT WORKING
-const restartButton = document.getElementById('restartButton');
-restartButton.addEventListener('click', function() {
-    startNewGame();
-});
-
-function startNewGame() {
-    // load a new set of categories and redraw the game board
-    getRandomCategories(setUpNewGame);
-    console.log('Starting a new game...');
-    // If a game was currently in progress, clear the win streak and average num guesses
-    // Hint: you may want to keep track of the overall number of guesses.
-    // Remove any display of the prior guesses for the in-progress game
-    // Update the game statistics to increase the number of games played
-}
-
-startNewGame();
-
-// Clear history. The user must be able to clear the game statistics 
-// (and any current game) from the browser.
-function clearHistory() {
-}
 
 
 /** --------------------- DISPLAY CARDS STUFF --------------------- */
 const board = document.getElementById('grid');
 // loop through the random board data (REPLACE WITH WORDS ARRAY?)
 // might have to be an object to keep track of categories? idk
-//var randomWords = ["word1", "word2", "word3", "word4", "word5", "word6", "word7", "word8", "word9", "word10", "word11", "word12", "word13", "word14", "word15", "word16"];
+var randomWords = ["word1", "word2", "word3", "word4", "word5", "word6", "word7", "word8", "word9", "word10", "word11", "word12", "word13", "word14", "word15", "word16"];
 
 // Function to create cards
-function createCards(allWords) {
+function createCards() {
     var cardCount = 0;
     // create 4 rows 
     for (let rowNum = 0; rowNum < 4; rowNum++) {
@@ -151,8 +93,8 @@ function createCards(allWords) {
             // fill in card content
             const cardBody = document.createElement('div');
             cardBody.classList.add('card-body');
-            // get the current word in the scrambled word list? (idk how we wanna do this)
-            const curr = allWords[cardCount];
+                // get the current word in the scrambled word list? (idk how we wanna do this)
+            const curr = randomWords[cardCount];
             const word = document.createElement('h5');
             word.classList.add('card-title');
             word.textContent = curr;
@@ -166,7 +108,7 @@ function createCards(allWords) {
     }
 }
 // probs have to wrap this in a function so it only runs when user is playing?
-//createCards();
+createCards();
 
 // event listener to select cards on click
 function selectWord(word) {
@@ -239,6 +181,25 @@ function startNewGame() {
 // (and any current game) from the browser.
 function clearHistory() {
 }
+
+
+/** --------------------- GUESS STUFF --------------------- */
+const guessButton = document.getElementById('guessButton');
+guessButton.addEventListener('click', function() {
+    makeGuess();
+});
+// Guess words functionality. The user must be able to make a guess.
+function makeGuess() {
+    const guess = document.querySelectorAll('.selected');
+    // make sure its a valid 4 words (display alert errors if not)
+    // save to users prior guesses
+    // check if right answer
+
+}
+
+
+
+
 
 
 
