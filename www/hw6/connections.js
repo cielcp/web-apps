@@ -136,6 +136,7 @@ function shuffleCardContent() {
     });
 }
 
+
 /** --------------------- GAME LOGIC STUFF --------------------- */
 // New game functionality. The user must be able to start a new game.
 function setUpNewGame(newCategories) {
