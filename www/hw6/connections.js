@@ -91,6 +91,7 @@ function setUpNewGame(newCategories) {
     });
     shuffle(allWords);
     createCards(allWords);
+    localStorage.setItem("allWords", JSON.stringify(allWords));
 }
 
 
@@ -116,6 +117,18 @@ function startNewGame() {
     // Update the game statistics to increase the number of games played
 }
 startNewGame();
+
+
+/** --------------------- DISPLAY MESSAGE STUFF --------------------- */
+var message = "";
+
+function makeMessage(message) {
+    if(message !== "") {
+        const messageContainer = document.getElementById("messageContainer");
+        messageContainer.classList.add('alert', 'alert-success');
+        messageContainer.textContent = message;
+    }
+}
 
 
 /** --------------------- DISPLAY CARDS STUFF --------------------- */
@@ -241,10 +254,10 @@ function guessWord(){
     array of their text content, effectively capturing the selected words. */
 
     const selectedWords = Array.from(document.querySelectorAll('.word.selected')).map(element => element.textContent);
-    const messageElement = document.getElementById('message'); // Feedback message element
+    //const messageElement = document.getElementById('message'); // Feedback message element
 
     if (selectedWords.length !== 4) {
-        messageElement.textContent = "Please select exactly 4 words for your guess.";
+        makeMessage("Please select exactly 4 words for your guess");
         clearSelections();
         return;
     }
