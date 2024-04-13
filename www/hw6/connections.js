@@ -233,45 +233,23 @@ function guessWord() {
         if (matchCount == 4) {
             // a correct guess!
             makeMessage("Correct! All words are from the category: " + category);
-
+            updateGameStatistics(true);
         }
         else if (matchCount == 3) {
             // one away!
             makeMessage("One away!");
+            updateGameStatistics(false);
         }
         else if (matchCount == 2) {
             // two away!
             makeMessage("Two away!");
+            updateGameStatistics(false);
         }
         else {
             // not quite...
             makeMessage("Not quite...");
+            updateGameStatistics(false);
         }
-    }
-
-
-    for (const category in categories) {
-        console.log(category['category']);
-        console.log(category['words']);
-
-        
-
-        //const matchedWords = selectedWords.filter(word => words.includes(word));
-
-        if (matchedWords.length === 4) {
-            result = { isCorrect: true, category, message: "" };
-            break;
-        } else if (matchedWords.length >= 2) {
-            result.message = `${matchedWords.length} words match the category ${category}.`;
-        }
-    }
-
-    if (guessResult.isCorrect) {
-        messageElement.textContent = "Correct! All words are from the category: " + guessResult.category;
-        updateGameStatistics(true); // Update statistics for a correct guess
-    } else {
-        messageElement.textContent = guessResult.message;
-        updateGameStatistics(false); // Update statistics for an incorrect guess
     }
     clearSelections(); // Prepare for the next guess
 
