@@ -85,11 +85,13 @@ function setUpNewGame(newCategories) {
     // generate new categories
     // setup board for display (and checking later)
     const categories = newCategories["categories"];
+    localStorage.setItem('categories', JSON.stringify(categories));
     // categories[0]; // first category in the board
     categories.forEach(function(category) {
         allWords = allWords.concat(category.words);
     });
     shuffle(allWords);
+    localStorage.setItem('allWords', allWords);
     createCards(allWords);
 }
 
@@ -117,6 +119,16 @@ function startNewGame() {
 }
 startNewGame();
 
+/** --------------------- DISPLAY MESSAGE STUFF --------------------- */
+var message = "";
+
+function makeMessage(message) {
+    if(message !== "") {
+        const messageContainer = document.getElementById("messageContainer");
+        messageContainer.classList.add('alert', 'alert-success');
+        messageContainer.textContent = message;
+    }
+}
 
 /** --------------------- DISPLAY CARDS STUFF --------------------- */
 const board = document.getElementById('grid');
@@ -167,7 +179,112 @@ function selectWord(word) {
     word.classList.toggle('selected');
 }
 
-// taken from stack overflow probably need to cite/unplagarize?
+
+/** --------------------- GUESS STUFF --------------------- */
+const guessButton = document.getElementById('guessButton');
+guessButton.addEventListener('click', function() {
+    guessWord();
+});
+
+function guessWord() {
+/*     Selecting Words: It starts by selecting all elements with the class .word that are also marked as .selected 
+    (likely through a user interaction like clicking). The Array.from method is used to convert the 
+    NodeList returned by document.querySelectorAll into an array, allowing array methods 
+    like map to be used. The map function then transforms this array of elements into an 
+    array of their text content, effectively capturing the selected words. */
+
+    const selectedWords = Array.from(document.querySelectorAll('.selected')).map(element => element.textContent);
+    //const messageElement = document.getElementById('message'); // Feedback message element
+    // console.log(selectedWords);
+
+    if (selectedWords.length !== 4) {
+        makeMessage("Please select exactly 4 words for your guess");
+        clearSelections();
+        return;
+    }
+
+    let result = { isCorrect: false, category: null, message: "Not quite right." };
+    
+    // loop over selected words, and check with each category
+    let categories = JSON.parse(localStorage.getItem('categories'));
+    //console.log(categories);
+    //console.log(categories[0]);
+
+    // loop over the categories
+    for (let i = 0; i < 4; i++) {
+        let matchCount = 0;
+        let category = categories[i]['category'];
+        let words = categories[i]['words'];
+
+        //console.log(categories[i]['category']);
+        //console.log(categories[i]['words']);
+        
+        // count how many of the category words matches the selected words category
+        for (let j = 0; j < 4; j++) {
+            // console.log(words[j]);
+            for (let x = 0; x < 4; x++) {
+                // console.log(selectedWords[x]);
+                if (selectedWords[x] == words[j]) {
+                    matchCount++;
+                    console.log(matchCount);
+                }
+            }
+        }
+        if (matchCount == 4) {
+            // a correct guess!
+            makeMessage("Correct! All words are from the category: " + category);
+
+        }
+        else if (matchCount == 3) {
+            // one away!
+            makeMessage("One away!");
+        }
+        else if (matchCount == 2) {
+            // two away!
+            makeMessage("Two away!");
+        }
+        else {
+            // not quite...
+            makeMessage("Not quite...");
+        }
+    }
+
+
+    for (const category in categories) {
+        console.log(category['category']);
+        console.log(category['words']);
+
+        
+
+        //const matchedWords = selectedWords.filter(word => words.includes(word));
+
+        if (matchedWords.length === 4) {
+            result = { isCorrect: true, category, message: "" };
+            break;
+        } else if (matchedWords.length >= 2) {
+            result.message = `${matchedWords.length} words match the category ${category}.`;
+        }
+    }
+
+    if (guessResult.isCorrect) {
+        messageElement.textContent = "Correct! All words are from the category: " + guessResult.category;
+        updateGameStatistics(true); // Update statistics for a correct guess
+    } else {
+        messageElement.textContent = guessResult.message;
+        updateGameStatistics(false); // Update statistics for an incorrect guess
+    }
+    clearSelections(); // Prepare for the next guess
+
+}
+
+
+/** --------------------- SHUFFLE STUFF --------------------- */
+const shuffleButton = document.getElementById('shuffleButton');
+shuffleButton.addEventListener('click', function() {
+    shuffle(allWords);
+    shuffleCardContent();
+});
+
 function shuffle(array) {
     let i = array.length;
     while (i != 0) {
@@ -178,13 +295,6 @@ function shuffle(array) {
     }
   }
 
-
-/** --------------------- SHUFFLE STUFF --------------------- */
-const shuffleButton = document.getElementById('shuffleButton');
-shuffleButton.addEventListener('click', function() {
-    shuffle(allWords);
-    shuffleCardContent();
-});
 function shuffleCardContent() {
     var cardCount = 0;
     const cards = document.querySelectorAll('.card-title');
@@ -195,7 +305,7 @@ function shuffleCardContent() {
 }
 
 
-// I THINK FROM HERE TO .....
+/** --------------------- CLEAR STUFF --------------------- */
 document.getElementById("clearButton").addEventListener('click', clearGame);
 function clearGame() {
     // clear game and game stats storage from localstorage
@@ -225,113 +335,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// HERE IS FINE, JUST PUSHING THIS RN THOUGH TO SAVE LOL, IGNORE BELOW WORKINPROGRESS
-
-
-function guessWord(){
-/*     Selecting Words: It starts by selecting all elements with the class .word that are also marked as .selected 
-    (likely through a user interaction like clicking). The Array.from method is used to convert the 
-    NodeList returned by document.querySelectorAll into an array, allowing array methods 
-    like map to be used. The map function then transforms this array of elements into an 
-    array of their text content, effectively capturing the selected words. */
-
-    const selectedWords = Array.from(document.querySelectorAll('.word.selected')).map(element => element.textContent);
-    const messageElement = document.getElementById('message'); // Feedback message element
-
-    if (selectedWords.length !== 4) {
-        messageElement.textContent = "Please select exactly 4 words for your guess.";
-        clearSelections();
-        return;
-    }
-
-    let result = { isCorrect: false, category: null, message: "Not quite right." };
-
-    for (const [category, words] of Object.entries(categories)) {
-        const matchedWords = selectedWords.filter(word => words.includes(word));
-
-        if (matchedWords.length === 4) {
-            result = { isCorrect: true, category, message: "" };
-            break;
-        } else if (matchedWords.length >= 2) {
-            result.message = `${matchedWords.length} words match the category ${category}.`;
-        }
-    }
-
-    if (guessResult.isCorrect) {
-        messageElement.textContent = "Correct! All words are from the category: " + guessResult.category;
-        updateGameStatistics(true); // Update statistics for a correct guess
-    } else {
-        messageElement.textContent = guessResult.message;
-        updateGameStatistics(false); // Update statistics for an incorrect guess
-    }
-    clearSelections(); // Prepare for the next guess
-
-}
 
 function clearSelections() {
     document.querySelectorAll('.word.selected').forEach(element => {
         element.classList.remove('selected'); // Clear visual selection
     });
-}
-
-
-function answerGame() {
-    let answerInput = document.getElementById("answerInput"); // Assuming an input field with ID 'answerInput'
-    if (answerInput.value) {
-        // Assume 'gameState' is an object where we keep the game state, similar to PHP's $_SESSION
-        let gameState = JSON.parse(localStorage.getItem("gameState") || "{}");
-
-        let answer = answerInput.value.split(' ');
-        let guess = [];
-        let validGuess = true;
-
-        answer.forEach(num => {
-            if (gameState.randomBoard && gameState.randomBoard.hasOwnProperty(num)) {
-                guess.push(gameState.randomBoard[num]);
-            } else {
-                gameState.message = "Please make a valid guess";
-                validGuess = false;
-                // Show message or update the DOM with the game state here
-                showGame(gameState); // You'll need to implement this function
-                return; // Equivalent to 'exit()' in PHP
-            }
-        });
-
-        if (!validGuess) {
-            return; // Stop execution if the guess was not valid
-        }
-
-        let match = [];
-        let hint = "Not quite...";
-
-        Object.keys(gameState.board).forEach(key => {
-            match = gameState.board[key].filter(word => guess.includes(word));
-
-            if (match.length === 4) {
-                answer.forEach(num => {
-                    delete gameState.randomBoard[num];
-                });
-                hint = key; // Assuming key is the category name
-            } else if (match.length === 3) {
-                hint = "One away!";
-            } else if (match.length === 2) {
-                hint = "Two away";
-            }
-        });
-
-        gameState.allGuesses = gameState.allGuesses || [];
-        gameState.allGuesses.push({ guess, hint });
-        gameState.numGuesses = gameState.allGuesses.length;
-
-        if (Object.keys(gameState.randomBoard).length === 0) {
-            showGameOver(gameState); // You'll need to implement this function
-            return;
-        }
-
-        // Save the updated game state back to localStorage
-        localStorage.setItem("gameState", JSON.stringify(gameState));
-        showGame(gameState); // Refresh or update game state display
-    } else {
-        console.error("Not sure how this error is possible but please make a guess.");
-    }
 }
