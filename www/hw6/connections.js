@@ -91,7 +91,7 @@ function setUpNewGame(newCategories) {
         allWords = allWords.concat(category.words);
     });
     shuffle(allWords);
-    localStorage.setItem('allWords', allWords);
+    localStorage.setItem('allWords', JSON.stringify(allWords));
     localStorage.setItem('guessCount', 0);
     //localStorage.setItem('hints', []);
     localStorage.setItem('guesses', JSON.stringify([]));
@@ -223,9 +223,6 @@ function guessWord() {
         let matchCount = 0;
         let category = categories[i]['category'];
         let words = categories[i]['words'];
-
-        //console.log(categories[i]['category']);
-        //console.log(categories[i]['words']);
         
         // count how many of the category words matches the selected words category
         for (let j = 0; j < 4; j++) {
@@ -234,7 +231,6 @@ function guessWord() {
                 // console.log(selectedWords[x]);
                 if (selectedWords[x] == words[j]) {
                     matchCount++;
-                    console.log(matchCount);
                 }
             }
         }
@@ -242,7 +238,6 @@ function guessWord() {
             // a correct guess!
             makeMessage("Correct! All words are from the category: " + category);
             guess = { category: category, words: selectedWords, message: "Correct!" };
-            //updateGameStatistics(true);
         }
         else if (matchCount == 3) {
             // one away!
@@ -263,8 +258,8 @@ function guessWord() {
     clearSelections(); // Prepare for the next guess
     // update previous guesses
     guesses.push(guess);
-    console.log(guesses);
-    localStorage.setItem["guesses"] = JSON.stringify(guesses);
+    localStorage.setItem("guesses", JSON.stringify(guesses));
+    return;
 }
 
 
