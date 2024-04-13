@@ -93,8 +93,8 @@ function setUpNewGame(newCategories) {
     shuffle(allWords);
     localStorage.setItem('allWords', allWords);
     localStorage.setItem('guessCount', 0);
-    localStorage.setItem('hints', []);
-    localStorage.setItem('guesses', []);
+    //localStorage.setItem('hints', []);
+    localStorage.setItem('guesses', JSON.stringify([]));
     createCards(allWords);
 }
 
@@ -199,22 +199,17 @@ function guessWord() {
     array of their text content, effectively capturing the selected words. */
 
     const selectedWords = Array.from(document.querySelectorAll('.selected')).map(element => element.textContent);
-
-    guesses = localStorage.getItem('guesses');
-    console.log(guesses);
-    //guesses.push(selectedWords);
-    console.log(guesses);
+    
+    // update prior guesses
+    let guess = { category: "none", words: selectedWords, message: "test" };
+    let guesses = JSON.parse(localStorage.getItem('guesses'));
 
     // update guess count
     guessCount = localStorage.getItem('guessCount');
-    console.log(guessCount);
     guessCount++;
-    console.log(guessCount);
     localStorage.setItem('guessCount', guessCount);
     const priorGuessNum = document.getElementById('priorGuessNum');
     priorGuessNum.textContent = "Prior guesses: " + guessCount + " total";
-    //const messageElement = document.getElementById('message'); // Feedback message element
-    // console.log(selectedWords);
 
     if (selectedWords.length !== 4) {
         makeMessage("Please select exactly 4 words for your guess");
@@ -222,12 +217,7 @@ function guessWord() {
         return;
     }
 
-    
-    // loop over selected words, and check with each category
     let categories = JSON.parse(localStorage.getItem('categories'));
-    //console.log(categories);
-    //console.log(categories[0]);
-
     // loop over the categories
     for (let i = 0; i < 4; i++) {
         let matchCount = 0;
@@ -272,7 +262,9 @@ function guessWord() {
     }
     clearSelections(); // Prepare for the next guess
     // update previous guesses
-
+    guesses.push(guess);
+    console.log(guesses);
+    localStorage.setItem["guesses"] = JSON.stringify(guesses);
 }
 
 
