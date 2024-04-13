@@ -99,7 +99,7 @@ function setUpNewGame(newCategories) {
     localStorage.setItem('allWords', allWords);
     localStorage.setItem('guessCount', 0);
     localStorage.setItem('hints', []);
-    localStorage.setItem('guesses', []);
+    localStorage.setItem('guesses', JSON.stringify([]));
     createCards(allWords);
 }
 
@@ -198,6 +198,7 @@ guessButton.addEventListener('click', function() {
 });
 
 
+let priorGuesses = document.getElementById("priorGuesses");
 
 function guessWord() {
 /*     Selecting Words: It starts by selecting all elements with the class .word that are also marked as .selected 
@@ -208,9 +209,8 @@ function guessWord() {
 
     const selectedWords = Array.from(document.querySelectorAll('.selected')).map(element => element.textContent);
 
-    guesses = localStorage.getItem('guesses');
+    guesses = JSON.parse(localStorage.getItem('guesses'));
     console.log(guesses);
-    //guesses.push(selectedWords);
     console.log(guesses);
 
     // update guess count
@@ -221,8 +221,6 @@ function guessWord() {
     localStorage.setItem('guessCount', guessCount);
     const priorGuessNum = document.getElementById('priorGuessNum');
     priorGuessNum.textContent = "Prior guesses: " + guessCount + " total";
-    //const messageElement = document.getElementById('message'); // Feedback message element
-    // console.log(selectedWords);
 
     if (selectedWords.length !== 4) {
         makeMessage("Please select exactly 4 words for your guess");
@@ -233,17 +231,12 @@ function guessWord() {
     
     // loop over selected words, and check with each category
     let categories = JSON.parse(localStorage.getItem('categories'));
-    //console.log(categories);
-    //console.log(categories[0]);
 
     // loop over the categories
     for (let i = 0; i < 4; i++) {
         let matchCount = 0;
         let category = categories[i]['category'];
         let words = categories[i]['words'];
-
-        //console.log(categories[i]['category']);
-        //console.log(categories[i]['words']);
         
         // count how many of the category words matches the selected words category
         for (let j = 0; j < 4; j++) {
@@ -279,19 +272,17 @@ function guessWord() {
         else if (matchCount == 3) {
             // one away!
             makeMessage("One away!");
-            guess = { category: "none", words: selectedWords, message: "One away!" };
+            guess = { words: selectedWords, message: "One away!" };
         }
         else if (matchCount == 2) {
             // two away!
             makeMessage("Two away!");
-            guess = { category: "none", words: selectedWords, message: "Two away!" };
-            console.log(allWords);
-
+            guess = { words: selectedWords, message: "Two away!" };
         }
         else {
             // not quite...
             makeMessage("Not quite...");
-            guess = { category: "none", words: selectedWords, message: "Not quite..." };
+            guess = { words: selectedWords, message: "Not quite..." };
         }
     }
     if(allWords.length == 0){
@@ -306,7 +297,13 @@ function guessWord() {
     }
     clearSelections(); // Prepare for the next guess
     // update previous guesses
-
+    console.log(guess);
+    guesses.push(guess);
+    localStorage.setItem("guesses", JSON.stringify(guesses));
+    
+    const currGuess = document.createElement('p');
+    currGuess.textContent = guess["words"] + " " + guess["message"];
+    priorGuesses.appendChild(currGuess);
 }
 
 
@@ -354,6 +351,7 @@ function clearGame() {
     document.getElementById('won').textContent = 'Games won: 0';
     document.getElementById('winStreak').textContent = 'Current win streak: 0';
     document.getElementById('averageGuesses').textContent = 'Average guesses per game: 0';
+    document.getElementById('priorGuessNum').textContent = 'Prior guesses: 0 Total';
     
     // start new game
     startNewGame();
