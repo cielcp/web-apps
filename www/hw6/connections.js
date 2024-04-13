@@ -79,6 +79,8 @@ async function getRandomCategories(callback) {
 */
 // New game functionality. The user must be able to start a new game.
 var allWords = [];
+var gamesWon = 0;
+var gamesPlayed = 0;
 
 function setUpNewGame(newCategories) {
     // reset the game board (clearhistory should reset selected words)
@@ -294,6 +296,13 @@ function guessWord() {
     }
     if(allWords.length == 0){
         alert("you won!");
+        gamesWon++;
+        localStorage.setItem('gamesWon', JSON.stringify(gamesWon));
+        won.textContent = "Games Won: " + gamesWon;
+
+        gamesPlayed++;
+        localStorage.setItem('gamesPlayed', JSON.stringify(gamesPlayed));
+        played.textContent = "Games Played: " + gamePlayed;
     }
     clearSelections(); // Prepare for the next guess
     // update previous guesses
