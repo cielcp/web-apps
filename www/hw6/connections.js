@@ -92,6 +92,9 @@ function setUpNewGame(newCategories) {
     });
     shuffle(allWords);
     localStorage.setItem('allWords', allWords);
+    localStorage.setItem('guessCount', 0);
+    localStorage.setItem('hints', []);
+    localStorage.setItem('guesses', []);
     createCards(allWords);
 }
 
@@ -186,6 +189,8 @@ guessButton.addEventListener('click', function() {
     guessWord();
 });
 
+
+
 function guessWord() {
 /*     Selecting Words: It starts by selecting all elements with the class .word that are also marked as .selected 
     (likely through a user interaction like clicking). The Array.from method is used to convert the 
@@ -194,6 +199,20 @@ function guessWord() {
     array of their text content, effectively capturing the selected words. */
 
     const selectedWords = Array.from(document.querySelectorAll('.selected')).map(element => element.textContent);
+
+    guesses = localStorage.getItem('guesses');
+    console.log(guesses);
+    //guesses.push(selectedWords);
+    console.log(guesses);
+
+    // update guess count
+    guessCount = localStorage.getItem('guessCount');
+    console.log(guessCount);
+    guessCount++;
+    console.log(guessCount);
+    localStorage.setItem('guessCount', guessCount);
+    const priorGuessNum = document.getElementById('priorGuessNum');
+    priorGuessNum.textContent = "Prior guesses: " + guessCount + " total";
     //const messageElement = document.getElementById('message'); // Feedback message element
     // console.log(selectedWords);
 
@@ -203,7 +222,6 @@ function guessWord() {
         return;
     }
 
-    let result = { isCorrect: false, category: null, message: "Not quite right." };
     
     // loop over selected words, and check with each category
     let categories = JSON.parse(localStorage.getItem('categories'));
@@ -233,24 +251,30 @@ function guessWord() {
         if (matchCount == 4) {
             // a correct guess!
             makeMessage("Correct! All words are from the category: " + category);
+            guess = { category: category, words: selectedWords, message: "Correct!" };
             //updateGameStatistics(true);
         }
         else if (matchCount == 3) {
             // one away!
             makeMessage("One away!");
+            guess = { category: "none", words: selectedWords, message: "One away!" };
         }
         else if (matchCount == 2) {
             // two away!
             makeMessage("Two away!");
+            guess = { category: "none", words: selectedWords, message: "Two away!" };
         }
         else {
             // not quite...
             makeMessage("Not quite...");
+            guess = { category: "none", words: selectedWords, message: "Not quite..." };
         }
     }
     clearSelections(); // Prepare for the next guess
+    // update previous guesses
 
 }
+
 
 
 /** --------------------- SHUFFLE STUFF --------------------- */
