@@ -84,6 +84,9 @@ function setUpNewGame(newCategories) {
     // reset the game board (clearhistory should reset selected words)
     // generate new categories
     // setup board for display (and checking later)
+    const board = document.getElementById('grid');
+    board.innerHTML = ''; // This clears the board
+
     const categories = newCategories["categories"];
     localStorage.setItem('categories', JSON.stringify(categories));
     // categories[0]; // first category in the board
@@ -91,10 +94,10 @@ function setUpNewGame(newCategories) {
         allWords = allWords.concat(category.words);
     });
     shuffle(allWords);
-    localStorage.setItem('allWords', JSON.stringify(allWords));
+    localStorage.setItem('allWords', allWords);
     localStorage.setItem('guessCount', 0);
-    //localStorage.setItem('hints', []);
-    localStorage.setItem('guesses', JSON.stringify([]));
+    localStorage.setItem('hints', []);
+    localStorage.setItem('guesses', []);
     createCards(allWords);
 }
 
@@ -143,7 +146,8 @@ const board = document.getElementById('grid');
 function createCards(allWords) {
     var cardCount = 0;
     // create 4 rows 
-    for (let rowNum = 0; rowNum < 4; rowNum++) {
+    maxRow = (allWords.length)/4;
+    for (let rowNum = 0; rowNum < maxRow; rowNum++) {
         // create the current row
         const row = document.createElement('div');
         row.classList.add('row', 'flex-nowrap', 'mb-3');
@@ -173,6 +177,8 @@ function createCards(allWords) {
         }
         board.appendChild(row);
     }
+    console.log(allWords);
+
 }
 // probs have to wrap this in a function so it only runs when user is playing?
 //createCards();
@@ -199,17 +205,22 @@ function guessWord() {
     array of their text content, effectively capturing the selected words. */
 
     const selectedWords = Array.from(document.querySelectorAll('.selected')).map(element => element.textContent);
-    
-    // update prior guesses
-    let guess = { category: "none", words: selectedWords, message: "test" };
-    let guesses = JSON.parse(localStorage.getItem('guesses'));
+
+    guesses = localStorage.getItem('guesses');
+    console.log(guesses);
+    //guesses.push(selectedWords);
+    console.log(guesses);
 
     // update guess count
     guessCount = localStorage.getItem('guessCount');
+    console.log(guessCount);
     guessCount++;
+    console.log(guessCount);
     localStorage.setItem('guessCount', guessCount);
     const priorGuessNum = document.getElementById('priorGuessNum');
     priorGuessNum.textContent = "Prior guesses: " + guessCount + " total";
+    //const messageElement = document.getElementById('message'); // Feedback message element
+    // console.log(selectedWords);
 
     if (selectedWords.length !== 4) {
         makeMessage("Please select exactly 4 words for your guess");
@@ -217,12 +228,20 @@ function guessWord() {
         return;
     }
 
+    
+    // loop over selected words, and check with each category
     let categories = JSON.parse(localStorage.getItem('categories'));
+    //console.log(categories);
+    //console.log(categories[0]);
+
     // loop over the categories
     for (let i = 0; i < 4; i++) {
         let matchCount = 0;
         let category = categories[i]['category'];
         let words = categories[i]['words'];
+
+        //console.log(categories[i]['category']);
+        //console.log(categories[i]['words']);
         
         // count how many of the category words matches the selected words category
         for (let j = 0; j < 4; j++) {
@@ -231,6 +250,7 @@ function guessWord() {
                 // console.log(selectedWords[x]);
                 if (selectedWords[x] == words[j]) {
                     matchCount++;
+                    console.log(matchCount);
                 }
             }
         }
@@ -238,6 +258,21 @@ function guessWord() {
             // a correct guess!
             makeMessage("Correct! All words are from the category: " + category);
             guess = { category: category, words: selectedWords, message: "Correct!" };
+            //updateGameStatistics(true);
+
+            //remove 4 words from the list to reshuffle and displahy
+            for(let i = 0; i < 4; i++){
+                let index = allWords.indexOf(selectedWords[i]);
+                if (index !== -1) {
+                    allWords.splice(index, 1);
+                }
+            }
+            localStorage.setItem('allWords', JSON.stringify(allWords));
+            const board = document.getElementById('grid');
+            board.innerHTML = ''; // This clears the board
+            createCards(allWords);
+            console.log(allWords);
+    
         }
         else if (matchCount == 3) {
             // one away!
@@ -248,6 +283,8 @@ function guessWord() {
             // two away!
             makeMessage("Two away!");
             guess = { category: "none", words: selectedWords, message: "Two away!" };
+            console.log(allWords);
+
         }
         else {
             // not quite...
@@ -255,11 +292,12 @@ function guessWord() {
             guess = { category: "none", words: selectedWords, message: "Not quite..." };
         }
     }
+    if(allWords.length == 0){
+        alert("you won!");
+    }
     clearSelections(); // Prepare for the next guess
     // update previous guesses
-    guesses.push(guess);
-    localStorage.setItem("guesses", JSON.stringify(guesses));
-    return;
+
 }
 
 
@@ -293,16 +331,20 @@ function shuffleCardContent() {
 
 /** --------------------- CLEAR STUFF --------------------- */
 document.getElementById("clearButton").addEventListener('click', clearGame);
+
 function clearGame() {
+    localStorage.clear('categories');
+    localStorage.clear('guessCount');
+  
+    
+    alert('hi');
     // clear game and game stats storage from localstorage
-    localStorage.clear();
 
     // clear stats from the DOM
     document.getElementById('played').textContent = 'Games played: 0';
     document.getElementById('won').textContent = 'Games won: 0';
     document.getElementById('winStreak').textContent = 'Current win streak: 0';
     document.getElementById('averageGuesses').textContent = 'Average guesses per game: 0';
-    document.getElementById('prior-guesses-num').textContent = 'Prior guesses: 0 Total';
     
     // start new game
     startNewGame();
