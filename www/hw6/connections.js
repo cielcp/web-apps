@@ -233,22 +233,19 @@ function guessWord() {
         if (matchCount == 4) {
             // a correct guess!
             makeMessage("Correct! All words are from the category: " + category);
-            updateGameStatistics(true);
+            //updateGameStatistics(true);
         }
         else if (matchCount == 3) {
             // one away!
             makeMessage("One away!");
-            updateGameStatistics(false);
         }
         else if (matchCount == 2) {
             // two away!
             makeMessage("Two away!");
-            updateGameStatistics(false);
         }
         else {
             // not quite...
             makeMessage("Not quite...");
-            updateGameStatistics(false);
         }
     }
     clearSelections(); // Prepare for the next guess
@@ -315,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function clearSelections() {
-    document.querySelectorAll('.word.selected').forEach(element => {
+    document.querySelectorAll('.selected').forEach(element => {
         element.classList.remove('selected'); // Clear visual selection
     });
 }
