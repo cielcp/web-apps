@@ -208,7 +208,13 @@ let priorGuesses = document.getElementById("priorGuesses");
 function guessWord() {
 
     const selectedWords = Array.from(document.querySelectorAll('.selected')).map(element => element.textContent);
+    if (selectedWords.length !== 4) {
+        makeMessage("Please select exactly 4 words for your guess");
+        clearSelections();
+        return;
+    }
 
+    
     guesses = JSON.parse(localStorage.getItem('guesses'));
     console.log(guesses);
     console.log(guesses);
@@ -220,12 +226,6 @@ function guessWord() {
     localStorage.setItem('guessCount', guessCount);
     const priorGuessNum = document.getElementById('priorGuessNum');
     priorGuessNum.textContent = "Prior guesses: " + guessCount + " total";
-
-    if (selectedWords.length !== 4) {
-        makeMessage("Please select exactly 4 words for your guess");
-        clearSelections();
-        return;
-    }
 
     
     // loop over selected words, and check with each category
