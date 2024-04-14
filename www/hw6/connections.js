@@ -116,6 +116,11 @@ const newGameButton = document.getElementById('newGameButton');
 newGameButton.addEventListener('click', function() {
     // if user did not get all categories, update win streak, avg guesses, num games played
     startNewGame();
+    const priorGuessNum = document.getElementById('priorGuessNum');
+    priorGuessNum.textContent = "Prior guesses: 0 total";
+    const priorGuesses = document.getElementById('priorGuesses');
+    priorGuesses.innerHTML = ''; // This clears the prior guesses list
+    makeMessage("New game!");
 });
 
 function startNewGame() {
