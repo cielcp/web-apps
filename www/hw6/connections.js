@@ -120,6 +120,8 @@ restartButton.addEventListener('click', function() {
 });
 
 function startNewGame() {
+    const board = document.getElementById('grid');
+    board.innerHTML = '';
     // load a new set of categories and redraw the game board
     getRandomCategories(setUpNewGame);
     console.log('Starting a new game...');
@@ -347,10 +349,10 @@ document.getElementById("clearButton").addEventListener('click', clearGame);
 function clearGame() {
     localStorage.clear('categories');
     localStorage.clear('guessCount');
-  
-    
-    makeMessage('hi');
-    // clear game and game stats storage from localstorage
+    allWords = [];
+    localStorage.clear('allWords');
+
+      // clear game and game stats storage from localstorage
 
     // clear stats from the DOM
     document.getElementById('played').textContent = 'Games played: 0';
@@ -365,16 +367,50 @@ function clearGame() {
 
 // when the page unloads, store the current game and game stats in localstorage
 window.addEventListener('beforeunload', () => {
-    const gameData = { played: 0, won: 0, winStreak: 0, averageGuesses: 0, priorGuesses: 0};
-    localStorage.setItem('gameData', JSON.stringify(gameData));});
+    const gameData = {
+        allWords: allWords,
+        gamesWon: gamesWon,
+        gamesPlayed: gamesPlayed,
+        winStreak: winStreak,
+        totalGuess: totalGuess,
+        averageGuesses: averageGuesses,
+        guesses: JSON.parse(localStorage.getItem('guesses')), 
+        guessCount: localStorage.getItem('guessCount')
+    };
+    localStorage.setItem('gameData', JSON.stringify(gameData));
+});
 
 // when the page loads, if there is a game or game stats stored in localstorage, repopulate
 document.addEventListener('DOMContentLoaded', () => {
     const savedGameData = localStorage.getItem('gameData');
-    if(savedGameData !== null){
+    if (savedGameData) {
         const gameData = JSON.parse(savedGameData);
+        allWords = gameData.allWords;
+        gamesWon = gameData.gamesWon;
+        gamesPlayed = gameData.gamesPlayed;
+        winStreak = gameData.winStreak;
+        totalGuess = gameData.totalGuess;
+        averageGuesses = gameData.averageGuesses;
+        localStorage.setItem('guesses', JSON.stringify(gameData.guesses));
+        localStorage.setItem('guessCount', gameData.guessCount);
+
+        // Update UI elements with restored data
+        document.getElementById('played').textContent = 'Games played: ' + gamesPlayed;
+        document.getElementById('won').textContent = 'Games won: ' + gamesWon;
+        document.getElementById('winStreak').textContent = 'Current win streak: ' + winStreak;
+        document.getElementById('averageGuesses').textContent = 'Average guesses per game: ' + averageGuesses;
+        document.getElementById('priorGuessNum').textContent = 'Prior guesses: ' + gameData.guessCount;
+
+        // Restore the game board
+        if (allWords.length > 0) {
+            createCards(allWords);
+        }
+    } else {
+        // Start a new game if no game data is found
+        startNewGame();
     }
 });
+
 
 
 function clearSelections() {
@@ -382,3 +418,4 @@ function clearSelections() {
         element.classList.remove('selected'); // Clear visual selection
     });
 }
+
