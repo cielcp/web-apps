@@ -182,8 +182,6 @@ function createCards(allWords) {
         }
         board.appendChild(row);
     }
-    console.log(allWords);
-
 }
 // probs have to wrap this in a function so it only runs when user is playing?
 //createCards();
@@ -204,11 +202,6 @@ guessButton.addEventListener('click', function() {
 let priorGuesses = document.getElementById("priorGuesses");
 
 function guessWord() {
-/*     Selecting Words: It starts by selecting all elements with the class .word that are also marked as .selected 
-    (likely through a user interaction like clicking). The Array.from method is used to convert the 
-    NodeList returned by document.querySelectorAll into an array, allowing array methods 
-    like map to be used. The map function then transforms this array of elements into an 
-    array of their text content, effectively capturing the selected words. */
 
     totalGuess++;
     localStorage.setItem('totalGuess', JSON.stringify(totalGuess));
@@ -237,7 +230,8 @@ function guessWord() {
     
     // loop over selected words, and check with each category
     let categories = JSON.parse(localStorage.getItem('categories'));
-
+    let guess = { words: selectedWords, message: "Not quite..." };
+    
     // loop over the categories
     for (let i = 0; i < 4; i++) {
         let matchCount = 0;
@@ -246,15 +240,14 @@ function guessWord() {
         
         // count how many of the category words matches the selected words category
         for (let j = 0; j < 4; j++) {
-            // console.log(words[j]);
             for (let x = 0; x < 4; x++) {
-                // console.log(selectedWords[x]);
                 if (selectedWords[x] == words[j]) {
                     matchCount++;
                     console.log(matchCount);
                 }
             }
         }
+        
         if (matchCount == 4) {
             // a correct guess!
             makeMessage("Correct! All words are from the category: " + category);
@@ -272,29 +265,26 @@ function guessWord() {
             const board = document.getElementById('grid');
             board.innerHTML = ''; // This clears the board
             createCards(allWords);
-            console.log(allWords);
-    
+            // console.log(allWords);
+            break;
         }
         else if (matchCount == 3) {
             // one away!
             makeMessage("One away!");
             guess = { words: selectedWords, message: "One away!" };
+            break;
         }
         else if (matchCount == 2) {
             // two away!
             makeMessage("Two away!");
             guess = { words: selectedWords, message: "Two away!" };
-        }
-        else {
-            // not quite...
-            makeMessage("Not quite...");
-            guess = { words: selectedWords, message: "Not quite..." };
+            break;
         }
     }
 
     // if they've guessed all the words
     if(allWords.length == 0){
-        alert("you won!");
+        makeMessage("you won!");
         updateGameStats();
     }
     clearSelections(); // Prepare for the next guess
@@ -359,7 +349,7 @@ function clearGame() {
     localStorage.clear('guessCount');
   
     
-    alert('hi');
+    makeMessage('hi');
     // clear game and game stats storage from localstorage
 
     // clear stats from the DOM
