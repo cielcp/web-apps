@@ -81,6 +81,9 @@ async function getRandomCategories(callback) {
 var allWords = [];
 var gamesWon = 0;
 var gamesPlayed = 0;
+var winStreak = 0;
+var totalGuess = 0;
+var averageGuesses = 0;
 
 function setUpNewGame(newCategories) {
     // reset the game board (clearhistory should reset selected words)
@@ -207,6 +210,9 @@ function guessWord() {
     like map to be used. The map function then transforms this array of elements into an 
     array of their text content, effectively capturing the selected words. */
 
+    totalGuess++;
+    localStorage.setItem('totalGuess', JSON.stringify(totalGuess));
+
     const selectedWords = Array.from(document.querySelectorAll('.selected')).map(element => element.textContent);
 
     guesses = JSON.parse(localStorage.getItem('guesses'));
@@ -285,17 +291,14 @@ function guessWord() {
             guess = { words: selectedWords, message: "Not quite..." };
         }
     }
+
+    // if they've guessed all the words
     if(allWords.length == 0){
         alert("you won!");
-        gamesWon++;
-        localStorage.setItem('gamesWon', JSON.stringify(gamesWon));
-        won.textContent = "Games Won: " + gamesWon;
-
-        gamesPlayed++;
-        localStorage.setItem('gamesPlayed', JSON.stringify(gamesPlayed));
-        played.textContent = "Games Played: " + gamePlayed;
+        updateGameStats();
     }
     clearSelections(); // Prepare for the next guess
+
     // update previous guesses
     console.log(guess);
     guesses.push(guess);
@@ -306,7 +309,20 @@ function guessWord() {
     priorGuesses.appendChild(currGuess);
 }
 
+function updateGameStats(){
+    if (allWords.length == 0) {  // Only increment gamesWon if all words are guessed
+        gamesWon++;
+        localStorage.setItem('gamesWon', JSON.stringify(gamesWon));
+        won.textContent = "Games Won: " + gamesWon;
+    }
+        gamesPlayed++;
+        localStorage.setItem('gamesPlayed', JSON.stringify(gamesPlayed));
+        played.textContent = "Games Played: " + gamesPlayed;
 
+        averageGuesses = totalGuess/gamesPlayed;
+        localStorage.setItem('averageGuesses', JSON.stringify(averageGuesses));
+        averageGuesses.textContent = "Average guesses per game: " + averageGuesses;
+}
 
 /** --------------------- SHUFFLE STUFF --------------------- */
 const shuffleButton = document.getElementById('shuffleButton');
