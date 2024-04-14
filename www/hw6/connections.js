@@ -79,8 +79,10 @@ async function getRandomCategories(callback) {
 */
 // New game functionality. The user must be able to start a new game.
 var allWords = [];
-var gamesWon = 0;
 var gamesPlayed = 0;
+var gamesWon = 0;
+var winStreak = 0;
+var totalGuessCount = 0;
 
 function setUpNewGame(newCategories) {
     // reset the game board (clearhistory should reset selected words)
@@ -98,7 +100,6 @@ function setUpNewGame(newCategories) {
     shuffle(allWords);
     localStorage.setItem('allWords', allWords);
     localStorage.setItem('guessCount', 0);
-    localStorage.setItem('hints', []);
     localStorage.setItem('guesses', JSON.stringify([]));
     createCards(allWords);
 }
@@ -111,8 +112,9 @@ function setUpNewGame(newCategories) {
  * with the new category object.
 */
 // EVENT HANDLER NOT WORKING
-const restartButton = document.getElementById('restartButton');
-restartButton.addEventListener('click', function() {
+const newGameButton = document.getElementById('newGameButton');
+newGameButton.addEventListener('click', function() {
+    // if user did not get all categories, update win streak, avg guesses, num games played
     startNewGame();
 });
 
@@ -208,9 +210,8 @@ function guessWord() {
 
     // update guess count
     guessCount = localStorage.getItem('guessCount');
-    console.log(guessCount);
     guessCount++;
-    console.log(guessCount);
+    // console.log(guessCount);
     localStorage.setItem('guessCount', guessCount);
     const priorGuessNum = document.getElementById('priorGuessNum');
     priorGuessNum.textContent = "Prior guesses: " + guessCount + " total";
@@ -275,16 +276,6 @@ function guessWord() {
             break;
         }
     }
-    if(allWords.length == 0){
-        makeMessage("you won!");
-        gamesWon++;
-        localStorage.setItem('gamesWon', JSON.stringify(gamesWon));
-        won.textContent = "Games Won: " + gamesWon;
-
-        gamesPlayed++;
-        localStorage.setItem('gamesPlayed', JSON.stringify(gamesPlayed));
-        played.textContent = "Games Played: " + gamePlayed;
-    }
     clearSelections(); // Prepare for the next guess
     // update previous guesses
     console.log(guess);
@@ -294,6 +285,27 @@ function guessWord() {
     const currGuess = document.createElement('p');
     currGuess.textContent = guess["words"] + " " + guess["message"];
     priorGuesses.appendChild(currGuess);
+    if(allWords.length == 0){
+        makeMessage("you won!");
+        
+        gamesWon++;
+        localStorage.setItem('gamesWon', JSON.stringify(gamesWon));
+        document.getElementById('won').textContent = "Games Won: " + gamesWon;
+        
+        gamesPlayed++;
+        localStorage.setItem('gamesPlayed', JSON.stringify(gamesPlayed));
+        document.getElementById('played').textContent = "Games Played: " + gamesPlayed;
+        
+        winStreak++;
+        localStorage.setItem('winStreak', JSON.stringify(winStreak));
+        document.getElementById('winStreak').textContent = "Current win streak: " + winStreak;
+
+        
+        totalGuessCount += guessCount;
+        localStorage.setItem('totalGuessCount', JSON.stringify(totalGuessCount));
+        var avg = Math.round(totalGuessCount / gamesPlayed);
+        document.getElementById('averageGuesses').textContent = "Average guesses per game: " + avg;
+    }
 }
 
 
