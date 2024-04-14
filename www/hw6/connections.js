@@ -350,7 +350,7 @@ function clearGame() {
     localStorage.clear('guessCount');
   
     
-    makeMessage('hi');
+    makeMessage('Game cleared');
     // clear game and game stats storage from localstorage
 
     // clear stats from the DOM
@@ -359,7 +359,8 @@ function clearGame() {
     document.getElementById('winStreak').textContent = 'Current win streak: 0';
     document.getElementById('averageGuesses').textContent = 'Average guesses per game: 0';
     document.getElementById('priorGuessNum').textContent = 'Prior guesses: 0 Total';
-    
+    document.getElementById('priorGuesses').innerHTML = '';
+
     // start new game
     startNewGame();
 }
