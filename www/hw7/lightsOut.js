@@ -1,6 +1,7 @@
 console.log("uh did this connect");
 
 $(document).ready(function () {
+// function lightsOut() {
   var currentGame = null;
 
   // function to create a board of the input size

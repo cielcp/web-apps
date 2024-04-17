@@ -1,16 +1,27 @@
 <?php
-// BELOW IS JUST CHAT GPTED
+
+/* Write a setup.php back-end file that accepts the number of rows 
+and columns in the board as GET parameters (on the query string) and 
+randomly select 10 starting positions–the boxes in the board where the 
+lights will be on at the start of the game. */ 
+
 // class setupLightsOut {
 
-    // Get the number of rows and columns from the query string
+
+ // Get the number of rows and columns from the query string
 $rows = isset($_GET['rows']) ? intval($_GET['rows']) : 0;
 $columns = isset($_GET['columns']) ? intval($_GET['columns']) : 0;
+echo $rows . $columns;
 
 // Initialize an array to store the starting positions of lights
 $starting_positions = [];
 
 // Check if the board has less than 10 boxes
 $total_boxes = $rows * $columns;
+
+
+/* If the board has less than 10 boxes, then your setup.php file should return 
+a JSON object with the list of all positions (all lights are on). */   
 if ($total_boxes <= 10) {
     // If the board has less than 10 boxes, all 10 lights are on
     for ($i = 1; $i <= $rows; $i++) {
@@ -33,7 +44,10 @@ if ($total_boxes <= 10) {
     $starting_positions = $selected_positions;
 }
 
+/* Each position should be defined by its position–or row-column coordinate–in the board. 
+This script must return a JSON object with the list of the lights-on starting positions. */    
 // Return the starting positions as a JSON object
+
 header('Content-Type: application/json');
 echo json_encode($starting_positions);
 
