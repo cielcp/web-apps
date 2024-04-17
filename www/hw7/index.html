@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- published at https://cs4640.cs.virginia.edu/ccp7gcp/hw7 -->
+    <!-- JUST CHAT GPTED -->
+    <meta name="author" content="Ciel Park and Hannah Park">
+    <meta name="description" content="Our Lights Out Game">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lights Out Game</title>
+    <style>
+        .board {
+            display: grid;
+            grid-template-columns: repeat(5, 50px); /* Change the number of columns to match your preference */
+            grid-gap: 2px;
+        }
+        .box {
+            width: 50px;
+            height: 50px;
+            background-color: #DDD;
+            border: 1px solid #AAA;
+            cursor: pointer;
+        }
+        .box.on {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lights Out Game</h1>
+    <form id="setupForm">
+        <label for="boardSize">Board Size:</label>
+        <input type="number" id="boardSize" name="boardSize" min="2" max="10" required>
+        <button type="submit" id="startGameBtn">Start Game</button>
+    </form>
+
+    <div id="message" style="display: none; margin-top: 10px;">
+        <h2>You've won!</h2>
+        <button id="newGameBtn">Start New Game</button>
+    </div>
+
+    <div id="boardContainer"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var currentGame = null;
+
+            function createBoard(rows, columns, startingPositions) {
+                var $boardContainer = $('#boardContainer');
+                $boardContainer.empty();
+
+                var $board = $('<div class="board"></div>');
+                for (var i = 1; i <= rows; i++) {
+                    for (var j = 1; j <= columns; j++) {
+                        var $box = $('<div class="box"></div>');
+                        if (startingPositions.some(position => position[0] === i && position[1] === j)) {
+                            $box.addClass('on');
+                        }
+                        $box.data('row', i);
+                        $box.data('column', j);
+                        $board.append($box);
+                    }
+                }
+                $boardContainer.append($board);
+            }
+
+            function checkWin() {
+                return $('.box.on').length === 0;
+            }
+
+            function toggleLights(row, column) {
+                $('.box').each(function() {
+                    var $box = $(this);
+                    var boxRow = $box.data('row');
+                    var boxColumn = $box.data('column');
+
+                    if ((boxRow === row && Math.abs(boxColumn - column) === 1) ||
+                        (boxColumn === column && Math.abs(boxRow - row) === 1)) {
+                        $box.toggleClass('on');
+                    }
+                });
+            }
+
+            $('#setupForm').submit(function(event) {
+                event.preventDefault();
+                var boardSize = parseInt($('#boardSize').val());
+                $.ajax({
+                    url: 'setup.php',
+                    method: 'GET',
+                    data: { rows: boardSize, columns: boardSize },
+                    success: function(data) {
+                        createBoard(boardSize, boardSize, data);
+                        $('#message').hide();
+                        currentGame = { rows: boardSize, columns: boardSize, startingPositions: data };
+                    }
+                });
+            });
+
+            $(document).on('click', '.box', function() {
+                if (currentGame !== null && !checkWin()) {
+                    var row = $(this).data('row');
+                    var column = $(this).data('column');
+                    toggleLights(row, column);
+                    if (checkWin()) {
+                        $('#message').show();
+                    }
+                }
+            });
+
+            $('#newGameBtn').click(function() {
+                $('#setupForm').submit();
+            });
+        });
+    </script>
+</body>
+</html>
