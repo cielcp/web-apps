@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- published at https://cs4640.cs.virginia.edu/ccp7gcp/hw7 -->
-    <!-- JUST CHAT GPTED -->
+    <!-- published at https://cs4640.cs.virginia.edu/ccp7gcp/hw7 ?? -->
     <meta name="author" content="Ciel Park and Hannah Park">
     <meta name="description" content="Our Lights Out Game">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lights Out Game</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <style>
-        .board {
-            display: grid;
-            grid-template-columns: repeat(5, 50px); /* Change the number of columns to match your preference */
-            grid-gap: 2px;
-        }
         .box {
             width: 50px;
             height: 50px;
@@ -24,94 +19,33 @@
         .box.on {
             background-color: yellow;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <h1>Lights Out Game</h1>
-    <form id="setupForm">
-        <label for="boardSize">Board Size:</label>
-        <input type="number" id="boardSize" name="boardSize" min="2" max="10" required>
-        <button type="submit" id="startGameBtn">Start Game</button>
-    </form>
+    <div class="container">
+        <h1 class="mt-5">Lights Out Game</h1>
+            <form id="setupForm" method="post" class="mt-4 uh how do i link to my form">
+                    <div class="form-group">
+                        <label for="rows">Rows:</label>
+                        <input type="number" class="form-control" id="rows" name="rows" min="2" max="10" required>
+                        <label for="columns">Columns:</label>
+                        <input type="number" class="form-control" id="columns" name="columns" min="2" max="10" required>
+                        <button type="submit" class="btn btn-dark">Start Game</button>
+                    </div>
+            </form>
 
-    <div id="message" style="display: none; margin-top: 10px;">
-        <h2>You've won!</h2>
-        <button id="newGameBtn">Start New Game</button>
+        <div id="message" class="mt-4 hidden">
+            <h2>You've won!</h2>
+            <button id="newGameBtn" class="btn btn-primary">Start New Game</button>
+        </div>
+
+        <div id="boardContainer" class="row mt-4"></div>
     </div>
 
-    <div id="boardContainer"></div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            var currentGame = null;
-
-            function createBoard(rows, columns, startingPositions) {
-                var $boardContainer = $('#boardContainer');
-                $boardContainer.empty();
-
-                var $board = $('<div class="board"></div>');
-                for (var i = 1; i <= rows; i++) {
-                    for (var j = 1; j <= columns; j++) {
-                        var $box = $('<div class="box"></div>');
-                        if (startingPositions.some(position => position[0] === i && position[1] === j)) {
-                            $box.addClass('on');
-                        }
-                        $box.data('row', i);
-                        $box.data('column', j);
-                        $board.append($box);
-                    }
-                }
-                $boardContainer.append($board);
-            }
-
-            function checkWin() {
-                return $('.box.on').length === 0;
-            }
-
-            function toggleLights(row, column) {
-                $('.box').each(function() {
-                    var $box = $(this);
-                    var boxRow = $box.data('row');
-                    var boxColumn = $box.data('column');
-
-                    if ((boxRow === row && Math.abs(boxColumn - column) === 1) ||
-                        (boxColumn === column && Math.abs(boxRow - row) === 1)) {
-                        $box.toggleClass('on');
-                    }
-                });
-            }
-
-            $('#setupForm').submit(function(event) {
-                event.preventDefault();
-                var boardSize = parseInt($('#boardSize').val());
-                $.ajax({
-                    url: 'setup.php',
-                    method: 'GET',
-                    data: { rows: boardSize, columns: boardSize },
-                    success: function(data) {
-                        createBoard(boardSize, boardSize, data);
-                        $('#message').hide();
-                        currentGame = { rows: boardSize, columns: boardSize, startingPositions: data };
-                    }
-                });
-            });
-
-            $(document).on('click', '.box', function() {
-                if (currentGame !== null && !checkWin()) {
-                    var row = $(this).data('row');
-                    var column = $(this).data('column');
-                    toggleLights(row, column);
-                    if (checkWin()) {
-                        $('#message').show();
-                    }
-                }
-            });
-
-            $('#newGameBtn').click(function() {
-                $('#setupForm').submit();
-            });
-        });
-    </script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <script src="lightsOut.js"></script>
 </body>
 </html>
