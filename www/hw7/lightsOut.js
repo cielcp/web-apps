@@ -1,26 +1,25 @@
 // console.log("uh did this connect");
 
-$(document).ready(function() {
-
+$(document).ready(function () {
   // event handler for start game form submission
-  $('#setupForm').submit(function(event) {
-      event.preventDefault();
-      var size = $('#size').val();
+  $("#setupForm").submit(function (event) {
+    event.preventDefault();
+    var size = $("#size").val();
 
-      // make an AJAX request to setup.php
-      $.ajax({
-          url: 'setup.php',
-          method: 'GET',
-          data: { size: size },
-          success: function(data) {
-              console.log('Starting positions:', data);
-              // create the game board
-              createBoard(size, data);
-          },
-          error: function(error) {
-              console.error('Error:', error);
-          }
-      });
+    // make an AJAX request to setup.php
+    $.ajax({
+      url: "setup.php",
+      method: "GET",
+      data: { size: size },
+      success: function (data) {
+        console.log("Starting positions:", data);
+        // create the game board
+        createBoard(size, data);
+      },
+      error: function (error) {
+        console.error("Error:", error);
+      },
+    });
   });
 
   // function to create a board of the input size
@@ -34,16 +33,16 @@ $(document).ready(function() {
         var $col = $('<div class="col"></div>');
         var $box = $('<div class="box"></div>');
         if (
-            startingPositions.some(
-                (position) => position[0] === i && position[1] === j
-            )
+          startingPositions.some(
+            (position) => position[0] === i && position[1] === j
+          )
         ) {
           // turn the random startingpositions on
-            $box.addClass("on");
+          $box.addClass("on");
         }
         // set the data attribute of the box div for game logic stuff
         $box.data("row", i);
-        $box.data("column", j); 
+        $box.data("column", j);
         $col.append($box);
         $row.append($col);
       }
@@ -64,7 +63,8 @@ $(document).ready(function() {
       var boxRow = $box.data("row");
       var boxColumn = $box.data("column");
 
-      if ((boxRow === row && boxColumn === column) ||
+      if (
+        (boxRow === row && boxColumn === column) ||
         (boxRow === row && Math.abs(boxColumn - column) === 1) ||
         (boxColumn === column && Math.abs(boxRow - row) === 1)
       ) {
@@ -80,7 +80,7 @@ $(document).ready(function() {
       var column = $(this).data("column");
       toggleLights(row, column);
       if (checkWin()) {
-        $('#setup').hide();
+        $("#setup").hide();
         $("#message").show();
       }
     }
@@ -88,9 +88,9 @@ $(document).ready(function() {
 
   // event handler for new game button click
   $("#newGameBtn").click(function () {
-    $('#message').hide();
-    $('#setup').show();
-    $('#setupForm')[0].reset();
-    $('#boardContainer').empty();
+    $("#message").hide();
+    $("#setup").show();
+    $("#setupForm")[0].reset();
+    $("#boardContainer").empty();
   });
 });
