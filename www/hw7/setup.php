@@ -1,5 +1,4 @@
 <?php
-echo "what is happening";
 
 /* Write a setup.php back-end file that accepts the number of rows 
 and columns in the board as GET parameters (on the query string) and 
@@ -8,16 +7,12 @@ lights will be on at the start of the game. */
 
 // class setupLightsOut {
 
-// DEBUGGING ONLY! Show all errors.
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
-
  // Get the number of rows and columns from the query string
  // This number will be used to create a square board 
 $size = isset($_GET['size']) ? intval($_GET['size']) : 0;
 //$columns = isset($_GET['columns']) ? intval($_GET['columns']) : 0;
 
-echo $size;
+// echo $size;
 
 // Initialize an array to store the starting positions of lights
 $starting_positions = [];

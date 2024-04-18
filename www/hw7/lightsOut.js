@@ -1,34 +1,34 @@
 console.log("uh did this connect");
 
 $(document).ready(function() {
-    // Event handler for form submission
-    $('#setupForm').submit(function(event) {
-        event.preventDefault(); // Prevent the default form submission behavior
+  // Event handler for form submission
+  $('#setupForm').submit(function(event) {
+      event.preventDefault(); // Prevent the default form submission behavior
 
-        // Get the values of rows and columns from the form
-        var size = $('#size').val();
+      // Get the values of rows and columns from the form
+      var size = $('#size').val();
 
-        // Make an AJAX request to setup.php
-        $.ajax({
-            url: '/opt/src/hw7/setup.php',
-            method: 'GET',
-            data: { rows: size, columns: size }, // Send the form data to the server
-            success: function(data) {
-                // Handle the successful response from the server
-                console.log('Starting positions:', data);
+      // Make an AJAX request to setup.php
+      $.ajax({
+          url: 'setup.php',
+          method: 'GET',
+          data: { size: size }, // Send the size parameter to the server
+          success: function(data) {
+              // Handle the successful response from the server
+              console.log('Starting positions:', data);
 
-                // Process the starting positions and display the game board
-                createBoard(size, size, data);
+              // Process the starting positions and create the game board
+              createBoard(size, data);
 
-                // Hide the "You've won!" message if it's visible
-                $('#message').hide();
-            },
-            error: function(xhr, status, error) {
-                // Handle any errors that occur during the AJAX request
-                console.error('Error:', error);
-            }
-        });
-    });
+              // Hide the "You've won!" message if it's visible
+              $('#message').hide();
+          },
+          error: function(xhr, status, error) {
+              // Handle any errors that occur during the AJAX request
+              console.error('Error:', error);
+          }
+      });
+  });
 
 //});
 
