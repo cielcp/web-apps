@@ -1,4 +1,5 @@
 <?php
+echo "what is happening";
 
 /* Write a setup.php back-end file that accepts the number of rows 
 and columns in the board as GET parameters (on the query string) and 
@@ -7,25 +8,28 @@ lights will be on at the start of the game. */
 
 // class setupLightsOut {
 
+// DEBUGGING ONLY! Show all errors.
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+
  // Get the number of rows and columns from the query string
- // This number will be used to create a square board  --> idt we need rows and columns if it's a square
-$rows = isset($_GET['rows']) ? intval($_GET['rows']) : 0;
+ // This number will be used to create a square board 
+$size = isset($_GET['size']) ? intval($_GET['size']) : 0;
 //$columns = isset($_GET['columns']) ? intval($_GET['columns']) : 0;
-echo $rows . $columns;
+
+echo $size;
 
 // Initialize an array to store the starting positions of lights
 $starting_positions = [];
 
-// Check if the board has less than 10 boxes
-$total_boxes = $rows * $rows;
-
-
 /* If the board has less than 10 boxes, then your setup.php file should return 
 a JSON object with the list of all positions (all lights are on). */   
+$total_boxes = $size * $size;
+
 if ($total_boxes < 10) {
-    // If the board has less than 10 boxes, all 10 lights are on
-    for ($i = 0; $i <= $rows; $i++) {
-        for ($j = 0; $j <= $columns; $j++) {
+    // If the board has less than 10 boxes, all lights are on
+    for ($i = 0; $i <= $size; $i++) {
+        for ($j = 0; $j <= $size; $j++) {
             $starting_positions[] = [$i, $j];
         }
     }
@@ -33,8 +37,8 @@ if ($total_boxes < 10) {
     // Randomly select 10 starting positions
     $selected_positions = [];
     while (count($selected_positions) < 10) {
-        $random_row = mt_rand(1, $rows);
-        $random_column = mt_rand(1, $columns);
+        $random_row = mt_rand(1, $size);
+        $random_column = mt_rand(1, $size);
         $position = [$random_row, $random_column];
         // Check if the position is already selected
         if (!in_array($position, $selected_positions)) {

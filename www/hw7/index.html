@@ -27,25 +27,23 @@
 <body>
     <div class="container">
         <h1 class="mt-5">Lights Out Game</h1>
-            <form id="setupForm" method="post" class="mt-4 uh how do i link to my form">
+            <form id="setupForm" method="get" action="/opt/src/hw7/setup.php" class="mt-4">
                     <div class="form-group">
-                        <label for="rows">Rows:</label>
-                        <input type="number" class="form-control" id="rows" name="rows" min="2" max="10" required>
-                        <label for="columns">Columns:</label>
-                        <input type="number" class="form-control" id="columns" name="columns" min="2" max="10" required>
+                        <label for="size">Board size:</label>
+                        <input type="number" class="form-control" id="size" name="size" min="2" max="10" required>
                         <button type="submit" class="btn btn-dark">Start Game</button>
                     </div>
             </form>
 
         <div id="message" class="mt-4 hidden">
             <h2>You've won!</h2>
-            <button id="newGameBtn" class="btn btn-primary">Start New Game</button>
+            <button id="newGameBtn" class="btn btn-dark">Start New Game</button>
         </div>
 
         <div id="boardContainer" class="row mt-4"></div>
     </div>
 
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="lightsOut.js"></script>
 </body>
 </html>
