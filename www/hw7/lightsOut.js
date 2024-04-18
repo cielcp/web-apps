@@ -41,17 +41,19 @@ $(document).ready(function() {
     for (var i = 1; i <= size; i++) {
       var $row = $('<div class="row"></div>');
       for (var j = 1; j <= size; j++) {
-        var $box = $('<div class="col"><div class="box"></div></div>');
+        var $col = $('<div class="col"></div>'); // Create a new column div
+        var $box = $('<div class="box"></div>'); // Create a new box div
         if (
-          startingPositions.some(
-            (position) => position[0] === i && position[1] === j
-          )
+            startingPositions.some(
+                (position) => position[0] === i && position[1] === j
+            )
         ) {
-          $box.addClass("on");
+            $box.addClass("on"); // Add on class to the box div
         }
-        $box.data("row", i);
-        $box.data("column", j);
-        $row.append($box);
+        $box.data("row", i); // Set data attribute on the box div
+        $box.data("column", j); // Set data attribute on the box div
+        $col.append($box); // Append the box div to the column div
+        $row.append($col); // Append the column div to the row div
       }
       $boardContainer.append($row);
     }
