@@ -33,7 +33,7 @@
         }
 
         .on {
-            background-color: olive;
+            background-color: olivedrab;
         }
     </style>
 </head>
@@ -43,8 +43,10 @@
         <div id="setup" class="mt-4">
             <h1 class="mt-5">Lights Out Game</h1>
             <form id="setupForm" method="get" action="setup.php" class="mt-4">
-                <label for="size">Board size:</label>
-                <input type="number" class="form-control" id="size" name="size" min="2" max="10" required />
+                <div class="form-group">
+                    <label for="size">Board size:</label>
+                    <input type="number" class="form-control" id="size" name="size" min="2" max="10" required />
+                </div>
                 <button type="submit" class="btn btn-dark">Start Game</button>
             </form>
         </div>
@@ -54,39 +56,8 @@
             <button id="newGameBtn" class="btn btn-dark">Start New Game</button>
         </div>
 
-        <div id="boardContainer" class="container boardContainer">
-            <div class="row">
-                <div class="col"><div class="box"></div></div>
-                <div class="col">
-                    <div class="box"></div>
-                </div>
-                <div class="col">
-                    <div class="box"></div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div class="box"></div>
-                </div>
-                <div class="col">
-                    <div class="box"></div>
-                </div>
-                <div class="col">
-                    <div class="box"></div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div class="box"></div>
-                </div>
-                <div class="col">
-                    <div class="box"></div>
-                </div>
-                <div class="col">
-                    <div class="box"></div>
-                </div>
-            </div>
-        </div>
+        <div id="boardContainer" class="container boardContainer"></div>
+    
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
