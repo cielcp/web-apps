@@ -20,11 +20,11 @@ $(document).ready(function() {
 
               // Process the starting positions and create the game board
               createBoard(size, data);
-
+              // Hide the setup section
+              // $('#setup').hide();
               // Hide the "You've won!" message if it's visible
-              $('#message').hide();
-              // Hide the setup portion
-              $('#setup').hide();
+              // $('#message').hide();
+              
           },
           error: function(xhr, status, error) {
               // Handle any errors that occur during the AJAX request
