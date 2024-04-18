@@ -73,7 +73,7 @@ $(document).ready(function() {
       var boxRow = $box.data("row");
       var boxColumn = $box.data("column");
 
-      if (
+      if ((boxRow === row && boxColumn === column) ||
         (boxRow === row && Math.abs(boxColumn - column) === 1) ||
         (boxColumn === column && Math.abs(boxRow - row) === 1)
       ) {
