@@ -23,8 +23,8 @@ $total_boxes = $size * $size;
 
 if ($total_boxes <= 10) {
     // If the board has less than 10 boxes, all lights are on
-    for ($i = 0; $i < $size; $i++) {
-        for ($j = 0; $j < $size; $j++) {
+    for ($i = 1; $i <= $size; $i++) {
+        for ($j = 1; $j <= $size; $j++) {
             $starting_positions[] = [$i, $j];
         }
     }
