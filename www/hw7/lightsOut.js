@@ -63,7 +63,8 @@ $(document).ready(function() {
 
   // function to determine if the game has been won
   function checkWin() {
-    return $(".box.on").length === 0;
+    $won = $(".box.on").length === 0;
+    return $won;
   }
 
   // function to toggle the lights of the select boxes
@@ -90,6 +91,7 @@ $(document).ready(function() {
       toggleLights(row, column);
       if (checkWin()) {
         $("#message").show();
+        $("#setup").hide();
       }
     }
   });
