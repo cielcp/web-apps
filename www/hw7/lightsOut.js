@@ -90,8 +90,8 @@ $(document).ready(function() {
       var column = $(this).data("column");
       toggleLights(row, column);
       if (checkWin()) {
+        $('#setup').hide();
         $("#message").show();
-        $("#setup").hide();
       }
     }
   });
