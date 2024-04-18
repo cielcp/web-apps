@@ -41,19 +41,21 @@ $(document).ready(function() {
     for (var i = 1; i <= size; i++) {
       var $row = $('<div class="row"></div>');
       for (var j = 1; j <= size; j++) {
-        var $col = $('<div class="col"></div>'); // Create a new column div
-        var $box = $('<div class="box"></div>'); // Create a new box div
+        var $col = $('<div class="col"></div>');
+        var $box = $('<div class="box"></div>');
         if (
             startingPositions.some(
                 (position) => position[0] === i && position[1] === j
             )
         ) {
-            $box.addClass("on"); // Add on class to the box div
+          // turn the random startingpositions on
+            $box.addClass("on");
         }
-        $box.data("row", i); // Set data attribute on the box div
-        $box.data("column", j); // Set data attribute on the box div
-        $col.append($box); // Append the box div to the column div
-        $row.append($col); // Append the column div to the row div
+        // set the data attribute of the box div for game logic stuff
+        $box.data("row", i);
+        $box.data("column", j); 
+        $col.append($box);
+        $row.append($col);
       }
       $boardContainer.append($row);
     }
@@ -80,7 +82,7 @@ $(document).ready(function() {
     });
   }
 
-  // Event handler for box click
+  // event handler for box click
   $(document).on("click", ".box", function () {
     if (!checkWin()) {
       var row = $(this).data("row");
@@ -92,7 +94,7 @@ $(document).ready(function() {
     }
   });
 
-  // Event handler for new game button click
+  // event handler for new game button click
   $("#newGameBtn").click(function () {
     // Reset the form and show setup
     $('#setup').show();
