@@ -7,25 +7,25 @@ lights will be on at the start of the game. */
 
 // class setupLightsOut {
 
-
  // Get the number of rows and columns from the query string
+ // This number will be used to create a square board  --> idt we need rows and columns if it's a square
 $rows = isset($_GET['rows']) ? intval($_GET['rows']) : 0;
-$columns = isset($_GET['columns']) ? intval($_GET['columns']) : 0;
+//$columns = isset($_GET['columns']) ? intval($_GET['columns']) : 0;
 echo $rows . $columns;
 
 // Initialize an array to store the starting positions of lights
 $starting_positions = [];
 
 // Check if the board has less than 10 boxes
-$total_boxes = $rows * $columns;
+$total_boxes = $rows * $rows;
 
 
 /* If the board has less than 10 boxes, then your setup.php file should return 
 a JSON object with the list of all positions (all lights are on). */   
-if ($total_boxes <= 10) {
+if ($total_boxes < 10) {
     // If the board has less than 10 boxes, all 10 lights are on
-    for ($i = 1; $i <= $rows; $i++) {
-        for ($j = 1; $j <= $columns; $j++) {
+    for ($i = 0; $i <= $rows; $i++) {
+        for ($j = 0; $j <= $columns; $j++) {
             $starting_positions[] = [$i, $j];
         }
     }
