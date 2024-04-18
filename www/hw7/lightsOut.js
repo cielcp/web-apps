@@ -2,32 +2,22 @@
 
 $(document).ready(function() {
 
-  // Event handler for form submission
+  // event handler for start game form submission
   $('#setupForm').submit(function(event) {
-      event.preventDefault(); // Prevent the default form submission behavior
-
-      // Get the values of rows and columns from the form
+      event.preventDefault();
       var size = $('#size').val();
 
-      // Make an AJAX request to setup.php
+      // make an AJAX request to setup.php
       $.ajax({
           url: 'setup.php',
           method: 'GET',
-          data: { size: size }, // Send the size parameter to the server
+          data: { size: size },
           success: function(data) {
-              // Handle the successful response from the server
               console.log('Starting positions:', data);
-
-              // Process the starting positions and create the game board
+              // create the game board
               createBoard(size, data);
-              // Hide the setup section
-              // $('#setup').hide();
-              // Hide the "You've won!" message if it's visible
-              // $('#message').hide();
-              
           },
-          error: function(xhr, status, error) {
-              // Handle any errors that occur during the AJAX request
+          error: function(error) {
               console.error('Error:', error);
           }
       });
@@ -98,12 +88,9 @@ $(document).ready(function() {
 
   // event handler for new game button click
   $("#newGameBtn").click(function () {
-    // Reset the form and show setup
+    $('#message').hide();
     $('#setup').show();
     $('#setupForm')[0].reset();
-    // Empty the board container
     $('#boardContainer').empty();
-    // Hide the win message
-    $('#message').hide();
   });
 });
