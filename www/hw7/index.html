@@ -1,47 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- published at https://cs4640.cs.virginia.edu/ccp7gcp/hw7 ?? -->
-    <meta name="author" content="Ciel Park and Hannah Park">
-    <meta name="description" content="Our Lights Out Game">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Ciel Park and Hannah Park" />
+    <meta name="description" content="Our Lights Out Game" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lights Out Game</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
     <style>
-        .box {
-            width: 50px;
-            height: 50px;
-            background-color: #DDD;
-            border: 1px solid #AAA;
-            cursor: pointer;
-        }
-        .box.on {
-            background-color: yellow;
-        }
         .hidden {
             display: none;
         }
+
+        .boardContainer {
+            max-width: 600px;
+        }
+
+        .col {
+            padding: 0px;
+        }
+
+        .box {
+            position: relative;
+            padding-bottom: 100%;
+            /* Height is equal to width */
+            background-color: darkolivegreen;
+            border: 3px solid white;
+            cursor: pointer;
+        }
+
+        .on {
+            background-color: olive;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h1 class="mt-5">Lights Out Game</h1>
+        <div id="setup" class="mt-4">
+            <h1 class="mt-5">Lights Out Game</h1>
             <form id="setupForm" method="get" action="setup.php" class="mt-4">
-                        <label for="size">Board size:</label>
-                        <input type="number" class="form-control" id="size" name="size" min="2" max="10" required>
-                        <button type="submit" class="btn btn-dark">Start Game</button>
+                <label for="size">Board size:</label>
+                <input type="number" class="form-control" id="size" name="size" min="2" max="10" required />
+                <button type="submit" class="btn btn-dark">Start Game</button>
             </form>
+        </div>
 
         <div id="message" class="mt-4 hidden">
             <h2>You've won!</h2>
             <button id="newGameBtn" class="btn btn-dark">Start New Game</button>
         </div>
 
-        <div id="boardContainer" class="row mt-4"></div>
+        <div id="boardContainer" class="container boardContainer">
+            <div class="row">
+                <div class="col"><div class="box"></div></div>
+                <div class="col">
+                    <div class="box"></div>
+                </div>
+                <div class="col">
+                    <div class="box"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="box"></div>
+                </div>
+                <div class="col">
+                    <div class="box"></div>
+                </div>
+                <div class="col">
+                    <div class="box"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="box"></div>
+                </div>
+                <div class="col">
+                    <div class="box"></div>
+                </div>
+                <div class="col">
+                    <div class="box"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="lightsOut.js"></script>
 </body>
+
 </html>

@@ -1,6 +1,7 @@
-console.log("uh did this connect");
+// console.log("uh did this connect");
 
 $(document).ready(function() {
+
   // Event handler for form submission
   $('#setupForm').submit(function(event) {
       event.preventDefault(); // Prevent the default form submission behavior
@@ -22,6 +23,8 @@ $(document).ready(function() {
 
               // Hide the "You've won!" message if it's visible
               $('#message').hide();
+              // Hide the setup portion
+              $('#setup').hide();
           },
           error: function(xhr, status, error) {
               // Handle any errors that occur during the AJAX request
@@ -30,24 +33,15 @@ $(document).ready(function() {
       });
   });
 
-//});
-
-
-
-
-//$(document).ready(function () {
-// function lightsOut() {
-  var currentGame = null;
-
   // function to create a board of the input size
-  function createBoard(rows, columns, startingPositions) {
+  function createBoard(size, startingPositions) {
     var $boardContainer = $("#boardContainer");
     $boardContainer.empty();
 
-    for (var i = 1; i <= rows; i++) {
+    for (var i = 1; i <= size; i++) {
       var $row = $('<div class="row"></div>');
-      for (var j = 1; j <= columns; j++) {
-        var $box = $('<div class="box col"></div>');
+      for (var j = 1; j <= size; j++) {
+        var $box = $('<div class="col"><div class="box"></div></div>');
         if (
           startingPositions.some(
             (position) => position[0] === i && position[1] === j
@@ -84,27 +78,9 @@ $(document).ready(function() {
     });
   }
 
-  $("#setupForm").submit(function (event) {
-    event.preventDefault();
-    var boardSize = parseInt($("#boardSize").val());
-    $.ajax({
-      url: "setup.php",
-      method: "GET",
-      data: { rows: boardSize, columns: boardSize },
-      success: function (data) {
-        createBoard(boardSize, boardSize, data);
-        $("#message").hide();
-        currentGame = {
-          rows: boardSize,
-          columns: boardSize,
-          startingPositions: data,
-        };
-      },
-    });
-  });
-
+  // Event handler for box click
   $(document).on("click", ".box", function () {
-    if (currentGame !== null && !checkWin()) {
+    if (!checkWin()) {
       var row = $(this).data("row");
       var column = $(this).data("column");
       toggleLights(row, column);
@@ -114,7 +90,14 @@ $(document).ready(function() {
     }
   });
 
+  // Event handler for new game button click
   $("#newGameBtn").click(function () {
-    $("#setupForm").submit();
+    // Reset the form and show setup
+    $('#setup').show();
+    $('#setupForm')[0].reset();
+    // Empty the board container
+    $('#boardContainer').empty();
+    // Hide the win message
+    $('#message').hide();
   });
 });
