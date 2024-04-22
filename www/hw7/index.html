@@ -4,7 +4,7 @@
 <head>
     <!-- published at https://cs4640.cs.virginia.edu/ccp7gcp/hw7 ?? -->
     <!-- published at https://cs4640.cs.virginia.edu/hyp2ftn/hw7 ?? -->
-
+  
     <meta name="author" content="Ciel Park and Hannah Park" />
     <meta name="description" content="Our Lights Out Game" />
     <meta charset="UTF-8" />
@@ -28,7 +28,6 @@
         .box {
             position: relative;
             padding-bottom: 100%;
-            /* Height is equal to width */
             background-color: darkolivegreen;
             border: 3px solid white;
             cursor: pointer;
@@ -44,8 +43,9 @@
     <div class="container text-center">
         <div id="setup" class="mt-4">
             <h1 class="mt-5">Lights Out Game</h1>
-            <form id="setupForm" method="get" action="setup.php" class="form-inline justify-content-center my-4" style="gap: 10px;">
-                <div class="form-group" style="gap: 10px;">
+            <form id="setupForm" method="get" action="setup.php" class="form-inline justify-content-center my-4"
+                style="gap: 10px">
+                <div class="form-group" style="gap: 10px">
                     <label for="size">Board size:</label>
                     <input type="number" class="form-control" id="size" name="size" min="2" max="10" required />
                 </div>
@@ -53,13 +53,12 @@
             </form>
         </div>
 
-        <div id="message" class="mt-4 hidden">
+        <div id="message" class="my-4 hidden">
             <h2>You've won!</h2>
             <button id="newGameBtn" class="btn btn-dark">Start New Game</button>
         </div>
 
         <div id="boardContainer" class="container boardContainer"></div>
-    
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
