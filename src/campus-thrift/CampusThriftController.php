@@ -92,6 +92,22 @@ class CampusThriftController
         }
     }
 
+    public function sendMessage(){
+        $username = $_POST['username'];
+        $message = $_POST['message'];
+
+        // okay fix this db stuff
+        $query = $this->db->prepare("INSERT INTO messages (username, message) VALUES (?, ?)");
+        $query->execute([$username, $message]);
+        echo "Message sent!";
+    }
+
+    public function getMessage(){
+        // fix db stuff
+        $query = $this->db->query("SELECT * FROM messages ORDER BY timestamp DESC");
+        $messages = $query->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($messages);
+    }
     /** ------------------- FUNCTIONS TO PROCESS ACCOUNT STUFF ------------------- */
 
     public function processSignup()
