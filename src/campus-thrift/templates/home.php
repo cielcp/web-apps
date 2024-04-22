@@ -179,7 +179,7 @@
                         echo '<form action="?command=listing" method="POST" class="listing-img-form mb-0" style="height:100%; width:100%;">';
                         echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
                         echo '<button type="submit" style="border-style:none; padding:0px; height:100%; width:100%; border-radius:0px;">';
-                        echo '<img src="images/greyshirt.jpg" alt="grey shirt image">';
+                        echo '<img src="' . $listing["images"] . '" alt="'. $listing["name"] . '">';
                         echo '</button>';
                         echo '</form>';
                         echo '</div>';

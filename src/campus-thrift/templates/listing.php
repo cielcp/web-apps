@@ -29,7 +29,11 @@
     <section class="d-flex listing-details" id="chat">
         <!-- Listing image -->
         <div class="listing-details-container">
-            <img src="images/greyshirt.jpg">
+            <?php
+                $listings = $this->db->query("select * FROM listings WHERE id=". $_SESSION['listing_id'] . ";");
+                foreach ($listings as $listing):
+                    echo '<img src="' . $listing["images"] . '" alt="'. $listing["name"] . '">';
+            ?>
         </div>
 
         <div class="vert-line"></div>
@@ -55,9 +59,6 @@
                 $name = $listing['listing_details']['name'];
                 
                 echo $name; */
-
-                $listings = $this->db->query("select * FROM listings WHERE id=". $_SESSION['listing_id'] . ";");
-                foreach ($listings as $listing):
 
                 // Display the listing details
                 echo '<div class="listing-info-block">';

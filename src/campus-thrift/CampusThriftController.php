@@ -92,6 +92,9 @@ class CampusThriftController
         }
     }
 
+    /** ------------------- MESSAGE STUFF? ------------------- */
+
+
     public function sendMessage(){
         $username = $_POST['username'];
         $message = $_POST['message'];
@@ -108,6 +111,7 @@ class CampusThriftController
         $messages = $query->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($messages);
     }
+
     /** ------------------- FUNCTIONS TO PROCESS ACCOUNT STUFF ------------------- */
 
     public function processSignup()
@@ -222,8 +226,58 @@ class CampusThriftController
             $category = $_POST['category'];
             $method = $_POST['method'];
             $tags = $_POST['tags'];
-            // how to do images??????????
-            $images = $_POST['image'];
+            $tags = $_POST['tags'];
+            
+            // IMAGE STUFF
+            // Check the image file
+            $target_dir = "images/";
+            $target_file = $target_dir . basename($_FILES["image"]["name"]);
+            $uploadOk = 1;
+            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+            // Check if image file is a actual image or fake image
+            $check = getimagesize($_FILES["image"]["tmp_name"]);
+            if($check !== false) {
+                echo "File is an image - " . $check["mime"] . ".";
+                $uploadOk = 1;
+            } else {
+                echo "File is not an image.";
+                $uploadOk = 0;
+            }
+            // Check if file already exists
+            if (file_exists($target_file)) {
+                echo "Sorry, file already exists.";
+                $uploadOk = 0;
+            }
+            // Check file size
+            if ($_FILES["image"]["size"] > 500000) {
+                echo "Sorry, your file is too large.";
+                $uploadOk = 0;
+            }
+            // Allow certain file formats
+            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+            && $imageFileType != "gif" && $imageFileType != "webp") {
+                echo "Sorry, only JPG, JPEG, PNG, GIF, and WEBP files are allowed.";
+                $uploadOk = 0;
+            }
+            // Check if $uploadOk is set to 0 by an error
+            if ($uploadOk == 0) {
+                echo "Sorry, your file was not uploaded.";
+                $images = "images/greyshirt.jpg";
+            // if everything is ok, try to upload file
+            } else {
+                if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                    echo "The file ". basename( $_FILES["image"]["name"]). " has been uploaded.";
+                    // Store file path in database
+                    $image_path = $target_file;
+                    // Insert $image_path into your database table
+                    $images = $image_path;
+                } else {
+                    echo "Sorry, there was an error uploading your file.";
+                }
+            }
+
+
+
             if (!empty($_SESSION['username'])) {
                 $creator = $_SESSION['username'];
             } else {
@@ -358,7 +412,8 @@ class CampusThriftController
     /** ------------------- FUNCTIONS TO SHOW PAGES ------------------- */
 
     // SWAP TO YOUR URL HERE!!
-    public $myURL = "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/";
+    public $myURL = "/opt/src/campus-thrift/templates/";
+    //public $myURL = "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/";
     //public $myURL = "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/";
 
     public function showHome($message = "")
@@ -367,11 +422,7 @@ class CampusThriftController
             $alert = "<div class='alert alert-success'>{$message}</div>";
             echo $alert;
         }
-        if ($_SERVER['SERVER_PORT'] === '8080') {
-            include "/opt/src/campus-thrift/templates/home.php";
-        } else {
-            include ($this->myURL . "home.php");
-        }
+        include ($this->myURL . "home.php");
     }
 
     public function showSignup($message = "")
@@ -447,11 +498,7 @@ class CampusThriftController
             // Store the id to the current session
             $_SESSION['listing_id'] = $_POST['listing_id'];
             // redirect the user to the appropriate listing.php page (with the json file?)
-            if ($_SERVER['SERVER_PORT'] === '8080') {
-                include "/opt/src/campus-thrift/templates/listing.php";
-            } else {
-                include $this->myURL . "listing.php";
-            }
+            include $this->myURL . "listing.php";
         } else {
             // Invalid request, show error message
             die("Invalid listing ID provided");

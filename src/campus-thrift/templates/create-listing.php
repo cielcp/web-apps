@@ -32,7 +32,7 @@
           <form action="?command=createListing" method="post" enctype="multipart/form-data">
             <div class="mb-3">
               <label for="image">Images:</label>
-              <input type="text" class="form-control" id="image" name="image" required>
+              <input type="file" class="form-control" id="image" name="image" required>
             </div>
 
             <div class="mb-3">
