@@ -38,4 +38,10 @@ $(document).ready(function() {
 
     // Initialize chat application
     chatApp.init();
+
+        // Self-invoking anonymous function for initial setup
+        (function() {
+            console.log("Chat app started at " + new Date().toLocaleTimeString());
+            $('#messages').append('<p>Welcome to the chat! Type a message and hit send.</p>');
+        })();
 });
