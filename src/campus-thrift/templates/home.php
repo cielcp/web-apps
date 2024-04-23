@@ -158,7 +158,10 @@
                     <div class="line"></div>
                     <div class="listing-text-container">
                         <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
+                        <button class="icon-button bookmark-button">
+                            <img class="bookmark hidden" src="icons/bookmark-filled.svg">
+                            <img class="bookmark" src="icons/bookmark.svg">
+                        </button>
                     </div>
                 </div>
             </div>
@@ -187,8 +190,12 @@
                         echo '<div class="listing-text-container">';
                         echo '<h3> $'. $listing["price"] . ' '. $listing["name"] . '</h3>';
                         if (isset($_SESSION["username"]) && ($listing["creator"] !== $_SESSION["username"])) {
-                            echo '<form action="?command=saveListing" method="POST" class="mb-0">
-                                <button type="submit" class="icon-button"><img src="icons/bookmark.svg"></button>
+                            echo '<form action="?command=saveListing" method="POST" class="mb-0">';
+                            echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
+                            echo '<button type="submit" class="icon-button bookmark-button">
+                                    <img class="bookmark hidden" src="icons/bookmark-filled.svg">
+                                    <img class="bookmark" src="icons/bookmark.svg">
+                                </button>
                               </form>';
                         }
                         echo '</div>';
@@ -213,6 +220,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="campusThrift.js"></script>
 </body>
 
 </html>
