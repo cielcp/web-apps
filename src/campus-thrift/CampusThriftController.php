@@ -95,7 +95,8 @@ class CampusThriftController
     /** ------------------- MESSAGE STUFF? ------------------- */
 
 
-    public function sendMessage(){
+    public function sendMessage()
+    {
         $username = $_POST['username'];
         $message = $_POST['message'];
 
@@ -105,7 +106,8 @@ class CampusThriftController
         echo "Message sent!";
     }
 
-    public function getMessage(){
+    public function getMessage()
+    {
         // fix db stuff
         $query = $this->db->query("SELECT * FROM messages ORDER BY timestamp DESC");
         $messages = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -140,12 +142,13 @@ class CampusThriftController
                 $sql = "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)";
                 $insertResult = $this->db->prepareAndExecute("insert_user", $sql, array($username, $email, $password)); // $hashedPassword later
                 // if unsuccessful, refresh signup and show error message
-                if ($insertResult === false) { 
+                if ($insertResult === false) {
                     $message = "There was an unknown error creating your account";
                     $this->showSignup($message);
                     return;
                 } else {
                     // Show welcome message and redirect to home
+                    $_SESSION["user_id"] = $user["id"];
                     $message = "Welcome to Campus Thrift, " . $username;
                     $this->showHome($message);
                     return;
@@ -181,6 +184,7 @@ class CampusThriftController
                     $_SESSION["username"] = $username;
                     $_SESSION["email"] = $email;
                     $_SESSION["logged"] = true;
+                    $_SESSION["user_id"] = $user["id"];
                     $message = "Welcome back to Campus Thrift, " . $username;
                     $this->showHome($message);
                     return;
@@ -353,16 +357,16 @@ class CampusThriftController
             }
             // Remove trailing comma and space
             $tags = rtrim($tags, ", ");
-            
+
             // PROCESS IMAGE
             // Check the image file
             $target_dir = "images/";
             $target_file = $target_dir . basename($_FILES["image"]["name"]);
             $uploadOk = 1;
-            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
             // Check if image file is a actual image or fake image
             $check = getimagesize($_FILES["image"]["tmp_name"]);
-            if($check !== false) {
+            if ($check !== false) {
                 echo "File is an image - " . $check["mime"] . ".";
                 $uploadOk = 1;
             } else {
@@ -380,8 +384,10 @@ class CampusThriftController
                 $uploadOk = 0;
             }
             // Allow certain file formats
-            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-            && $imageFileType != "gif" && $imageFileType != "webp") {
+            if (
+                $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                && $imageFileType != "gif" && $imageFileType != "webp"
+            ) {
                 echo "Sorry, only JPG, JPEG, PNG, GIF, and WEBP files are allowed.";
                 $uploadOk = 0;
             }
@@ -389,10 +395,10 @@ class CampusThriftController
             if ($uploadOk == 0) {
                 echo "Sorry, your file was not uploaded.";
                 $images = "images/greyshirt.jpg";
-            // if everything is ok, try to upload file
+                // if everything is ok, try to upload file
             } else {
                 if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                    echo "The file ". basename( $_FILES["image"]["name"]). " has been uploaded.";
+                    echo "The file " . basename($_FILES["image"]["name"]) . " has been uploaded.";
                     // Store file path in database
                     $image_path = $target_file;
                     // Insert $image_path into your database table
@@ -529,7 +535,51 @@ class CampusThriftController
     // function to save listing NEED TO DO
     public function saveListing()
     {
-        $this->showSaved();
+        // Check if the user is logged in
+        if (isset($_SESSION['logged']) && $_SESSION['logged']) {
+            // Check if the listing ID is provided
+            if (!empty($_POST['listing_id'])) {
+                $listing_id = $_POST['listing_id'];
+
+                // Check if the listing exists in the database
+                $listing = $this->db->prepareAndExecute("fetch_listing", "SELECT * FROM listings WHERE id = $1", [$listing_id]);
+
+                if ($listing) {
+                    // Get the email of the currently logged-in user
+                    $user_id = $_SESSION['user_id'];
+
+                    // Check if the listing is already saved by the user
+                    $savedListing = $this->db->prepareAndExecute("fetch_saved_listing", "SELECT * FROM saved WHERE listing_id = $1 AND user_id = $2", [$listing_id, $user_id]);
+
+                    if ($savedListing) {
+                        // Listing already saved
+                        $message = "Listing already saved.";
+                    } else {
+                        // Save the listing
+                        $insertResult = $this->db->prepareAndExecute("insert_saved_listing", "INSERT INTO saved (listing_id, user_id) VALUES ($1, $2)", [$listing_id, $user_id]);
+                        if ($insertResult === false) {
+                            // Error saving listing
+                            $message = "Error saving listing.";
+                        } else {
+                            // Listing saved successfully
+                            $message = "Listing saved successfully.";
+                        }
+                    }
+                } else {
+                    // Listing not found
+                    $message = "Listing not found.";
+                }
+            } else {
+                // No listing ID provided
+                $message = "No listing ID provided.";
+            }
+        } else {
+            // User is not logged in
+            $message = "Please log in to save listings.";
+        }
+
+        // Show the appropriate message and redirect to the home page
+        $this->showHome($message);
     }
 
 
@@ -547,7 +597,7 @@ class CampusThriftController
             $alert = "<div class='alert alert-success'>{$message}</div>";
             echo $alert;
         }
-        include ($this->myURL . "home.php");
+        include($this->myURL . "home.php");
     }
 
     public function showSignup($message = "")

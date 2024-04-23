@@ -96,6 +96,10 @@ form {
     background-color: transparent;
 }
 
+.hidden {
+    display: none;
+}
+
 
 /* ------------ HOME ---------- */
 
