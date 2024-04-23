@@ -182,11 +182,6 @@
         container.appendChild(checkbox);
     }
 
-    /* <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="goodCheck">
-          <label class="form-check-label" for="goodCheck">Good</label>
-      </div> */
-
     // Event listener for category change
     document.getElementById("category").addEventListener("change", fetchTags);
 </script>

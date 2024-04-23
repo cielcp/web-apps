@@ -65,8 +65,12 @@
                     echo '<div class="listing-small-info-block">';
                         echo '<h3>' . $listing['category'] . '</h3>';
                         echo '<h2 class="my-2">' . $listing['name'] . '</h2>';
-                        echo '<h2 class="mb-2"> $' . $listing['price'] . '</h2>';
-                        echo '<h3>' . $listing['tags'] . '</h3>';
+                        echo '<h2 class="mb-2"> $' . $listing['price'] . '</h2> <div class="d-flex" style="gap:10px;">';
+                        $tagList = explode(', ', $listing['tags']);
+                        foreach ($tagList as $tag) {
+                            echo '<h4 class="tag">' . $tag . '</h4>';
+                        }
+                        echo '</div>';
                     echo '</div>';
                     echo '<div class="listing-small-info-block d-flex justify-content-end">';
                         echo '<form action="?command=saveListing" method="POST" class="mb-0 ">
@@ -84,7 +88,13 @@
                     echo '<div class="vert-line"></div>';
                     echo '<div class="listing-small-info-block">';
                         echo '<h3> This item is available for: </h3>
-                            <ul class="mb-5"><li>' . $listing['method'] .'</li></ul>';
+                            <ul class="mb-5">';
+                        $methods = explode(', ', $listing['method']);
+                        // Loop through each method and display as a list element
+                        foreach ($methods as $method) {
+                            echo '<li>' . $method . '</li>';
+                        }
+                        echo '</ul>';
                         if ($listing['creator'] == $_SESSION["username"]) {
                             echo '<form action="?command=deleteListing" method="POST" class="mb-0 ">
                                 <button type="submit">DELETE LISTING</button>
