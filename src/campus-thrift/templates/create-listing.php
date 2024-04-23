@@ -31,7 +31,7 @@
 
           <form action="?command=createListing" method="post" enctype="multipart/form-data">
             <div class="mb-3">
-              <label for="image">Images:</label>
+              <label for="image">Image:</label>
               <input type="file" class="form-control" id="image" name="image" required>
             </div>
 
@@ -48,6 +48,7 @@
             <div class="mb-3">
               <label for="category">Category:</label>
               <select class="form-control" id="category" name="category" required>
+                <option value="" selected disabled>Select Category</option>
                 <option value="Clothing">Clothing</option>
                 <option value="Furniture">Furniture</option>
                 <option value="School supplies">School supplies</option>
@@ -56,12 +57,19 @@
             </div>
 
             <div class="mb-3">
-              <label for="exchange_method">Exchange method: </label>
-              <select class="form-control" id="method" name="method" required>
-                <option value="Pickup">Pickup</option>
-                <option value="Drop off">Drop off</option>
-                <option value="Meetup">Meetup</option>
-              </select>
+              <label for="exchange_method">Exchange methods: </label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" name="pickupCheck">
+                <label class="form-check-label" for="pickupCheck">Pickup</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" name="dropoffCheck">
+                <label class="form-check-label" for="dropoffCheck">Dropoff</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" name="meetupCheck">
+                <label class="form-check-label" for="meetupCheck">Meetup</label>
+              </div>
             </div>
 
             <div class="mb-3">
@@ -71,21 +79,25 @@
 
             <div class="mb-3">
               <label for="tags">Tags:</label>
-              <!-- <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="mensCheck">
-                    <label class="form-check-label" for="mensCheck">
-                      Men's
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="womensCheck" disabled>
-                    <label class="form-check-label" for="womensCheck">
-                      Women's
-                    </label>
-                  </div> -->
-              <input type="text" class="form-control" id="tags" name="tags" required>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" name="excellentCheck">
+                <label class="form-check-label" for="excellentCheck">Excellent</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" name="greatCheck">
+                <label class="form-check-label" for="greatCheck">Great</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" name="goodCheck">
+                <label class="form-check-label" for="goodCheck">Good</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" name="poorCheck">
+                <label class="form-check-label" for="poorCheck">Poor</label>
+              </div>
+              <div id="tagsContainer"></div>
             </div>
-
+              
             <div class="text-center">
               <button type="submit" class=""> SUBMIT </button>
             </div>
@@ -99,5 +111,79 @@
   <?php include('shared/footer.php'); ?>
 
 </body>
+
+<script>
+    // Function to fetch tags based on selected category
+    function fetchTags() {
+        var category = document.getElementById("category").value;
+        var tagsContainer = document.getElementById("tagsContainer");
+        tagsContainer.innerHTML = "";
+
+        // Show checkboxes based on selected category
+        switch (category) {
+            case "Clothing":
+                addCheckbox(tagsContainer, "Xsmall");
+                addCheckbox(tagsContainer, "Small");
+                addCheckbox(tagsContainer, "Medium");
+                addCheckbox(tagsContainer, "Large");
+                addCheckbox(tagsContainer, "Xlarge");
+                addCheckbox(tagsContainer, "Tops");
+                addCheckbox(tagsContainer, "Bottoms");
+                addCheckbox(tagsContainer, "Outerwear");
+                addCheckbox(tagsContainer, "Dresses");
+                addCheckbox(tagsContainer, "Shoes");
+                addCheckbox(tagsContainer, "Bags");
+                addCheckbox(tagsContainer, "Accessories");
+                break;
+            case "Furniture":
+                addCheckbox(tagsContainer, "Table");
+                addCheckbox(tagsContainer, "Chair");
+                addCheckbox(tagsContainer, "Couch");
+                addCheckbox(tagsContainer, "Storage");
+                addCheckbox(tagsContainer, "Decoration");
+                addCheckbox(tagsContainer, "Dishware");
+                addCheckbox(tagsContainer, "Appliances");
+                break;
+            case "School supplies":
+                addCheckbox(tagsContainer, "Textbooks");
+                addCheckbox(tagsContainer, "Stationary");
+                addCheckbox(tagsContainer, "Electronics");
+                addCheckbox(tagsContainer, "Equipment");
+                addCheckbox(tagsContainer, "Other");
+                break;
+            case "Other":
+                addCheckbox(tagsContainer, "Entertainment");
+                addCheckbox(tagsContainer, "Collectibles");
+                addCheckbox(tagsContainer, "Lease");
+                addCheckbox(tagsContainer, "Tickets");
+                addCheckbox(tagsContainer, "Food");
+                addCheckbox(tagsContainer, "Services");
+                addCheckbox(tagsContainer, "Health & Beauty");
+                break;
+            default:
+                // Hide all checkboxes if no category selected
+                addCheckbox(tagsContainer, "No Tags Available");
+        }
+    }
+
+    // Function to add a checkbox to the tags container
+    function addCheckbox(container, value) {
+        var checkbox = document.createElement("div");
+        checkbox.classList.add("form-check");
+        var box = document.createElement("input");
+        box.classList.add("form-check-input");
+        box.type = "checkbox";
+        box.name = value + "Check";
+        var tag = document.createElement("label");
+        tag.classList.add("form-check-label");
+        tag.textContent = value;
+        checkbox.appendChild(box);
+        checkbox.appendChild(tag);
+        container.appendChild(checkbox);
+    }
+
+    // Event listener for category change
+    document.getElementById("category").addEventListener("change", fetchTags);
+</script>
 
 </html>
