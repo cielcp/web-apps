@@ -223,12 +223,138 @@ class CampusThriftController
             $name = $_POST['name'];
             $description = $_POST['description'];
             $price = $_POST['price'];
+
             $category = $_POST['category'];
-            $method = $_POST['method'];
-            $tags = $_POST['tags'];
-            $tags = $_POST['tags'];
+
+            // PROCESS METHOD
+            $method = "";
+            if (isset($_POST['pickupCheck'])) {
+                $method .= "Pickup, ";
+            }
+            if (isset($_POST['dropoffCheck'])) {
+                $method .= "Dropoff, ";
+            }
+            if (isset($_POST['meetupCheck'])) {
+                $method .= "Meetup, ";
+            }
+            // Remove trailing comma and space
+            $method = rtrim($method, ", ");
+
+            // PROCESS TAGS
+            $tags = "";
+            if (isset($_POST['excellentCheck'])) {
+                $tags .= "Excellent, ";
+            }
+            if (isset($_POST['greatCheck'])) {
+                $tags .= "Great, ";
+            }
+            if (isset($_POST['goodCheck'])) {
+                $tags .= "Good, ";
+            }
+            if (isset($_POST['poorCheck'])) {
+                $tags .= "Poor, ";
+            }
+            // Clothing
+            if (isset($_POST['XsmallCheck'])) {
+                $tags .= "Xsmall, ";
+            }
+            if (isset($_POST['SmallCheck'])) {
+                $tags .= "Small, ";
+            }
+            if (isset($_POST['MediumCheck'])) {
+                $tags .= "Medium, ";
+            }
+            if (isset($_POST['LargeCheck'])) {
+                $tags .= "Large, ";
+            }
+            if (isset($_POST['XlargeCheck'])) {
+                $tags .= "Xlarge, ";
+            }
+            if (isset($_POST['TopsCheck'])) {
+                $tags .= "Tops, ";
+            }
+            if (isset($_POST['BottomsCheck'])) {
+                $tags .= "Bottoms, ";
+            }
+            if (isset($_POST['OuterwearCheck'])) {
+                $tags .= "Outerwear, ";
+            }
+            if (isset($_POST['DressesCheck'])) {
+                $tags .= "Dresses, ";
+            }
+            if (isset($_POST['ShoesCheck'])) {
+                $tags .= "Shoes, ";
+            }
+            if (isset($_POST['BagsCheck'])) {
+                $tags .= "Bags, ";
+            }
+            if (isset($_POST['AccessoriesCheck'])) {
+                $tags .= "Accessories, ";
+            }
+            // Furniture
+            if (isset($_POST['TableCheck'])) {
+                $tags .= "Table, ";
+            }
+            if (isset($_POST['ChairCheck'])) {
+                $tags .= "Chair, ";
+            }
+            if (isset($_POST['CouchCheck'])) {
+                $tags .= "Couch, ";
+            }
+            if (isset($_POST['StorageCheck'])) {
+                $tags .= "Storage, ";
+            }
+            if (isset($_POST['DecorationCheck'])) {
+                $tags .= "Decoration, ";
+            }
+            if (isset($_POST['DishwareCheck'])) {
+                $tags .= "Dishware, ";
+            }
+            if (isset($_POST['AppliancesCheck'])) {
+                $tags .= "Appliances, ";
+            }
+            // School supplies
+            if (isset($_POST['TextbooksCheck'])) {
+                $tags .= "Textbooks, ";
+            }
+            if (isset($_POST['StationaryCheck'])) {
+                $tags .= "Stationary, ";
+            }
+            if (isset($_POST['ElectronicsCheck'])) {
+                $tags .= "Electronics, ";
+            }
+            if (isset($_POST['EquipmentCheck'])) {
+                $tags .= "Equipment, ";
+            }
+            if (isset($_POST['OtherCheck'])) {
+                $tags .= "Other, ";
+            }
+            // Other
+            if (isset($_POST['EntertainmentCheck'])) {
+                $tags .= "Entertainment, ";
+            }
+            if (isset($_POST['CollectiblesCheck'])) {
+                $tags .= "Collectibles, ";
+            }
+            if (isset($_POST['LeaseCheck'])) {
+                $tags .= "Lease, ";
+            }
+            if (isset($_POST['TicketsCheck'])) {
+                $tags .= "Tickets, ";
+            }
+            if (isset($_POST['FoodCheck'])) {
+                $tags .= "Food, ";
+            }
+            if (isset($_POST['ServicesCheck'])) {
+                $tags .= "Services, ";
+            }
+            if (isset($_POST['Health & BeautyCheck'])) {
+                $tags .= "Health & Beauty, ";
+            }
+            // Remove trailing comma and space
+            $tags = rtrim($tags, ", ");
             
-            // IMAGE STUFF
+            // PROCESS IMAGE
             // Check the image file
             $target_dir = "images/";
             $target_file = $target_dir . basename($_FILES["image"]["name"]);
@@ -275,7 +401,6 @@ class CampusThriftController
                     echo "Sorry, there was an error uploading your file.";
                 }
             }
-
 
 
             if (!empty($_SESSION['username'])) {
