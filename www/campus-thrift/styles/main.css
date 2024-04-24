@@ -383,8 +383,14 @@ should utilize the responsive design mode of the browser to showcase */
 }
 
 @media (max-width: 1025px) {
+    .category-container {
+        gap: 10px;
+    }
     .listing {
-        width: 176px;
+        width: 155px;
+    }
+    .listing-img-container {
+        height: 155px;
     }
 }
 
