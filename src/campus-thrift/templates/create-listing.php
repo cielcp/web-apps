@@ -50,7 +50,7 @@
               <select class="form-control" id="category" name="category" required>
                 <option value="" selected disabled>Select Category</option>
                 <option value="Clothing">Clothing</option>
-                <option value="Furniture">Furniture</option>
+                <option value="Home">Home</option>
                 <option value="School supplies">School supplies</option>
                 <option value="Other">Other</option>
               </select>
@@ -135,7 +135,7 @@
                 addCheckbox(tagsContainer, "Bags");
                 addCheckbox(tagsContainer, "Accessories");
                 break;
-            case "Furniture":
+            case "Home":
                 addCheckbox(tagsContainer, "Table");
                 addCheckbox(tagsContainer, "Chair");
                 addCheckbox(tagsContainer, "Couch");

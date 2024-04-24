@@ -148,7 +148,9 @@ class CampusThriftController
                     return;
                 } else {
                     // Show welcome message and redirect to home
-                    $_SESSION["user_id"] = $user["id"];
+                    $user = $this->db->prepareAndExecute("fetch_user", $sql, array($email));
+                    $userid = $user["id"];
+                    $_SESSION["user_id"] = $userid;
                     $message = "Welcome to Campus Thrift, " . $username;
                     $this->showHome($message);
                     return;
@@ -184,8 +186,11 @@ class CampusThriftController
                     $_SESSION["username"] = $username;
                     $_SESSION["email"] = $email;
                     $_SESSION["logged"] = true;
-                    $_SESSION["user_id"] = $user["id"];
-                    $message = "Welcome back to Campus Thrift, " . $username;
+                    
+                    // WHY IS THIS RETURNING NULL
+                    $userid = $user["id"];
+                    $_SESSION["user_id"] = $userid;
+                    $message = "Wel " . $user["id"] . "come back to Campus Thrift, " . $username;
                     $this->showHome($message);
                     return;
                 } else {
@@ -295,7 +300,7 @@ class CampusThriftController
             if (isset($_POST['AccessoriesCheck'])) {
                 $tags .= "Accessories, ";
             }
-            // Furniture
+            // Home
             if (isset($_POST['TableCheck'])) {
                 $tags .= "Table, ";
             }
@@ -367,20 +372,20 @@ class CampusThriftController
             // Check if image file is a actual image or fake image
             $check = getimagesize($_FILES["image"]["tmp_name"]);
             if ($check !== false) {
-                echo "File is an image - " . $check["mime"] . ".";
+                $message = "File is an image - " . $check["mime"] . ".";
                 $uploadOk = 1;
             } else {
-                echo "File is not an image.";
+                $message = "File is not an image.";
                 $uploadOk = 0;
             }
             // Check if file already exists
             if (file_exists($target_file)) {
-                echo "Sorry, file already exists.";
+                $message = "Sorry, file already exists.";
                 $uploadOk = 0;
             }
             // Check file size
             if ($_FILES["image"]["size"] > 500000) {
-                echo "Sorry, your file is too large.";
+                $message = "Sorry, your file is too large.";
                 $uploadOk = 0;
             }
             // Allow certain file formats
@@ -388,23 +393,25 @@ class CampusThriftController
                 $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
                 && $imageFileType != "gif" && $imageFileType != "webp"
             ) {
-                echo "Sorry, only JPG, JPEG, PNG, GIF, and WEBP files are allowed.";
+                $message = "Sorry, only JPG, JPEG, PNG, GIF, and WEBP files are allowed.";
                 $uploadOk = 0;
             }
             // Check if $uploadOk is set to 0 by an error
             if ($uploadOk == 0) {
-                echo "Sorry, your file was not uploaded.";
+                // $message = "Sorry, your file was not uploaded.";
                 $images = "images/greyshirt.jpg";
+                $this->showCreateListing($message);
                 // if everything is ok, try to upload file
             } else {
                 if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                    echo "The file " . basename($_FILES["image"]["name"]) . " has been uploaded.";
+                    // echo "The file " . basename($_FILES["image"]["name"]) . " has been uploaded.";
                     // Store file path in database
                     $image_path = $target_file;
                     // Insert $image_path into your database table
                     $images = $image_path;
                 } else {
-                    echo "Sorry, there was an error uploading your file.";
+                    $message = "Sorry, there was an error uploading your file.";
+                    $this->showCreateListing($message);
                 }
             }
 
@@ -546,7 +553,9 @@ class CampusThriftController
 
                 if ($listing) {
                     // Get the email of the currently logged-in user
+                    // THIS IS RETURNING NULL AND ITS REALLY MESSING ME UP!!
                     $user_id = $_SESSION['user_id'];
+                    echo $user_id;
 
                     // Check if the listing is already saved by the user
                     $savedListing = $this->db->prepareAndExecute("fetch_saved_listing", "SELECT * FROM saved WHERE listing_id = $1 AND user_id = $2", [$listing_id, $user_id]);
