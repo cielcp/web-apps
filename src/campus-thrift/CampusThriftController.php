@@ -148,8 +148,10 @@ class CampusThriftController
                     return;
                 } else {
                     // Show welcome message and redirect to home
-                    $user = $this->db->prepareAndExecute("fetch_user", $sql, array($email));
-                    $userid = $user["id"];
+                    $sql = "SELECT * FROM users WHERE email = $1";
+                    $user = $this->db->prepareAndExecute("fetch_new_user", $sql, array($email));
+                    // echo json_encode($user);
+                    $userid = $user[0]["id"];
                     $_SESSION["user_id"] = $userid;
                     $message = "Welcome to Campus Thrift, " . $username;
                     $this->showHome($message);

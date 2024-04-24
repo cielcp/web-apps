@@ -179,18 +179,20 @@
                     $saved = $this->db->query("select * FROM saved;");
 
                     $sql = "SELECT * FROM saved WHERE user_id = $1";
-                    $user_id = $_SESSION["user_id"];
-                    $saved_listings = $this->db->prepareAndExecute("fetch_saved_listings", $sql, array($user_id));
-                    //echo json_encode($saved_listings);
-                    if (count($saved_listings) == 0) {
-                        echo 'no listings saved';
+                    if (isset($_SESSION["user_id"])) {
+                        $user_id = $_SESSION["user_id"];
+                        $saved_listings = $this->db->prepareAndExecute("fetch_saved_listings", $sql, array($user_id));
+                        //echo json_encode($saved_listings);
+                        $saved_ids = [];
+                        foreach ($saved_listings as $saved_listing):
+                            //get the listing_id and add to list to compare later
+                            //echo json_encode($saved_listing["listing_id"]);
+                            $saved_ids[] = $saved_listing["listing_id"];
+                        endforeach;
+                    } else {
+                        echo 'not logged in?';
                     }
-                    $saved_ids = [];
-                    foreach ($saved_listings as $saved_listing):
-                        //get the listing_id and add to list to compare later
-                        //echo json_encode($saved_listing["listing_id"]);
-                        $saved_ids[] = $saved_listing["listing_id"];
-                    endforeach;
+
                     foreach ($listings as $listing):
                         echo '<div class="listing">';
                         echo '<div class="listing-img-container">';
