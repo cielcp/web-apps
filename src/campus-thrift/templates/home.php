@@ -74,9 +74,7 @@
                 //echo json_encode($saved_listing["listing_id"]);
                 $saved_ids[] = $saved_listing["listing_id"];
             endforeach;
-        } else {
-            echo 'not logged in?';
-        }
+        } 
         ?>
 
         <!-- Recently added listings -->

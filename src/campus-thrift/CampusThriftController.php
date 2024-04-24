@@ -195,7 +195,7 @@ class CampusThriftController
                     // WHY IS THIS RETURNING NULL
                     $userid = $user["id"];
                     $_SESSION["user_id"] = $userid;
-                    $message = "Wel " . $user["id"] . "come back to Campus Thrift, " . $username;
+                    $message = "Welcome back to Campus Thrift, " . $username;
                     $this->showHome($message);
                     return;
                 } else {
@@ -661,7 +661,7 @@ class CampusThriftController
         }
 
          
-        error_log(print_r('accesing this'));
+        // error_log(print_r('accesing this'));
         // $listing_id = 1;
         // $_SESSION['listing_id'] = $listing_id;
         

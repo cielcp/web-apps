@@ -101,13 +101,14 @@
                             echo '<li>' . $method . '</li>';
                         }
                         echo '</ul>';
-                        if ($listing['creator'] == $_SESSION["username"]) {
+                        if(isset($_SESSION["username"]) && ($listing['creator'] == $_SESSION["username"])) {
                             echo '<form action="?command=deleteListing" method="POST" class="mb-0 ">
                                 <button type="submit">DELETE LISTING</button>
                             </form>';
                         } else {
                             echo '<a href="?command=messages" class="mb-2 "><button>MESSAGE SELLER</button></a>';
                         }
+                        
                     echo '</div>';
                 echo '</div>';
                 
