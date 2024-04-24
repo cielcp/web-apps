@@ -69,8 +69,8 @@
                         echo '<form action="?command=saveListing" method="POST" class="mb-0">';
                             echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
                             echo '<button type="submit" class="icon-button bookmark-button">
-                                    <img class="bookmark hidden" src="icons/bookmark-filled.svg">
-                                    <img class="bookmark" src="icons/bookmark.svg">
+                                    <img class="bookmark" src="icons/bookmark-filled.svg">
+                                    <img class="bookmark hidden" src="icons/bookmark.svg">
                                 </button>
                               </form>';
                         echo '</div>';

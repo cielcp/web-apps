@@ -4,6 +4,7 @@ $(document).ready(function () {
   // Get all elements with class "bookmark-button"
   const bookmarkButtons = document.querySelectorAll(".bookmark-button");
 
+  // --------------- NONE OF THIS IS RUNNING METHINKS
   console.log("attempting ajax request");
   // AJAX request to fetch saved listings
   $.ajax({
@@ -27,7 +28,8 @@ $(document).ready(function () {
       console.error("AJAX error:", error);
     },
   });
-
+  // -------------- WANT THIS TO WORK BASED ON THE ^ AJAX QUERY
+  // -------------- BUT I J RAW PHPED IT ON THE HOME PAGE
   // Loop through each bookmark button
   bookmarkButtons.forEach(function (button) {
     // WANT THIS TO WORK ASYNC TO SHOW SAVED BUTTONS FILLED IN
@@ -47,7 +49,8 @@ $(document).ready(function () {
   });
 });
 
-// Add click event listener to each button
+
+// Event listener to toggle clicked state of bookmark button
 button.addEventListener("click", function () {
   // Get the bookmark images inside this button
   const bookmarks = this.querySelectorAll(".bookmark");
@@ -57,6 +60,7 @@ button.addEventListener("click", function () {
     bookmark.classList.toggle("hidden");
   });
 });
+
 
 /* $(document).ready(function () {
     // event handler for start game form submission

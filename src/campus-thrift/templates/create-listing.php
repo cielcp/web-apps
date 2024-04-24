@@ -97,7 +97,7 @@
                 <label class="form-check-label" for="meetupCheck">Meetup</label>
               </div>
             </div>
-              
+
             <div class="text-center">
               <button type="submit" class=""> SUBMIT </button>
             </div>
@@ -112,78 +112,44 @@
 
 </body>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+  $(document).ready(function() {
+    // JavaScript object to store tag options
+    const tagOptions = {
+      Clothing: ["Xsmall", "Small", "Medium", "Large", "Xlarge", "Tops", "Bottoms", "Outerwear", "Dresses", "Shoes", "Bags", "Accessories"],
+      Home: ["Table", "Chair", "Couch", "Storage", "Decoration", "Dishware", "Appliances"],
+      "School supplies": ["Textbooks", "Stationary", "Electronics", "Equipment", "Other"],
+      Other: ["Entertainment", "Collectibles", "Lease", "Tickets", "Food", "Services", "Health & Beauty"]
+    };
     // Function to fetch tags based on selected category
     function fetchTags() {
-        var category = document.getElementById("category").value;
-        var tagsContainer = document.getElementById("tagsContainer");
-        tagsContainer.innerHTML = "";
-
-        // Show checkboxes based on selected category
-        switch (category) {
-            case "Clothing":
-                addCheckbox(tagsContainer, "Xsmall");
-                addCheckbox(tagsContainer, "Small");
-                addCheckbox(tagsContainer, "Medium");
-                addCheckbox(tagsContainer, "Large");
-                addCheckbox(tagsContainer, "Xlarge");
-                addCheckbox(tagsContainer, "Tops");
-                addCheckbox(tagsContainer, "Bottoms");
-                addCheckbox(tagsContainer, "Outerwear");
-                addCheckbox(tagsContainer, "Dresses");
-                addCheckbox(tagsContainer, "Shoes");
-                addCheckbox(tagsContainer, "Bags");
-                addCheckbox(tagsContainer, "Accessories");
-                break;
-            case "Home":
-                addCheckbox(tagsContainer, "Table");
-                addCheckbox(tagsContainer, "Chair");
-                addCheckbox(tagsContainer, "Couch");
-                addCheckbox(tagsContainer, "Storage");
-                addCheckbox(tagsContainer, "Decoration");
-                addCheckbox(tagsContainer, "Dishware");
-                addCheckbox(tagsContainer, "Appliances");
-                break;
-            case "School supplies":
-                addCheckbox(tagsContainer, "Textbooks");
-                addCheckbox(tagsContainer, "Stationary");
-                addCheckbox(tagsContainer, "Electronics");
-                addCheckbox(tagsContainer, "Equipment");
-                addCheckbox(tagsContainer, "Other");
-                break;
-            case "Other":
-                addCheckbox(tagsContainer, "Entertainment");
-                addCheckbox(tagsContainer, "Collectibles");
-                addCheckbox(tagsContainer, "Lease");
-                addCheckbox(tagsContainer, "Tickets");
-                addCheckbox(tagsContainer, "Food");
-                addCheckbox(tagsContainer, "Services");
-                addCheckbox(tagsContainer, "Health & Beauty");
-                break;
-            default:
-                // Hide all checkboxes if no category selected
-                addCheckbox(tagsContainer, "No Tags Available");
-        }
+      var category = $("#category").val();
+      var tagsContainer = $("#tagsContainer");
+      tagsContainer.empty(); // Clear previous tags
+      // Show checkboxes based on selected category
+      if (tagOptions.hasOwnProperty(category)) {
+        tagOptions[category].forEach(tag => {
+          addCheckbox(tagsContainer, tag);
+        });
+      } else {
+        addCheckbox(tagsContainer, "No Tags Available");
+      }
     }
 
     // Function to add a checkbox to the tags container
     function addCheckbox(container, value) {
-        var checkbox = document.createElement("div");
-        checkbox.classList.add("form-check");
-        var box = document.createElement("input");
-        box.classList.add("form-check-input");
-        box.type = "checkbox";
-        box.name = value + "Check";
-        var tag = document.createElement("label");
-        tag.classList.add("form-check-label");
-        tag.textContent = value;
-        checkbox.appendChild(box);
-        checkbox.appendChild(tag);
-        container.appendChild(checkbox);
+      var checkbox = $("<div>").addClass("form-check");
+      var box = $("<input>").addClass("form-check-input").attr("type", "checkbox").attr("name", value + "Check");
+      var tag = $("<label>").addClass("form-check-label").text(value);
+      checkbox.append(box).append(tag);
+      container.append(checkbox);
     }
 
     // Event listener for category change
-    document.getElementById("category").addEventListener("change", fetchTags);
+    $("#category").on("change", fetchTags);
+
+  });
 </script>
 
 </html>
