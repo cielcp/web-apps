@@ -583,13 +583,12 @@ class CampusThriftController
     
     public function showSignup($message = "")
     {
-        $this->showListing();
         //$message = "what";        
         if (!empty($message)) {
             $alert = "<div class='alert alert-success'>{$message}</div>";
             echo $alert;
         }
-        //include $this->myURL . "listing.php";
+        include $this->myURL . "signup.php";
     }
 
     public function showLogin($message = "")

@@ -78,8 +78,9 @@
                         echo '</div>';
                     echo '</div>';
                     echo '<div class="listing-small-info-block d-flex justify-content-end">';
-                        echo '<form action="?command=saveListing" method="POST" class="mb-0 ">
-                                <button type="submit" class="icon-button"><img style="width:40px; height:40px;" src="icons/bookmark.svg"></button>
+                        echo '<form action="?command=saveListing" method="POST" class="mb-0 ">';
+                        echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
+                        echo '<button type="submit" class="icon-button"><img style="width:40px; height:40px;" src="icons/bookmark.svg"></button>
                             </form>';
                     echo '</div>';
                 echo '</div>';
