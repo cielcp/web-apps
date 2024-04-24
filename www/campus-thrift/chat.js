@@ -1,47 +1,41 @@
-// uhhhh fix html button names w this
+
+
 $(document).ready(function() {
-    const chatApp = {
-        init: function() {
-            $('#sendButton').on('click', this.sendMessage);
-            setInterval(this.getMessages, 1000);
-            $('#chatInput').on('input', this.inputStyleChange);
-        },
-        sendMessage: () => {
-            const message = $('#chatInput').val();
-            const username = $('#username').val();
-            if (!chatApp.validateInput(message)) {
-                alert('Message cannot be empty');
-                return;
-            }
-            $.post('sendMessage.php', { username, message }, (response) => {
-                $('#chatInput').val('');
-                console.log(response); // Or use DOM to display message
-            });
-        },
-        getMessages: function() {
-            $.getJSON('getMessages.php', (messages) => {
-                $('#messages').empty();
-                messages.forEach((msg) => {
-                    $('#messages').append(`<div><b>${msg.username}</b>: ${msg.message}</div>`);
-                });
-            });
-        },
-        validateInput: input => input.trim().length > 0,
-        inputStyleChange: function() {
-            if (this.value.length > 0) {
-                $(this).css('background-color', '#aff');
-            } else {
-                $(this).css('background-color', '#ffa');
-            }
+    // Bind click event to the send button
+    $('#sendButton').on('click', function() {
+        const message = $('#chatInput').val();
+        const username = $('#username').val();
+        if (!validateInput(message)) {
+            alert('Message cannot be empty');
+            return;
         }
-    };
+        $.post('sendMessage.php', { username, message }, (response) => {
+            $('#chatInput').val('');
+            console.log(response); // Or use DOM to display message
+        });
+    });
 
-    // Initialize chat application
-    chatApp.init();
+    // Set an interval to fetch messages every 1000 milliseconds (1 second)
+    setInterval(function() {
+        $.getJSON('getMessages.php', (messages) => {
+            $('#messages').empty();
+            messages.forEach((msg) => {
+                $('#messages').append(`<div><b>${msg.username}</b>: ${msg.message}</div>`);
+            });
+        });
+    }, 1000);
 
-        // Self-invoking anonymous function for initial setup
-        (function() {
-            console.log("Chat app started at " + new Date().toLocaleTimeString());
-            $('#messages').append('<p>Welcome to the chat! Type a message and hit send.</p>');
-        })();
+    // Bind input event to dynamically change the input style
+    $('#chatInput').on('input', function() {
+        if (this.value.length > 0) {
+            $(this).css('background-color', '#aff');
+        } else {
+            $(this).css('background-color', '#ffa');
+        }
+    });
+
+    // Function to validate message input
+    function validateInput(input) {
+        return input.trim().length > 0;
+    }
 });
