@@ -18,59 +18,38 @@
         rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/less" ></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="campusThrift.js"></script>
 
 </head>
 
 <body style="background-color: #F8F5F0;">
-    <!-- (your existing content) -->
+    
+    <!-- Nav bar -->
+    <?php include('shared/header.php'); ?>
 
-    <!-- Container for listing details -->
-    <div id="listingDetailsContainer">
-        <!-- Listing details will be populated here by AJAX -->
-    </div>
+    <!-- Main section -->
+    <section class="d-flex listing-details" id="chat">
+        <!-- Listing image -->
+        <form action="?command=login" method="post" id="listingForm" >
+    
+            <div class="text-center">
+                <button type="submit" class=""> listing </button>
+        </form>
+        <div class="listing-details-container" id = "listing-details-container">
+   
+        </div>
 
-    <script>
-        $(document).ready(function() {
-            var listingId = <?php echo json_encode($_SESSION['listing_id']); ?>;
-            loadListing(1);
-        });
-        function loadListing() {
-            $.ajax({
-                url: 'index.php', // Replace with the actual URL to your PHP controller endpoint
-                type: 'POST',
-                data: { 'command': 'loadListing'},
-                dataType: 'json',
-                success: function(response) {
-                    if (response.result === 'success') {
-                        // Assuming response.listing_details contains the details
-                        var details = response.listing_details;
-                        var html = `
-                            <div class="listing-image">
-                                <img src="${details.images}" alt="${details.name}">
-                            </div>
-                            <div class="listing-info">
-                                <h2>${details.name}</h2>
-                                <p>${details.description}</p>
-                                <p>Price: $${details.price}</p>
-                                <!-- Other details here -->
-                            </div>
-                        `;
-                        $('#listingDetailsContainer').html(html);
-                    } else {
-                        // Handle errors
-                        $('#listingDetailsContainer').html(`<p>Error: ${response.result}</p>`);
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    // Handle any AJAX errors here
-                    $('#listingDetailsContainer').html('<p>Error loading listing details.</p>');
-                }
-            });
-        }
-    </script>
+    </section>
 
+    <!-- Footer -->
+    <?php include('shared/footer.php'); ?>
 
-    <!-- (your existing footer content) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
 </body>
+
 </html>

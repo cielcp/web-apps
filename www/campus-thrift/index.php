@@ -22,7 +22,6 @@ spl_autoload_register(function ($classname) {
         }
 });
 
-
 // Other global things that we need to do
 // (such as starting a session, coming soon!)
 

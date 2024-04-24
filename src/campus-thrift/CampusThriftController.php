@@ -465,55 +465,54 @@ class CampusThriftController
         }
     }
 
-    // load listing detail as json NOT WORKING
-    public function loadListing()
-    {
+   // load listing detail as json NOT WORKING
+   public function loadListing()
+   {
 /*         // Check if listing_id is provided
-        if (!isset($_POST['listing_id'])) {
-            echo json_encode(['result' => 'Listing ID not provided']);
-        }
-    
-        // Sanitize the input
-        $listing_id = (int) $_POST['listing_id']; */
-    
-        $listing_id = 1;
+       if (!isset($_POST['listing_id'])) {
+           echo json_encode(['result' => 'Listing ID not provided']);
+       }
+   
+       // Sanitize the input
+       $listing_id = (int) $_POST['listing_id']; */
+       $listing_id = 1;
 
-        // Prepare the statement for execution and execute it
-        $sql = "SELECT * FROM listings WHERE id = $1";
-       
-        $result = $this->db->prepareAndExecute("fetch_listing", $sql, [$listing_id]);
-    
-        if ($result) {
-            // Since the prepareAndExecute method returns an array of all rows,
-            // we should expect $result to be an array of arrays.
-            // We need to check if we got any rows back.
-            if (count($result) > 0) {
-                // Fetch the first row (the listing details)
-                $listing_details = $result[0];
-    
-                // Set the header to indicate JSON content
-                header('Content-Type: application/json');
-    
-                // Build the return data structure
-                $output = [
-                    'result' => 'success',
-                    'listing_details' => $listing_details
-                ];
-    
-                // Encode the output as JSON and return it
-                $json_output = json_encode($output, JSON_PRETTY_PRINT);
-                echo $json_output;
+       // Prepare the statement for execution and execute it
+       $sql = "SELECT * FROM listings WHERE id = $1";
+      
+       $result = $this->db->prepareAndExecute("fetch_listing", $sql, [$listing_id]);
+   
+       if ($result) {
+           // Since the prepareAndExecute method returns an array of all rows,
+           // we should expect $result to be an array of arrays.
+           // We need to check if we got any rows back.
+           if (count($result) > 0) {
+               // Fetch the first row (the listing details)
+               $listing_details = $result[0];
+   
+               // Set the header to indicate JSON content
+               header('Content-Type: application/json');
+   
+               // Build the return data structure
+               $output = [
+                   'result' => 'success',
+                   'listing_details' => $listing_details
+               ];
+   
+               // Encode the output as JSON and return it
+               $json_output = json_encode($output, JSON_PRETTY_PRINT);
+               echo $json_output;
 
-                //return json_encode($output, JSON_PRETTY_PRINT);
-            } else {
-                echo json_encode(['result' => 'Listing not found']);
-            }
-        } else {
-            echo json_encode(['result' => 'Error executing query']);
-        }
-        exit;
-    }
-    
+               //return json_encode($output, JSON_PRETTY_PRINT);
+           } else {
+               echo json_encode(['result' => 'Listing not found']);
+           }
+       } else {
+           echo json_encode(['result' => 'Error executing query']);
+       }
+       exit;
+   }
+   
 
     // script to save listing and return as an ajax request to display saved buttons correctly
     public function saveListing()
@@ -581,7 +580,7 @@ class CampusThriftController
         }
         include($this->myURL . "home.php");
     }
-
+    
     public function showSignup($message = "")
     {
         $this->showListing();
@@ -590,7 +589,7 @@ class CampusThriftController
             $alert = "<div class='alert alert-success'>{$message}</div>";
             echo $alert;
         }
-        include $this->myURL . "signup.php";
+        //include $this->myURL . "listing.php";
     }
 
     public function showLogin($message = "")
@@ -644,7 +643,6 @@ class CampusThriftController
             $this->showLogin($message);
         }
     }
-
     public function showListing($message = "")
     {
 /*         // $message = "";
@@ -663,11 +661,11 @@ class CampusThriftController
         }
 
          */
+        error_log(print_r('accesing this'));
         $listing_id = 1;
         $_SESSION['listing_id'] = $listing_id;
         include($this->myURL . "listing.php");
 
-        echo "hi";
         // json shtuff
         /* // load the listing details json file
         $data = $this->loadListing();
@@ -679,6 +677,7 @@ class CampusThriftController
         } */
         // redirect the user to the appropriate listing.php page with the json file
     }
+
 
     public function showCreateListing($message = "")
     {
