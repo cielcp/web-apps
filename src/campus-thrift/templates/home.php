@@ -61,119 +61,8 @@
             </div>
         </section>
 
-        <!-- Recently added category -->
-        <section class="my-4">
-            <div class="category-text-container">
-                <h2>Recently added</h2>
-                <a href="#">See more <img src="icons/angle-right.svg"> </a>
-            </div>
-            <div class="category-container">
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/greyshirt.jpg" alt="grey shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/redshirt.jpg" alt="red shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/greyshirt.jpg" alt="grey shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing sixth">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Example all listings -->
-        <section class="my-4">
-            <div class="category-text-container">
-                <h2>Testing</h2>
-            </div>
-            <div class="category-container">
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/greyshirt.jpg" alt="grey shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button bookmark-button">
-                            <img class="bookmark hidden" src="icons/bookmark-filled.svg">
-                            <img class="bookmark" src="icons/bookmark.svg">
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- All listings -->
-        <section class="my-4">
-            <div class="category-text-container">
-                <h2>All listings</h2>
-            </div>
-            <div class="category-container">
-                <?php 
+        <?php 
+        // INITIALIZING QUERY
                     $listings = $this->db->query("select * FROM listings;");
                     // listings saved by user should show up w filled in buttons
                     $saved = $this->db->query("select * FROM saved;");
@@ -192,6 +81,121 @@
                     } else {
                         echo 'not logged in?';
                     }
+                    ?>
+
+        <section class="my-4">
+            <div class="category-text-container">
+                <h2>Recently added</h2>
+                <a href="#">See more <img src="icons/angle-right.svg"> </a>
+            </div>
+            <div class="category-container">
+                <?php 
+                    $recent_listings = array_slice(array_reverse($listings), 0, 6);
+                    foreach ($recent_listings as $listing):
+                        echo '<div class="listing">';
+                        echo '<div class="listing-img-container">';
+                        echo '<form action="?command=listing" method="POST" class="listing-img-form mb-0" style="height:100%; width:100%;">';
+                        echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
+                        echo '<button type="submit" style="border-style:none; padding:0px; height:100%; width:100%; border-radius:0px;">';
+                        echo '<img src="' . $listing["images"] . '" alt="'. $listing["name"] . '">';
+                        echo '</button>';
+                        echo '</form>';
+                        echo '</div>';
+                        echo '<div class="line"></div>';
+                        echo '<div class="listing-text-container">';
+                        echo '<h3> $'. $listing["price"] . ' '. $listing["name"] . '</h3>';
+                        if (isset($_SESSION["username"]) && ($listing["creator"] !== $_SESSION["username"])) {
+                            echo '<form action="?command=saveListing" method="POST" class="mb-0">';
+                            echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
+                            // if the listing is in the saved listings list
+                            if (in_array($listing["id"], $saved_ids)) {
+                                echo '<button type="submit" class="icon-button bookmark-button">
+                                        <img class="bookmark" src="icons/bookmark-filled.svg">
+                                        <img class="bookmark hidden" src="icons/bookmark.svg">
+                                    </button>
+                                </form>';
+                            } else {
+                                echo '<button type="submit" class="icon-button bookmark-button">
+                                        <img class="bookmark hidden" src="icons/bookmark-filled.svg">
+                                        <img class="bookmark" src="icons/bookmark.svg">
+                                    </button>
+                                </form>';
+                            }
+                        }
+                        echo '</div>';
+                        echo '</div>';
+                    endforeach;
+                ?>
+            </div>
+        </section>
+
+        <section class="my-4">
+            <div class="category-text-container">
+                <h2>Under $20</h2>
+                <a href="#">See more <img src="icons/angle-right.svg"> </a>
+            </div>
+            <div class="category-container">
+                <?php 
+                    $cheap_listings = [];
+                    foreach ($listings as $listing):
+                        if ($listing["price"] <= 20) {
+                            $cheap_listings[] = $listing;
+                        }
+                    endforeach;
+                    $cheap_listings = array_slice($cheap_listings, 0, 6);
+                    foreach ($cheap_listings as $listing):
+                        echo '<div class="listing">';
+                        echo '<div class="listing-img-container">';
+                        echo '<form action="?command=listing" method="POST" class="listing-img-form mb-0" style="height:100%; width:100%;">';
+                        echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
+                        echo '<button type="submit" style="border-style:none; padding:0px; height:100%; width:100%; border-radius:0px;">';
+                        echo '<img src="' . $listing["images"] . '" alt="'. $listing["name"] . '">';
+                        echo '</button>';
+                        echo '</form>';
+                        echo '</div>';
+                        echo '<div class="line"></div>';
+                        echo '<div class="listing-text-container">';
+                        echo '<h3> $'. $listing["price"] . ' '. $listing["name"] . '</h3>';
+                        if (isset($_SESSION["username"]) && ($listing["creator"] !== $_SESSION["username"])) {
+                            echo '<form action="?command=saveListing" method="POST" class="mb-0">';
+                            echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
+                            // if the listing is in the saved listings list
+                            if (in_array($listing["id"], $saved_ids)) {
+                                echo '<button type="submit" class="icon-button bookmark-button">
+                                        <img class="bookmark" src="icons/bookmark-filled.svg">
+                                        <img class="bookmark hidden" src="icons/bookmark.svg">
+                                    </button>
+                                </form>';
+                            } else {
+                                echo '<button type="submit" class="icon-button bookmark-button">
+                                        <img class="bookmark hidden" src="icons/bookmark-filled.svg">
+                                        <img class="bookmark" src="icons/bookmark.svg">
+                                    </button>
+                                </form>';
+                            }
+                        }
+                        echo '</div>';
+                        echo '</div>';
+                    endforeach;
+                ?>
+            </div>
+        </section>
+
+        <!-- View all listings -->
+        <!-- <section>
+            <a class="view-all" href="#">
+                <h3>View all listings</h3>
+                <img src="icons/angle-down.svg">
+            </a>
+        </section> -->
+
+        <!-- All listings -->
+        <section class="my-4">
+            <div class="category-text-container">
+                <h2>All listings</h2>
+            </div>
+            <div class="category-container">
+                <?php 
 
                     foreach ($listings as $listing):
                         echo '<div class="listing">';

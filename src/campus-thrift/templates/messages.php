@@ -40,14 +40,13 @@
         <div class="chat-container">
             <div class="messages" id="messageArea">
                 <div class="message">
-                    {% comment %} <img src="icons/person circle.svg"> {% endcomment %}
-                    <p class="message-bubble" id = "username">name</p>
-
+                    <img src="icons/person circle.svg">
+                    <!-- <p id = "username">name</p> -->
                     <p class="message-bubble">Hello, can I buy this item?</p>
                 </div>
                 <div class="message mine">
                     <p class="message-bubble me">Sorry, no longer on sale</p>
-                    {% comment %} <img src="icons/person circle.svg"> {% endcomment %}
+                    <img src="icons/person circle.svg">
                 </div>
             </div>
             <form class="form-inline mt-4">

@@ -113,7 +113,6 @@ form {
 
 .navbar-nav {
     gap: 30px;
-    margin-right: 30px;
 }
 
     /* bro why is it not aligning center ugh */
@@ -383,24 +382,45 @@ should utilize the responsive design mode of the browser to showcase */
     }
 }
 
-@media (max-width: 1024px) {
-    .sixth {
-        display: none;
+@media (max-width: 1025px) {
+    .listing {
+        width: 176px;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 769px) {
     .category-container {
         gap: 10px;
     }
-    .sixth {
-        display: block;
+    .listing {
+        width: 174px;
     }
 }
 
-@media (max-width: 376px) {
+/* mobile */
+@media (max-width: 426px) {
+    .category-container {
+        gap: 20px;
+    }
     .listing {
-        width: 160px;
+        width: 180px;
+    }
+    button {
+        font-size: medium;
+    }
+    #profile-info {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .profile-pic-container {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media (max-width: 420px) {
+    .listing {
+        width: 156px;
     }
     .listing-img-container {
         height: 160px;
@@ -415,4 +435,14 @@ should utilize the responsive design mode of the browser to showcase */
         height: 135px;
     }
 }
+
+@media (max-width: 320px) {
+    .listing {
+        width: 130px;
+    }
+    .listing-img-container {
+        height: 130px;
+    }
+}
+
 

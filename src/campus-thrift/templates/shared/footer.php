@@ -18,13 +18,13 @@
                         <p class="ms-2">A UVA thrifting platform made by students, for students!</p>
                     </div>
                 </div>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                <button class="navbar-toggler icon-button" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <div class="container d-flex justify-content-end">
+                    <div class="container d-flex justify-content-end me-0">
                         <ul class="navbar-nav footer-links flex-column mx-5">
                             <li class="nav-item"><a class="nav-link" href="?command=home">HOME</a></li>
                             <li class="nav-item"><a class="nav-link" href="?command=messages">MESSAGES</a></li>

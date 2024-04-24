@@ -14,14 +14,14 @@
                     <img src="images/logo.png" alt="Campus Thrift Logo">
                     CAMPUS THRIFT
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                <button class="navbar-toggler icon-button" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                     <!-- Properly create at least four different screens with respect to the functionalities you proposed -->
-                    <ul class="navbar-nav align-items-center">
+                    <ul class="navbar-nav align-items-end py-2">
                         <li class="nav-item">
                             <a href="?command=home"><button class="nav-link icon-button"><img src="icons/house.svg"></button></a>
                         </li>
@@ -34,10 +34,13 @@
                         <li class="nav-item">
                             <a href="?command=profile"><button class="nav-link icon-button"><img src="icons/person circle.svg"></button></a>
                         </li>
+                        <li class="nav-item">
+                            <a href="?command=<?php echo isset($_SESSION['logged']) && $_SESSION['logged'] ? 'logout' : 'showLogin'; ?>">
+                                <button><?php echo isset($_SESSION['logged']) && $_SESSION['logged'] ? 'LOGOUT' : 'SIGN IN'; ?></button>
+                            </a>
+                        </li>
                     </ul>
-                    <a href="?command=<?php echo isset($_SESSION['logged']) && $_SESSION['logged'] ? 'logout' : 'showLogin'; ?>">
-                        <button><?php echo isset($_SESSION['logged']) && $_SESSION['logged'] ? 'LOGOUT' : 'SIGN IN'; ?></button>
-                    </a>
+                    
                 </div>
             </div>
         </nav>

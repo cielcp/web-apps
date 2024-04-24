@@ -8,7 +8,7 @@
 <body>
     <!-- Profile info -->
     <section class="container my-4">
-        <div class="container d-flex align-items-center justify-content-between">
+        <div class="container d-flex align-items-center justify-content-between" id="profile-info">
             <div class="d-flex align-items-center">
                 <div class="profile-pic-container">
                     <img src="images/profilepic.jpg" alt="profile pic" width=30px>
