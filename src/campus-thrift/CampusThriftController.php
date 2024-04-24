@@ -390,7 +390,7 @@ class CampusThriftController
             }
             // Check file size
             if ($_FILES["image"]["size"] > 500000) {
-                $message = "Sorry, your file is too large.";
+                $message = "Sorry, your image file is too large.";
                 $uploadOk = 0;
             }
             // Allow certain file formats
@@ -406,6 +406,7 @@ class CampusThriftController
                 // $message = "Sorry, your file was not uploaded.";
                 $images = "images/greyshirt.jpg";
                 $this->showCreateListing($message);
+                return;
                 // if everything is ok, try to upload file
             } else {
                 if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
@@ -468,14 +469,14 @@ class CampusThriftController
    // load listing detail as json NOT WORKING
    public function loadListing()
    {
-/*         // Check if listing_id is provided
+         // Check if listing_id is provided
        if (!isset($_POST['listing_id'])) {
            echo json_encode(['result' => 'Listing ID not provided']);
        }
    
        // Sanitize the input
-       $listing_id = (int) $_POST['listing_id']; */
-       $listing_id = 1;
+       $listing_id = (int) $_POST['listing_id'];
+       //$listing_id = 1;
 
        // Prepare the statement for execution and execute it
        $sql = "SELECT * FROM listings WHERE id = $1";
@@ -503,7 +504,6 @@ class CampusThriftController
                $json_output = json_encode($output, JSON_PRETTY_PRINT);
                echo $json_output;
 
-               //return json_encode($output, JSON_PRETTY_PRINT);
            } else {
                echo json_encode(['result' => 'Listing not found']);
            }
@@ -645,7 +645,7 @@ class CampusThriftController
     }
     public function showListing($message = "")
     {
-/*         // $message = "";
+         // $message = "";
         if (!empty($message)) {
             $alert = "<div class='alert alert-success'>{$message}</div>";
             echo $alert;
@@ -654,17 +654,18 @@ class CampusThriftController
             // Store the id to the current session
             $_SESSION['listing_id'] = $_POST['listing_id'];
             // redirect the user to the appropriate listing.php page (with the json file?)
-            $this->loadListing();
+            //$this->loadListing();
+            include($this->myURL . "listing.php");
         } else {
             // Invalid request, show error message
             die("Invalid listing ID provided");
         }
 
-         */
+         
         error_log(print_r('accesing this'));
-        $listing_id = 1;
-        $_SESSION['listing_id'] = $listing_id;
-        include($this->myURL . "listing.php");
+        // $listing_id = 1;
+        // $_SESSION['listing_id'] = $listing_id;
+        
 
         // json shtuff
         /* // load the listing details json file

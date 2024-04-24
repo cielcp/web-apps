@@ -25,7 +25,7 @@ $(document).ready(function () {
   console.log("attempting ajax request");
   // AJAX request to fetch saved listings
   $.ajax({
-    url: "savedJson.php", // Replace 'saveListing.php' with your PHP file path
+    url: "savedJson.php",
     type: "POST",
     dataType: "json",
     success: function (response) {
@@ -50,6 +50,17 @@ $(document).ready(function () {
   // Loop through each bookmark button
   bookmarkButtons.forEach(function (button) {
     // WANT THIS TO WORK ASYNC TO SHOW SAVED BUTTONS FILLED IN
+    // Event listener to toggle clicked state of bookmark button
+    button.addEventListener("click", function () {
+      // Get the bookmark images inside this button
+      const bookmarks = this.querySelectorAll(".bookmark");
+
+      // Toggle the 'hidden' class for the bookmark images
+      bookmarks.forEach(function (bookmark) {
+        bookmark.classList.toggle("hidden");
+      });
+    });
+
     // Determine if the listing is saved or not
     const isSaved = button.classList.contains("saved");
 
@@ -66,17 +77,6 @@ $(document).ready(function () {
   });
 });
 
-
-// Event listener to toggle clicked state of bookmark button
-button.addEventListener("click", function () {
-  // Get the bookmark images inside this button
-  const bookmarks = this.querySelectorAll(".bookmark");
-
-  // Toggle the 'hidden' class for the bookmark images
-  bookmarks.forEach(function (bookmark) {
-    bookmark.classList.toggle("hidden");
-  });
-});
 
 function loadListing(data) {
   console.log(data);
