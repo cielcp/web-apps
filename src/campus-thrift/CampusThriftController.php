@@ -449,6 +449,9 @@ class CampusThriftController
         if (!empty($_SESSION['listing_id'])) {
             //delete the listing that corresponds to the current id
             $this->db->query("DELETE FROM listings WHERE id=" . $_SESSION['listing_id'] . ";");
+            // ALSO REMOVE IMAGE FROM SERVER?
+
+
             $message = "Successfully deleted listing";
             $this->showProfile($message);
         } else {
@@ -537,9 +540,13 @@ class CampusThriftController
             // No listing found
             return json_encode(array('result' => 'Listing not found'));
         }
+
+
+
+        
     }
 
-    // function to save listing NEED TO DO
+    // script to save listing and return as an ajax request to display saved buttons correctly
     public function saveListing()
     {
         // Check if the user is logged in
@@ -552,34 +559,31 @@ class CampusThriftController
                 $listing = $this->db->prepareAndExecute("fetch_listing", "SELECT * FROM listings WHERE id = $1", [$listing_id]);
 
                 if ($listing) {
-                    // Get the email of the currently logged-in user
+                    // Get the id of the currently logged-in user
                     // THIS IS RETURNING NULL AND ITS REALLY MESSING ME UP!!
                     $user_id = $_SESSION['user_id'];
-                    echo $user_id;
+                    // echo $user_id;
 
                     // Check if the listing is already saved by the user
                     $savedListing = $this->db->prepareAndExecute("fetch_saved_listing", "SELECT * FROM saved WHERE listing_id = $1 AND user_id = $2", [$listing_id, $user_id]);
 
                     if ($savedListing) {
-                        // Listing already saved
-                        $message = "Listing already saved.";
+                        //remove the saved listing that corresponds to the current id
+                        $this->db->query("DELETE FROM saved WHERE listing_id=" . $listing_id . ";");
+                        $message = "Listing removed from saved.";
                     } else {
                         // Save the listing
                         $insertResult = $this->db->prepareAndExecute("insert_saved_listing", "INSERT INTO saved (listing_id, user_id) VALUES ($1, $2)", [$listing_id, $user_id]);
                         if ($insertResult === false) {
-                            // Error saving listing
                             $message = "Error saving listing.";
                         } else {
-                            // Listing saved successfully
                             $message = "Listing saved successfully.";
                         }
                     }
                 } else {
-                    // Listing not found
                     $message = "Listing not found.";
                 }
             } else {
-                // No listing ID provided
                 $message = "No listing ID provided.";
             }
         } else {
@@ -587,7 +591,7 @@ class CampusThriftController
             $message = "Please log in to save listings.";
         }
 
-        // Show the appropriate message and redirect to the home page
+        // Show the appropriate message and redirect to the home page (or saved page?)
         $this->showHome($message);
     }
 

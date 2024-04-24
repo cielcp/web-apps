@@ -1,26 +1,62 @@
 console.log("uh did this connect");
 
 $(document).ready(function () {
-    // Get all elements with class "bookmark-button"
-    const bookmarkButtons = document.querySelectorAll(".bookmark-button");
+  // Get all elements with class "bookmark-button"
+  const bookmarkButtons = document.querySelectorAll(".bookmark-button");
 
-    // Loop through each bookmark button
-    bookmarkButtons.forEach(function(button) {
-        // Add click event listener to each button
-        button.addEventListener("click", function() {
-            // Get the bookmark images inside this button
-            const bookmarks = this.querySelectorAll(".bookmark");
-
-            // Loop through each bookmark image
-            bookmarks.forEach(function(bookmark) {
-                // Toggle the 'hidden' class
-                bookmark.classList.toggle("hidden");
-            });
+  console.log("attempting ajax request");
+  // AJAX request to fetch saved listings
+  $.ajax({
+    url: "savedJson.php", // Replace 'saveListing.php' with your PHP file path
+    type: "POST",
+    dataType: "json",
+    success: function (response) {
+      if (response && response.savedListings) {
+        console.log("success making ajax request");
+        const savedListings = response.savedListings;
+        // Loop through saved listings and update UI accordingly
+        savedListings.forEach(function (savedListing) {
+          // Access the saved listing ID and update UI (e.g., change button color)
+          const listingId = savedListing.listing_id;
+          console.log("saved listing #", listingId);
+          // Example: document.getElementById('button-' + listingId).classList.add('filled');
         });
-    });
+      }
+    },
+    error: function (xhr, status, error) {
+      console.error("AJAX error:", error);
+    },
+  });
+
+  // Loop through each bookmark button
+  bookmarkButtons.forEach(function (button) {
+    // WANT THIS TO WORK ASYNC TO SHOW SAVED BUTTONS FILLED IN
+    // Determine if the listing is saved or not
+    const isSaved = button.classList.contains("saved");
+
+    // If the listing is already saved, remove it
+    if (isSaved) {
+      // Remove the saved listing from the profile (you need to implement this)
+      console.log("Removing from saved listings");
+      button.classList.remove("saved");
+    } else {
+      // Save the listing to the profile (you need to implement this)
+      console.log("Adding to saved listings");
+      button.classList.add("saved");
+    }
+  });
 });
 
+// Add click event listener to each button
+button.addEventListener("click", function () {
+  // Get the bookmark images inside this button
+  const bookmarks = this.querySelectorAll(".bookmark");
 
+  // Toggle the 'hidden' class for the bookmark images
+  bookmarks.forEach(function (bookmark) {
+    bookmark.classList.toggle("hidden");
+  });
+});
 
 /* $(document).ready(function () {
     // event handler for start game form submission
@@ -116,4 +152,3 @@ $(document).ready(function () {
       $("#boardContainer").empty();
     });
   }); */
-  

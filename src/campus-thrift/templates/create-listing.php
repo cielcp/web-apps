@@ -46,6 +46,11 @@
             </div>
 
             <div class="mb-3">
+              <label for="description">Description:</label>
+              <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+            </div>
+
+            <div class="mb-3">
               <label for="category">Category:</label>
               <select class="form-control" id="category" name="category" required>
                 <option value="" selected disabled>Select Category</option>
@@ -54,27 +59,6 @@
                 <option value="School supplies">School supplies</option>
                 <option value="Other">Other</option>
               </select>
-            </div>
-
-            <div class="mb-3">
-              <label for="exchange_method">Exchange methods: </label>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" name="pickupCheck">
-                <label class="form-check-label" for="pickupCheck">Pickup</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" name="dropoffCheck">
-                <label class="form-check-label" for="dropoffCheck">Dropoff</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" name="meetupCheck">
-                <label class="form-check-label" for="meetupCheck">Meetup</label>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="description">Description:</label>
-              <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
             </div>
 
             <div class="mb-3">
@@ -96,6 +80,22 @@
                 <label class="form-check-label" for="poorCheck">Poor</label>
               </div>
               <div id="tagsContainer"></div>
+            </div>
+
+            <div class="mb-3">
+              <label for="exchange_method">Exchange methods: </label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" name="pickupCheck">
+                <label class="form-check-label" for="pickupCheck">Pickup</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" name="dropoffCheck">
+                <label class="form-check-label" for="dropoffCheck">Dropoff</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" name="meetupCheck">
+                <label class="form-check-label" for="meetupCheck">Meetup</label>
+              </div>
             </div>
               
             <div class="text-center">

@@ -33,106 +33,50 @@
     </section>
     <div class="line"></div>
     
-    <!-- Profile listings -->
+    <!-- Saved listings -->
     <main>
         <section class="flex-column">
             <div class="category-container">
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/greyshirt.jpg" alt="grey shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/redshirt.jpg" alt="red shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/greyshirt.jpg" alt="grey shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
-                <div class="listing">
-                    <div class="listing-img-container">
-                        <a href="#">
-                            <img src="images/blueshirt.jpg" alt="blue shirt image">
-                        </a>
-                    </div>
-                    <div class="line"></div>
-                    <div class="listing-text-container">
-                        <h3>$10</h3>
-                        <button class="icon-button"><img src="icons/bookmark.svg"></button>
-                    </div>
-                </div>
+                <?php 
+                    $sql = "SELECT * FROM saved WHERE user_id = $1";
+                    $user_id = $_SESSION["user_id"];
+                    $saved_listings = $this->db->prepareAndExecute("fetch_saved_listings", $sql, array($user_id));
+                    // echo json_encode($listings);
+                    if (count($saved_listings) == 0) {
+                        echo '<div class="my-5">';
+                        echo '<h3"> You don\'t have any listings saved :/ </h3>';
+                        echo '</div>';
+                    }
+                    foreach ($saved_listings as $saved_listing):
+                        $sql = "SELECT * FROM listings WHERE id = $1";
+                        $listing_id = $saved_listing["listing_id"];
+                        // echo "ID is " . $listing_id;
+                        $raw_listing = $this->db->prepareAndExecute("fetch_listings_" . $listing_id, $sql, array($listing_id));
+                        //echo json_encode($listing);
+                        $listing = $raw_listing[0];
+                        echo '<div class="listing">';
+                        echo '<div class="listing-img-container">';
+                        echo '<form action="?command=listing" method="POST" class="listing-img-form mb-0" style="height:100%; width:100%;">';
+                        echo '<input type="hidden" name="listing_id" value="' . $listing_id . '">';
+                        echo '<button type="submit" style="border-style:none; padding:0px; height:100%; width:100%; border-radius:0px;">';
+                        echo '<img src="' . $listing["images"] . '" alt="'. $listing["name"] . '">';
+                        echo '</button>';
+                        echo '</form>';
+                        echo '</div>';
+                        echo '<div class="line"></div>';
+                        echo '<div class="listing-text-container">';
+                        echo '<h3> $'. $listing["price"] . ' '. $listing["name"] . '</h3>';
+                        echo '<form action="?command=saveListing" method="POST" class="mb-0">';
+                            echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
+                            echo '<button type="submit" class="icon-button bookmark-button">
+                                    <img class="bookmark hidden" src="icons/bookmark-filled.svg">
+                                    <img class="bookmark" src="icons/bookmark.svg">
+                                </button>
+                              </form>';
+                        echo '</div>';
+                        echo '</div>';
+                    endforeach;
+                ?>
             </div>
         </section>
     </main>
