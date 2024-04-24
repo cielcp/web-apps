@@ -175,6 +175,23 @@
             <div class="category-container">
                 <?php 
                     $listings = $this->db->query("select * FROM listings;");
+                    // listings saved by user should show up w filled in buttons
+                    $saved = $this->db->query("select * FROM saved;");
+
+                    $sql = "SELECT * FROM saved WHERE user_id = $1";
+                    if (isset($_SESSION["user_id"])) {
+                        $user_id = $_SESSION["user_id"];
+                        $saved_listings = $this->db->prepareAndExecute("fetch_saved_listings", $sql, array($user_id));
+                        //echo json_encode($saved_listings);
+                        $saved_ids = [];
+                        foreach ($saved_listings as $saved_listing):
+                            //get the listing_id and add to list to compare later
+                            //echo json_encode($saved_listing["listing_id"]);
+                            $saved_ids[] = $saved_listing["listing_id"];
+                        endforeach;
+                    } else {
+                        echo 'not logged in?';
+                    }
 
                     foreach ($listings as $listing):
                         echo '<div class="listing">';
@@ -192,11 +209,20 @@
                         if (isset($_SESSION["username"]) && ($listing["creator"] !== $_SESSION["username"])) {
                             echo '<form action="?command=saveListing" method="POST" class="mb-0">';
                             echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
-                            echo '<button type="submit" class="icon-button bookmark-button">
-                                    <img class="bookmark hidden" src="icons/bookmark-filled.svg">
-                                    <img class="bookmark" src="icons/bookmark.svg">
-                                </button>
-                              </form>';
+                            // if the listing is in the saved listings list
+                            if (in_array($listing["id"], $saved_ids)) {
+                                echo '<button type="submit" class="icon-button bookmark-button">
+                                        <img class="bookmark" src="icons/bookmark-filled.svg">
+                                        <img class="bookmark hidden" src="icons/bookmark.svg">
+                                    </button>
+                                </form>';
+                            } else {
+                                echo '<button type="submit" class="icon-button bookmark-button">
+                                        <img class="bookmark hidden" src="icons/bookmark-filled.svg">
+                                        <img class="bookmark" src="icons/bookmark.svg">
+                                    </button>
+                                </form>';
+                            }
                         }
                         echo '</div>';
                         echo '</div>';
