@@ -30,7 +30,9 @@ spl_autoload_register(function ($classname) {
 //session_start();
 
 // Instantiate the front controller
-$thrift = new CampusThriftController($_GET);
+$requestData = array_merge($_GET, $_POST);
+$thrift = new CampusThriftController($requestData);
+//$thrift = new CampusThriftController($_GET);
 
 // Run the controller
 $thrift->run();

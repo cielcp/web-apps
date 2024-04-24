@@ -43,6 +43,11 @@ class Database {
         return pg_fetch_all($res);
     }
 
+    public function prepare($sql){
+        return $stmt = pg_prepare($this->dbConnector, $sql);
+
+    }
+
     public function prepareAndExecute($name, $sql, $params) {
         $stmt = pg_prepare($this->dbConnector, $name, $sql);
         $result = pg_execute($this->dbConnector, $name, $params);
