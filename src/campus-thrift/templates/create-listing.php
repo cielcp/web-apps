@@ -99,7 +99,7 @@
             </div>
 
             <div class="text-center">
-              <button type="submit" class=""> SUBMIT </button>
+              <button type="submit" class=""> CREATE </button>
             </div>
           </form>
         </div>

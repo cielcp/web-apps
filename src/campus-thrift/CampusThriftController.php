@@ -60,6 +60,13 @@ class CampusThriftController
             case "deleteListing":
                 $this->deleteListing();
                 break;
+                // commands to process messaging stuff
+            case "startMessage":
+                $this->startMessage();
+                break;
+            case "sendMessage":
+                $this->sendMessage();
+                break;
                 // commands to show pages
             case "home":
                 $this->showHome();
@@ -96,20 +103,53 @@ class CampusThriftController
     }
 
     /** ------------------- MESSAGE STUFF? ------------------- */
-/* 
+
+    public function startMessage()
+    {
+        // only potential buyers can start messages
+        $buyer = $_POST['buyer'];
+        $seller = $_POST['seller'];
+
+        // DB STUFF
+        //if it already exists, direct to that chat 
+        $sql = "SELECT * FROM messages WHERE (buyer = $1 AND seller = $2) OR (buyer = $2 AND seller = $1)";
+        $chatlog = $this->db->prepareAndExecute("fetch_if_messages", $sql, array($buyer, $seller));
+        // echo json_encode($chatlog);
+        if ($chatlog == false) {
+            // An error occurred or no chat log exists, so create a new chat
+            $sql = "INSERT INTO messages (buyer, seller) VALUES ($1, $2)";
+            $insertResult = $this->db->prepareAndExecute("start_message", $sql, array($buyer, $seller));
+            if ($insertResult === false) {
+                $message = "There was an error starting your new chat";
+                $this->showMessages($message);
+                return;
+            } else {
+                $message = "New chat started!";
+                // buyer is the current user, seller is the passed in
+                $_SESSION['seller'] = $seller;
+                $this->showMessages($message, $seller);
+                return;
+            }
+            
+        } else {
+            // Chat log exists, so resume message history
+            $message = "Resuming message history with " . $seller;
+            $_SESSION['seller'] = $seller;
+            $this->showMessages($message);
+        }
+        
+    }
+ 
 
     public function sendMessage()
     {
-        $username = $_POST['username'];
+        $username = $_SESSION['username'];
         $message = $_POST['message'];
 
-        // okay fix this db stuff
-        $query = $this->db->prepare("INSERT INTO messages (username, message) VALUES (?, ?)");
-        $query->execute([$username, $message]);
         echo "Message sent!";
     }
 
-    public function getMessage()
+    /*public function getMessage()
     {
         // fix db stuff
         $query = $this->db->query("SELECT * FROM messages ORDER BY timestamp DESC");
@@ -130,6 +170,7 @@ class CampusThriftController
             $sql = "SELECT * FROM users WHERE email = $1";
             $user = $this->db->prepareAndExecute("fetch_user", $sql, array($email));
 
+            // also check for users with the same username?
             if ($user) {
                 $message = "An account with that email already exists. Try logging in?";
                 $this->showSignup($message);
@@ -559,8 +600,23 @@ class CampusThriftController
             $message = "Please log in to save listings.";
         }
 
-        // Show the appropriate message and redirect to the home page (or saved page?)
-        $this->showHome($message);
+        // Redirect to the previous page
+        if(isset($_SERVER['HTTP_REFERER'])) {
+            // Check if the referrer contains "saved" or "listing"
+            if (strpos($_SERVER['HTTP_REFERER'], "saved") !== false) {
+                $this->showSaved($message);
+            } elseif (strpos($_SERVER['HTTP_REFERER'], "listing") !== false) {
+                $this->showListing($message);
+                
+            } else {
+                $this->showHome($message);
+            }
+            exit;
+        } else {
+            // Show the appropriate message and redirect to the home page (or saved page?)
+            $this->showHome($message);
+            exit;
+        }
     }
 
 

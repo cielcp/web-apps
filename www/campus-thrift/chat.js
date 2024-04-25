@@ -1,6 +1,81 @@
+document.addEventListener("DOMContentLoaded", function () {
+    // event listener for sending a message (visual only)
+    document.getElementById("messageForm").addEventListener("submit", function (event) {
+        event.preventDefault(); 
+        var message = document.getElementById("chatInput").value.trim();
+        if (!message) return; // Exit if message is empty
+        // Clear the input field
+        document.getElementById("chatInput").value = "";
+        // Append the message to the message area
+        var messageBubble = '<div class="message mine"><p class="message-bubble me">' + message + '</p><img src="icons/person circle.svg"></div>';
+        document.getElementById("messageArea").innerHTML += messageBubble;
+        // Scroll to the bottom of the message area
+        var messageArea = document.getElementById("messageArea");
+        messageArea.scrollTop = messageArea.scrollHeight;
+        // Send message to server
+        sendMessage(message);
+    });
+
+    // Add event listener to chat profiles
+    var chatProfiles = document.querySelectorAll(".chat-profile");
+    chatProfiles.forEach(function (profile) {
+        profile.addEventListener("click", function () {
+            // Remove 'selected' class from all chat profiles
+            chatProfiles.forEach(function (profile) {
+                profile.classList.remove("selected");
+            });
+
+            // Add 'selected' class to the clicked chat profile
+            this.classList.add("selected");
+
+            // Fetch and display messages for the selected user
+            var selectedUser = this.textContent.trim(); // Get the text content of the profile
+            fetchMessages(selectedUser);
+        });
+    });
+});
+
+function sendMessage(message) {
+    // Send AJAX request to server to save message
+    $.ajax({
+        url: "index.php",
+        type: "POST",
+        data: { command: "sendMessage" , message: message},
+        success: function (response) {
+            // Handle success
+            console.log("Message sent:", response);
+        },
+        error: function (xhr, status, error) {
+            // Handle error
+            console.error("Error sending message:", error);
+        }
+    });
+}
+
+function fetchMessages(user) {
+    // Send AJAX request to server to fetch messages for a user
+    $.ajax({
+        url: 'fetch_messages.php',
+        method: 'POST',
+        data: { user: user },
+        dataType: 'json',
+        success: function (messages) {
+            // Handle success
+            console.log("Messages for " + user + ":", messages);
+            // Update the message area with the fetched messages
+            // Example: updateMessageArea(messages);
+        },
+        error: function (xhr, status, error) {
+            // Handle error
+            console.error("Error fetching messages:", error);
+        }
+    });
+}
 
 
-$(document).ready(function() {
+
+
+/* $(document).ready(function() {
     // Bind click event to the send button
     $('#sendButton').on('click', function() {
         const message = $('#chatInput').val();
@@ -38,4 +113,4 @@ $(document).ready(function() {
     function validateInput(input) {
         return input.trim().length > 0;
     }
-});
+}); */

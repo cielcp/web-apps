@@ -27,11 +27,56 @@
     <!-- Chat -->
     <section class="d-flex" id="chat">
         <div class="chat-log">
-            <div class="chat-profile"><img src="icons/person circle.svg">Ciel</div>
+            <div class="chat-profile selected"><img src="icons/person circle.svg">
+            <?php 
+                if (isset($_SESSION['seller'])) {
+                    echo $_SESSION['seller'];
+                } else {
+                    echo "ANON";
+                }
+            ?>
+            </div>
             <div class="line"></div>
+            <?php 
+                // get all of the user's chatlogs
+                $sql = "SELECT * FROM messages WHERE buyer = $1 OR seller = $1";
+                $user = $_SESSION['username'];
+                $messages = $this->db->prepareAndExecute("fetch_messages", $sql, array($user));
+                // echo json_encode($messages);
+                foreach ($messages as $message):
+                    $buyer = $message["buyer"];
+                    $seller = $message["seller"];
+                    // if you are the buyer
+                    if ($buyer == $_SESSION['username']) {
+                        $me = $buyer;
+                        $them = $seller;
+                    } else {
+                        $them = $buyer;
+                        $me = $seller;
+                    }
+                    /*if (isset($_SESSION['seller'])) {
+                        if ($them = $_SESSION['seller']) {
+                            // echo out a selected block
+                            echo '<div class="chat-profile selected"><img src="images/profilepic.jpg">'. $_SESSION['seller'] . '</div>';
+                            echo '<div class="line"></div>';
+                        } else {
+                            echo '<div class="chat-profile"><img src="images/profilepic.jpg">'. $them . '</div>';
+                            echo '<div class="line"></div>';
+                        }
+                    } else {
+                        echo '<div class="chat-profile selected"><img src="icons/person circle.svg"> ANON </div>';
+                        echo '<div class="line"></div>';
+                    }*/
+                    
+                    echo '<div class="chat-profile"><img src="images/profilepic.jpg">';
+                    echo $them;
+                    echo '</div>';
+                    echo '<div class="line"></div>';
+                endforeach;
+            ?>
             <div class="chat-profile"><img src="images/profilepic.jpg">Hannah</div>
             <div class="line"></div>
-            <div class="chat-profile"><img src="images/logo.png">Jane</div>
+            <div class="chat-profile"><img src="images/logo.png">Ciel</div>
             <div class="line"></div>
         </div>
 
@@ -49,7 +94,7 @@
                     <img src="icons/person circle.svg">
                 </div>
             </div>
-            <form class="form-inline mt-4">
+            <form class="form-inline mt-4" id="messageForm">
                 <div class="input-group align-items-center">
                     <input class="form-control search-bar" id = "chatInput" type="text" placeholder="Type a message..." id="messageInput">
                     <button class="btn btn-outline-secondary" id = "sendButton" type="submit">SEND</button>
@@ -64,6 +109,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="chat.js"></script>
 
 </body>
 

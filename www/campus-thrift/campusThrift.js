@@ -1,95 +1,102 @@
 console.log("uh did this connect");
 
 $(document).ready(function () {
-  $('#listingForm').submit(function(event) {
+  $("#listingForm").submit(function (event) {
     event.preventDefault(); // Prevent the default form submission behavior
 
     $.ajax({
-        url: 'index.php', // Replace with the actual URL to your PHP controller endpoint
-        type: 'POST',
-        data: { 'command': 'loadListing'},
-        dataType: 'json',
-        success: function(data) {
-            loadListing(data);
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            // Handle any AJAX errors here
-            $('#listingDetailsContainer').html('<p>Error loading listing details.</p>');
-        }
+      url: "index.php", // Replace with the actual URL to your PHP controller endpoint
+      type: "POST",
+      data: { command: "loadListing" },
+      dataType: "json",
+      success: function (data) {
+        loadListing(data);
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        // Handle any AJAX errors here
+        $("#listingDetailsContainer").html(
+          "<p>Error loading listing details.</p>"
+        );
+      },
     });
+  });
 
   // Get all elements with class "bookmark-button"
   const bookmarkButtons = document.querySelectorAll(".bookmark-button");
 
-  // --------------- NONE OF THIS IS RUNNING METHINKS
-  console.log("attempting ajax request");
-  // AJAX request to fetch saved listings
-  $.ajax({
-    url: "savedJson.php",
-    type: "POST",
-    dataType: "json",
-    success: function (response) {
-      if (response && response.savedListings) {
-        console.log("success making ajax request");
-        const savedListings = response.savedListings;
-        // Loop through saved listings and update UI accordingly
-        savedListings.forEach(function (savedListing) {
-          // Access the saved listing ID and update UI (e.g., change button color)
-          const listingId = savedListing.listing_id;
-          console.log("saved listing #", listingId);
-          // Example: document.getElementById('button-' + listingId).classList.add('filled');
-        });
-      }
-    },
-    error: function (xhr, status, error) {
-      console.error("AJAX error:", error);
-    },
-  });
-  // -------------- WANT THIS TO WORK BASED ON THE ^ AJAX QUERY
-  // -------------- BUT I J RAW PHPED IT ON THE HOME PAGE
-  // Loop through each bookmark button
-  bookmarkButtons.forEach(function (button) {
-    // WANT THIS TO WORK ASYNC TO SHOW SAVED BUTTONS FILLED IN
-    // Event listener to toggle clicked state of bookmark button
-    button.addEventListener("click", function () {
-      // Get the bookmark images inside this button
-      const bookmarks = this.querySelectorAll(".bookmark");
-
-      // Toggle the 'hidden' class for the bookmark images
-      bookmarks.forEach(function (bookmark) {
-        bookmark.classList.toggle("hidden");
-      });
+  // --------------- NONE OF THIS IS RUNNING METHINK
+  $(".saveForm").submit(function (event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+    // AJAX request to fetch saved listings
+    console.log("attempting ajax request!");
+    $.ajax({
+      url: "savedJson.php",
+      type: "POST",
+      data: { command: "saveListing" },
+      dataType: "json",
+      success: function (response) {
+        if (response && response.savedListings) {
+          console.log("success making ajax request");
+          const savedListings = response.savedListings;
+          // Loop through saved listings and update UI accordingly
+          savedListings.forEach(function (savedListing) {
+            // Access the saved listing ID and update UI (e.g., change button color)
+            const listingId = savedListing.listing_id;
+            console.log("saved listing #", listingId);
+            // Example: document.getElementById('button-' + listingId).classList.add('filled');
+          });
+        }
+      },
+      error: function (jqXHR, textStatus, error) {
+        // Handle any AJAX errors here
+        console.error("AJAX error:", error);
+      },
     });
 
-    // Determine if the listing is saved or not
-    const isSaved = button.classList.contains("saved");
+    // -------------- WANT THIS TO WORK BASED ON THE ^ AJAX QUERY
+    // -------------- BUT I J RAW PHPED IT ON THE HOME PAGE
+    // Loop through each bookmark button
+    bookmarkButtons.forEach(function (button) {
+      // WANT THIS TO WORK ASYNC TO SHOW SAVED BUTTONS FILLED IN
+      // Event listener to toggle clicked state of bookmark button
+      button.addEventListener("click", function () {
+        // Get the bookmark images inside this button
+        const bookmarks = this.querySelectorAll(".bookmark");
 
-    // If the listing is already saved, remove it
-    if (isSaved) {
-      // Remove the saved listing from the profile (you need to implement this)
-      console.log("Removing from saved listings");
-      button.classList.remove("saved");
-    } else {
-      // Save the listing to the profile (you need to implement this)
-      console.log("Adding to saved listings");
-      button.classList.add("saved");
-    }
+        // Toggle the 'hidden' class for the bookmark images
+        bookmarks.forEach(function (bookmark) {
+          bookmark.classList.toggle("hidden");
+        });
+      });
+
+      // Determine if the listing is saved or not
+      const isSaved = button.classList.contains("saved");
+
+      // If the listing is already saved, remove it
+      if (isSaved) {
+        // Remove the saved listing from the profile (you need to implement this)
+        console.log("Removing from saved listings");
+        button.classList.remove("saved");
+      } else {
+        // Save the listing to the profile (you need to implement this)
+        console.log("Adding to saved listings");
+        button.classList.add("saved");
+      }
+    });
   });
-});
 
+  function loadListing(data) {
+    console.log(data);
+    console.log("listing");
+    // Assuming response.listing_details contains the details
+    var details = data.listing_details;
+    var tags = details.tags.split(", "); // Use split instead of explode
+    var tagsHtml = "";
+    tags.forEach(function (tag) {
+      tagsHtml += '<h4 class="tag">' + tag + "</h4>"; // Use JavaScript concatenation
+    });
 
-function loadListing(data) {
-  console.log(data);
-  console.log('listing');
-  // Assuming response.listing_details contains the details
-  var details = data.listing_details;
-  var tags = details.tags.split(', '); // Use split instead of explode
-  var tagsHtml = '';
-  tags.forEach(function(tag) {
-      tagsHtml += '<h4 class="tag">' + tag + '</h4>'; // Use JavaScript concatenation
-  });
-
-  var html = `
+    var html = `
   <div class="listing-info-block">
   <div class="listing-small-info-block">
     <h3>${details.category}</h3>
@@ -122,9 +129,6 @@ function loadListing(data) {
   </div>
   </div>
   `;
-  $('#listing-details-container').html(html); // Make sure this matches your HTML container ID
-}
-
+    $("#listing-details-container").html(html); // Make sure this matches your HTML container ID
+  }
 });
-
-

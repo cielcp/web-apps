@@ -78,10 +78,22 @@
                         echo '</div>';
                     echo '</div>';
                     echo '<div class="listing-small-info-block d-flex justify-content-end">';
-                        echo '<form action="?command=saveListing" method="POST" class="mb-0 ">';
+                        echo '<form class="saveForm" action="?command=saveListing" method="POST" class="mb-0 ">';
                         echo '<input type="hidden" name="listing_id" value="' . $listing["id"] . '">';
-                        echo '<button type="submit" class="icon-button"><img style="width:40px; height:40px;" src="icons/bookmark.svg"></button>
-                            </form>';
+                        // if the listing is in the saved listings list
+                        /* if (in_array($listing["id"], $saved_ids)) {
+                            echo '<button type="submit" class="icon-button bookmark-button">
+                                        <img class="bookmark" src="icons/bookmark-filled.svg">
+                                        <img class="bookmark hidden" src="icons/bookmark.svg">
+                                    </button>
+                                </form>';
+                        } else { */
+                            echo '<button type="submit" class="icon-button bookmark-button">
+                                        <img class="bookmark hidden" src="icons/bookmark-filled.svg">
+                                        <img class="bookmark" src="icons/bookmark.svg">
+                                    </button>';
+                        //}
+                        echo '</form>';
                     echo '</div>';
                 echo '</div>';
 
@@ -101,14 +113,19 @@
                             echo '<li>' . $method . '</li>';
                         }
                         echo '</ul>';
-                        if(isset($_SESSION["username"]) && ($listing['creator'] == $_SESSION["username"])) {
-                            echo '<form action="?command=deleteListing" method="POST" class="mb-0 ">
-                                <button type="submit">DELETE LISTING</button>
-                            </form>';
-                        } else {
-                            echo '<a href="?command=messages" class="mb-2 "><button>MESSAGE SELLER</button></a>';
+                        if(isset($_SESSION["username"])) {
+                            if (($listing['creator'] == $_SESSION["username"])) {
+                                echo '<form action="?command=deleteListing" method="POST" class="mb-0 ">
+                                    <button type="submit">DELETE LISTING</button>
+                                </form>';
+                            } else {
+                                echo '<form action="?command=startMessage" method="POST" class="mb-0 ">';
+                                echo '<input type="hidden" name="buyer" value="' . $_SESSION["username"] . '">';
+                                echo '<input type="hidden" name="seller" value="' . $listing['creator'] . '">';
+                                echo '<button>MESSAGE SELLER</button></a>';
+                                echo '</form>';
+                            }
                         }
-                        
                     echo '</div>';
                 echo '</div>';
                 
@@ -169,6 +186,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
+    <!-- why is this weird
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="campusThrift.js"></script> -->
 
 </body>
 

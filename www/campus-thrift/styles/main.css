@@ -285,6 +285,11 @@ form {
     background-color: #F8F5F0;
 }
 
+.selected {
+    background-color: #040402;
+    color:#F8F5F0;
+}
+
 .chat-profile img {
     border-radius: 50px;
     border-style: solid;
@@ -294,6 +299,7 @@ form {
     width: 50px;
     object-fit: contain;
     margin-right: 20px;
+    background-color: #F8F5F0;
 }
 
 .chat-container {
