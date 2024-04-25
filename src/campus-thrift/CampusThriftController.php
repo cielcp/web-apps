@@ -219,7 +219,7 @@ class CampusThriftController
             $sql = "SELECT * FROM users WHERE email = $1";
             $user = $this->db->prepareAndExecute("fetch_user", $sql, array($email));
 
-            if ($user === false) {
+            if ($user == false) {
                 $message = "An account with that email does not exist, please try again";
                 $this->showLogin($message);
                 return;

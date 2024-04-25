@@ -95,23 +95,6 @@ $(document).ready(function () {
   });
 
   function loadListing(data) {
-
-    // Assuming response.listing_details contains the details
-/*       var details = data.listing_details;
-
-    var tags = details.tags.split(', '); // Use split instead of explode
-    var tagsHtml = '';
-    tags.forEach(function (tag) {
-        tagsHtml += '<h4 class="tag">' + tag + '</h4>'; // Use JavaScript concatenation
-    });
-
-    var method = details.method.split(', '); // Use split instead of explode
-    var methodsHtml = '';
-    method.forEach(function (method) {
-        methodsHtml += '<li>' + method + '</li>'; // Use JavaScript concatenation
-    }); */
-
-   
     var details = data.listing_details;
     var tagsHtml = details.tags.split(', ').map(tag => `<h4 class="tag">${tag}</h4>`).join('');
     var methodsHtml = details.method.split(', ').map(method => `<li>${method}</li>`).join('');
@@ -132,7 +115,10 @@ $(document).ready(function () {
                 <div class="listing-small-info-block d-flex justify-content-end">
                     <form action="?command=saveListing" method="POST" class="mb-0">
                         <input type="hidden" name="listing_id" value="${details.id}">
-                        <button type="submit" class="icon-button"><img style="width:40px; height:40px;" src="icons/bookmark.svg"></img></button>
+                        <button type="submit" class="icon-button bookmark-button">
+                            <img class="bookmark hidden" src="icons/bookmark-filled.svg" style="width:40px; height:40px;">
+                            <img class="bookmark" src="icons/bookmark.svg" style="width:40px; height:40px;">
+                        </button>
                     </form>
                 </div>
             </div>
