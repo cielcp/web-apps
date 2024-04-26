@@ -624,8 +624,8 @@ class CampusThriftController
     /** ------------------- FUNCTIONS TO SHOW PAGES ------------------- */
 
     // SWAP TO YOUR URL HERE!!
-    //public $myURL = "/opt/src/campus-thrift/templates/";
-    public $myURL = "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/";
+    public $myURL = "/opt/src/campus-thrift/templates/";
+    // public $myURL = "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/";
     //public $myURL = "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/";
 
     public function showHome($message = "")

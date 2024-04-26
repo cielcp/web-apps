@@ -32,6 +32,8 @@
                 $sql = "SELECT * FROM messages WHERE buyer = $1 OR seller = $1";
                 $user = $_SESSION['username'];
                 $messages = $this->db->prepareAndExecute("fetch_messages", $sql, array($user));
+
+                
                 // echo json_encode($messages);
 
                 // top chatlog!
@@ -40,12 +42,13 @@
                     echo '<div class="chat-profile selected"><img src="icons/person circle.svg">' . $_SESSION['seller'] . '</div>';
                     echo '<div class="line"></div>';
                 } else {
-                    // Fetch the most recent chat from the database
-                    $current = ($messages[0]['seller'] == $_SESSION['username']) ? $messages[0]['buyer'] : $messages[0]['seller'];
-                    echo '<div class="chat-profile selected"><img src="icons/person circle.svg">' . $current . '</div>';
-                    echo '<div class="line"></div>';
+                    if (!empty($messages[0])) {
+                        // Fetch the most recent chat from the database
+                        $current = ($messages[0]['seller'] == $_SESSION['username']) ? $messages[0]['buyer'] : $messages[0]['seller'];
+                        echo '<div class="chat-profile selected"><img src="icons/person circle.svg">' . $current . '</div>';
+                        echo '<div class="line"></div>';
+                    }
                 }
-
                 foreach ($messages as $message):
                     $buyer = $message["buyer"];
                     $seller = $message["seller"];
