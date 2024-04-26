@@ -3,38 +3,41 @@ console.log("uh did this connect");
 $(document).ready(function () {
   //$(document).on('submit', '.listing-img-form', function(event) {
   //$('.listing-img-form').submit(function(event) {
-      //event.preventDefault(); // Stop the form from submitting normally
-      var listingId = document.getElementById('listingData').getAttribute('data-listing-id');
-      //var listingId = "<?php echo $listingId; ?>";
-      //var listingId = 1;
-     // var listingId = sessionStorage.getItem('listingId');
+  //event.preventDefault(); // Stop the form from submitting normally
+  var listingId = document
+    .getElementById("listingData")
+    .getAttribute("data-listing-id");
+  //var listingId = "<?php echo $listingId; ?>";
+  //var listingId = 1;
+  // var listingId = sessionStorage.getItem('listingId');
 
-      console.log('ajax loaded');
-      console.log(listingId);
-      // Safely attempting to find and use the listing_id
-      //var listingId = $(this).find('input[name="listing_id"]').val();
+  console.log("ajax loaded");
+  console.log(listingId);
+  // Safely attempting to find and use the listing_id
+  //var listingId = $(this).find('input[name="listing_id"]').val();
 
-      $.ajax({
-          url: 'index.php', // Replace with the actual URL to your PHP controller endpoint
-          type: 'POST',
-          data: { 'command': 'loadListing', 'listing_id': listingId},
-          dataType: 'json',
-          success: function (data) {
-              console.log(data); // Check what is actually returned
-              loadListing(data);
-
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-              // Handle any AJAX errors here
-              $('#listingDetailsContainer').html('<p>Error loading listing details.</p>');
-          }
-      });
+  $.ajax({
+    url: "index.php", // Replace with the actual URL to your PHP controller endpoint
+    type: "POST",
+    data: { command: "loadListing", listing_id: listingId },
+    dataType: "json",
+    success: function (data) {
+      console.log(data); // Check what is actually returned
+      loadListing(data);
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      // Handle any AJAX errors here
+      $("#listingDetailsContainer").html(
+        "<p>Error loading listing details.</p>"
+      );
+    },
+  });
 
   // Get all elements with class "bookmark-button"
   const bookmarkButtons = document.querySelectorAll(".bookmark-button");
 
   // --------------- NONE OF THIS IS RUNNING METHINK
-  $(".saveForm").submit(function (event) {
+  /* $(".saveForm").submit(function (event) {
     event.preventDefault(); // Prevent the default form submission behavior
     // AJAX request to fetch saved listings
     console.log("attempting ajax request!");
@@ -91,51 +94,30 @@ $(document).ready(function () {
         console.log("Adding to saved listings");
         button.classList.add("saved");
       }
-    });
-  });
+    }); 
+  });*/
 
   function loadListing(data) {
     var details = data.listing_details;
-    var tagsHtml = details.tags.split(', ').map(tag => `<h4 class="tag">${tag}</h4>`).join('');
-    var methodsHtml = details.method.split(', ').map(method => `<li>${method}</li>`).join('');
-
-    var html = `
-        <div class="listing-details-container">
-            <img src="${details.images}" alt="${details.name}">
-        </div>
-        <div class="vert-line"></div>
-        <div class="listing-details-container">
-            <div class="listing-info-block">
-                <div class="listing-small-info-block">
-                    <h3>${details.category}</h3>
+    var tagsHtml = details.tags
+      .split(", ")
+      .map((tag) => `<h4 class="tag">${tag}</h4>`)
+      .join("");
+    var methodsHtml = details.method
+      .split(", ")
+      .map((method) => `<li>${method}</li>`)
+      .join("");
+    var listingImg = `<img src="${details.images}" alt="${details.name}">`;
+    $("#listing-img").html(listingImg);
+    var mainInfo = `<h3>${details.category}</h3>
                     <h2 class="my-2">${details.name}</h2>
                     <h2 class="mb-2">$${details.price}</h2>
-                    <div class="d-flex" style="gap:10px;">${tagsHtml}</div>
-                </div>
-                <div class="listing-small-info-block d-flex justify-content-end">
-                    <form action="?command=saveListing" method="POST" class="mb-0">
-                        <input type="hidden" name="listing_id" value="${details.id}">
-                        <button type="submit" class="icon-button bookmark-button">
-                            <img class="bookmark hidden" src="icons/bookmark-filled.svg" style="width:40px; height:40px;">
-                            <img class="bookmark" src="icons/bookmark.svg" style="width:40px; height:40px;">
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <div class="line"></div>
-            <div class="listing-info-block">
-                <div class="listing-small-info-block">
-                    <h3>${details.description}</h3>
-                </div>
-                <div class="vert-line"></div>
-                <div class="listing-small-info-block">
-                    <h3>This item is available for:</h3>
-                    <ul class="mb-5">${methodsHtml}</ul>
-                </div>
-            </div>
-        </div>`;
-    $('#listing-section').html(html);
-    }
+                    <div class="d-flex" style="gap:10px;">${tagsHtml}</div>`;
+    $("#listing-main-info").html(mainInfo);
 
+    var descr = `<h3>${details.description}</h3>`;
+    $("#listing-description").html(descr);
+    var methods = `${methodsHtml}`;
+    $("#listing-methods").html(methods);
+  }
 });
-

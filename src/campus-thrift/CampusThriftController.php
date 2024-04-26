@@ -624,8 +624,8 @@ class CampusThriftController
     /** ------------------- FUNCTIONS TO SHOW PAGES ------------------- */
 
     // SWAP TO YOUR URL HERE!!
-    public $myURL = "/opt/src/campus-thrift/templates/";
-    //public $myURL = "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/";
+    //public $myURL = "/opt/src/campus-thrift/templates/";
+    public $myURL = "/students/ccp7gcp/students/ccp7gcp/private/campus-thrift/templates/";
     //public $myURL = "/students/hyp2ftn/students/hyp2ftn/private/campus-thrift/templates/";
 
     public function showHome($message = "")
@@ -698,9 +698,10 @@ class CampusThriftController
             $this->showLogin($message);
         }
     }
+    
     public function showListing($message = "")
     {
-/*         // $message = "";
+         // $message = "";
         if (!empty($message)) {
             $alert = "<div class='alert alert-success'>{$message}</div>";
             echo $alert;
@@ -708,14 +709,13 @@ class CampusThriftController
         if (!empty($_POST['listing_id'])) {
             // Store the id to the current session
             $_SESSION['listing_id'] = $_POST['listing_id'];
-            // redirect the user to the appropriate listing.php page (with the json file?)
-            $this->loadListing();
+            
         } else {
             // Invalid request, show error message
             die("Invalid listing ID provided");
         }
+        include $this->myURL . "listing.php";
 
-         */
         //var_dump($_POST);
 
        // $listingId = $_POST['listing_id'] ?? null;
@@ -728,18 +728,7 @@ class CampusThriftController
         //$listing_id = 1;
         //$_SESSION['listing_id'] = $listing_id;
 
-        include $this->myURL . "listing.php";
-
-        // json shtuff
-        /* // load the listing details json file
-        $data = $this->loadListing();
-        //save to session
-        $parsed_data = json_decode($data, true);
-        $_SESSION['listing_details'] = json_decode($data, true);
-        foreach ($data as $item) {
-            echo 'ID: ' . $item['id'] . ', Name: ' . $item['name'] . ', Price: ' . $item['price'] . '<br>';
-        } */
-        // redirect the user to the appropriate listing.php page with the json file
+        
     }
 
 

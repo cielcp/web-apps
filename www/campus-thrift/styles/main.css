@@ -276,6 +276,7 @@ form {
 .chat-log {
     width: 30%;
     background-color: #D1D0CA;
+    overflow:scroll;
 }
 
 .chat-profile {

@@ -27,22 +27,25 @@
     <!-- Chat -->
     <section class="d-flex" id="chat">
         <div class="chat-log">
-            <div class="chat-profile selected"><img src="icons/person circle.svg">
             <?php 
-                if (isset($_SESSION['seller'])) {
-                    echo $_SESSION['seller'];
-                } else {
-                    echo "ANON";
-                }
-            ?>
-            </div>
-            <div class="line"></div>
-            <?php 
-                // get all of the user's chatlogs
+            // get all of the user's chatlogs
                 $sql = "SELECT * FROM messages WHERE buyer = $1 OR seller = $1";
                 $user = $_SESSION['username'];
                 $messages = $this->db->prepareAndExecute("fetch_messages", $sql, array($user));
                 // echo json_encode($messages);
+
+                // top chatlog!
+                if (isset($_SESSION['seller'])) {
+                    // Display the selected chat profile
+                    echo '<div class="chat-profile selected"><img src="icons/person circle.svg">' . $_SESSION['seller'] . '</div>';
+                    echo '<div class="line"></div>';
+                } else {
+                    // Fetch the most recent chat from the database
+                    $current = ($messages[0]['seller'] == $_SESSION['username']) ? $messages[0]['buyer'] : $messages[0]['seller'];
+                    echo '<div class="chat-profile selected"><img src="icons/person circle.svg">' . $current . '</div>';
+                    echo '<div class="line"></div>';
+                }
+
                 foreach ($messages as $message):
                     $buyer = $message["buyer"];
                     $seller = $message["seller"];
@@ -54,24 +57,12 @@
                         $them = $buyer;
                         $me = $seller;
                     }
-                    /*if (isset($_SESSION['seller'])) {
-                        if ($them = $_SESSION['seller']) {
-                            // echo out a selected block
-                            echo '<div class="chat-profile selected"><img src="images/profilepic.jpg">'. $_SESSION['seller'] . '</div>';
-                            echo '<div class="line"></div>';
-                        } else {
-                            echo '<div class="chat-profile"><img src="images/profilepic.jpg">'. $them . '</div>';
-                            echo '<div class="line"></div>';
-                        }
-                    } else {
-                        echo '<div class="chat-profile selected"><img src="icons/person circle.svg"> ANON </div>';
+                    if ((isset($current) && $them !== $current) OR (isset($_SESSION['seller']) && $them !== $_SESSION['seller'])) {
+                        echo '<div class="chat-profile"><img src="images/profilepic.jpg">';
+                        echo $them;
+                        echo '</div>';
                         echo '<div class="line"></div>';
-                    }*/
-                    
-                    echo '<div class="chat-profile"><img src="images/profilepic.jpg">';
-                    echo $them;
-                    echo '</div>';
-                    echo '<div class="line"></div>';
+                    }
                 endforeach;
             ?>
             <div class="chat-profile"><img src="images/profilepic.jpg">Hannah</div>
